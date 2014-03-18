@@ -1,11 +1,6 @@
 package jp.dodododo.dao.paging;
 
 /**
- * {@.en }
- * 
- * <br />
- * 
- * {@.ja }
  * 
  * @author Satoshi Kimura
  */
@@ -17,10 +12,8 @@ public class Paging extends LimitOffset {
 
 	/**
 	 * 
-	 * @param limit
-	 *            {@.en limit} {@.ja 件数}
-	 * @param pageNo
-	 *            {@.en pageNo(ranges from 0) } {@.ja ページ番号(0スタート) }
+	 * @param limit 件数
+	 * @param pageNo ページ番号(0スタート) 
 	 */
 	public Paging(long limit, long pageNo) {
 		super(limit, pageNo * limit);

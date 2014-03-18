@@ -1,11 +1,11 @@
 package jp.dodododo.dao.lock;
 
 /**
- * {@.en Optimistic locking. }
+ * Optimistic locking. 
  * 
  * <br />
  * 
- * {@.ja 楽観的ロック}
+ * 楽観的ロック
  * 
  * @author Satoshi Kimura
  */

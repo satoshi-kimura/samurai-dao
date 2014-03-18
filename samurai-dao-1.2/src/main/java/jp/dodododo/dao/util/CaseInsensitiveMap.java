@@ -9,11 +9,11 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 /**
- * {@.en Ignore UpperCase,LowerCase,CamelCase and SnakeCase. }
+ * Ignore UpperCase,LowerCase,CamelCase and SnakeCase. 
  *
  * <br />
  *
- * {@.ja UpperCase,LowerCase,CamelCase,SnakeCaseを無視。}
+ * UpperCase,LowerCase,CamelCase,SnakeCaseを無視。
  *
  * @author Satoshi Kimura
  *
@@ -205,11 +205,11 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 	}
 
 	/**
-	 * {@.en Ignore UpperCase and LowerCase. }
+	 * Ignore UpperCase and LowerCase. 
 	 *
 	 * <br />
 	 *
-	 * {@.ja UpperCase,LowerCaseを無視。}
+	 * UpperCase,LowerCaseを無視。
 	 *
 	 * @author Satoshi Kimura
 	 *

@@ -7,11 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@.en }
- * 
- * <br />
- * 
- * {@.ja }
  * 
  * @author Satoshi Kimura
  */

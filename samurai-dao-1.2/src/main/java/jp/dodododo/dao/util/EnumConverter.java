@@ -10,8 +10,6 @@ import jp.dodododo.dao.object.ObjectDescFactory;
 import jp.dodododo.dao.types.JavaTypes;
 
 /**
- * {@.en } <br />
- * {@.ja }
  *
  * @author Satoshi Kimura
  */

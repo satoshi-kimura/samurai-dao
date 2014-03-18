@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * {@.en Ignore UpperCase,LowerCase,CamelCase and SnakeCase. }
+ * Ignore UpperCase,LowerCase,CamelCase and SnakeCase. 
  *
  * <br />
  *
- * {@.ja UpperCase,LowerCase,CamelCase,SnakeCaseを無視。}
+ * UpperCase,LowerCase,CamelCase,SnakeCaseを無視。
  *
  * @author Satoshi Kimura
  *

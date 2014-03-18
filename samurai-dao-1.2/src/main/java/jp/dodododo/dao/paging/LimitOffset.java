@@ -5,11 +5,6 @@ import java.io.Serializable;
 import jp.dodododo.dao.message.Message;
 
 /**
- * {@.en }
- * 
- * <br />
- * 
- * {@.ja }
  * 
  * @author Satoshi Kimura
  */
@@ -25,10 +20,8 @@ public class LimitOffset implements Serializable {
 
 	/**
 	 * 
-	 * @param limit
-	 *            {@.en limit} {@.ja 件数}
-	 * @param offset
-	 *            {@.en offset(ranges from 0) } {@.ja 開始位置(0スタート) }
+	 * @param limit 件数
+	 * @param offset 開始位置(0スタート) 
 	 */
 	public LimitOffset(long limit, long offset) {
 		this.limit = limit;

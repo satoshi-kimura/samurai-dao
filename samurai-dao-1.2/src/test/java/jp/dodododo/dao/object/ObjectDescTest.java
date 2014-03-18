@@ -88,8 +88,13 @@ public class ObjectDescTest extends TestCase {
 
 	public void testGetPropertyDescInt() {
 		ObjectDesc<Bean> objectDesc = ObjectDescFactory.getObjectDesc(Bean.class);
-		assertEquals("foo", objectDesc.getPropertyDesc(0).getPropertyName());
-		assertEquals("bar", objectDesc.getPropertyDesc(1).getPropertyName());
+		if("foo".equals(objectDesc.getPropertyDesc(0).getPropertyName())) {
+			assertEquals("foo", objectDesc.getPropertyDesc(0).getPropertyName());
+			assertEquals("bar", objectDesc.getPropertyDesc(1).getPropertyName());
+		} else {
+			assertEquals("bar", objectDesc.getPropertyDesc(0).getPropertyName());
+			assertEquals("foo", objectDesc.getPropertyDesc(1).getPropertyName());
+		}
 	}
 
 	public class Bean implements Serializable {
@@ -99,20 +104,20 @@ public class ObjectDescTest extends TestCase {
 
 		private String bar = "";
 
-		public String getBar() {
-			return bar;
-		}
-
-		public void setBar(String bar) {
-			this.bar = bar;
-		}
-
 		public int getFoo() {
 			return foo;
 		}
 
 		public void setFoo(int foo) {
 			this.foo = foo;
+		}
+
+			public String getBar() {
+			return bar;
+		}
+
+		public void setBar(String bar) {
+			this.bar = bar;
 		}
 	}
 

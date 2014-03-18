@@ -4,11 +4,6 @@ import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.log.SqlLogRegistry;
 
 /**
- * {@.en }
- *
- * <br />
- *
- * {@.ja }
  *
  * @author skimura
  */

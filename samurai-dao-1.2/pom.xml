@@ -4,17 +4,17 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>jp.dodododo.dao</groupId>
+  <groupId>jp.dodododo</groupId>
   <artifactId>samurai-dao</artifactId>
   <packaging>jar</packaging>
   <name>dao</name>
-  <version>1.1.29-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
 <!--
-  <version>1.1.29-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
 -->
   <description></description>
   <url>http://code.google.com/p/samurai-dao/</url>
-  <inceptionYear>2008-2012</inceptionYear>
+  <inceptionYear>2008-2014</inceptionYear>
 
   <licenses>
     <license>
@@ -24,10 +24,71 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:svn:http://samurai-dao.googlecode.com/svn/trunk/samurai-dao/</connection>
-    <developerConnection>scm:svn:https://samurai-dao.googlecode.com/svn/trunk/samurai-dao/</developerConnection>
-    <url>http://code.google.com/p/samurai-dao/source/browse/</url>
+    <url>https://github.com/satoshi-kimura/samurai-dao/</url>
+    <connection>scm:git:git://github.com/satoshi-kimura/samurai-dao.git</connection>
+    <developerConnection>scm:git:git://github.com/satoshi-kimura/samurai-dao.git</developerConnection>
   </scm>
+  <developers>
+    <developer>
+      <id>satoshi-kimura</id>
+      <name>Satoshi Kimura</name>
+      <email>satoshi.kimura@gmail.com</email>
+      <url>http://dodododo.jp/</url>
+      <roles>
+        <role>lead</role>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-9</timezone>
+    </developer>
+  </developers>
+  <issueManagement>
+    <system>Google code</system>
+    <url>https://code.google.com/p/samurai-dao/issues/list</url>
+  </issueManagement>
+  <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <uniqueVersion>false</uniqueVersion>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-staging-snapshots</id>
+      <name>Nexus Release Repository Snapshots</name>
+      <uniqueVersion>false</uniqueVersion>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.0-alpha-4</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <build>
     <extensions>
       <extension>
@@ -42,8 +103,8 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.8</source>
+            <target>1.8</target>
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
@@ -110,7 +171,9 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <use>false</use>
-          <source>1.6</source>
+          <quiet>true</quiet>
+          <failOnError>false</failOnError>
+          <source>1.8</source>
           <encoding>UTF-8</encoding>
           <docencoding>UTF-8</docencoding>
           <charset>UTF-8</charset>
@@ -307,19 +370,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>dodododo.jp</id>
-      <name>Maven2 Repository</name>
-      <url>file:../../maven2</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>dodododo.jp</id>
-      <name>Snapshot Repository</name>
-      <url>file:../../maven2-snapshot</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>
+
