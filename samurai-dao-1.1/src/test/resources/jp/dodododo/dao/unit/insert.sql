@@ -1,0 +1,5 @@
+INSERT
+  INTO
+    EMP(EMPNO)
+  VALUES
+    (0)

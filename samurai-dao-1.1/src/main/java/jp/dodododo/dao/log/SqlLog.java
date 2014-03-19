@@ -1,0 +1,63 @@
+package jp.dodododo.dao.log;
+
+import java.util.List;
+
+public class SqlLog {
+
+	private String sql;
+
+	private String completeSql;
+
+	private List<Object> bindArgs;
+
+	private List<Integer> bindArgTypes;
+
+	private ExecuteType executeType;
+
+	/**
+	 * インスタンスを構築します。
+	 *
+	 * @param sql
+	 *            未加工のSQL
+	 * @param completeSql
+	 *            完全なSQL
+	 * @param bindArgs
+	 *            SQLにバインドされる値の配列
+	 * @param bindArgTypes
+	 *            SQLにバインドされる値の型の配列
+	 * @param executeType
+	 *            SQLの実行タイプ
+	 */
+	public SqlLog(String sql, String completeSql, List<Object> bindArgs, List<Integer> bindArgTypes, ExecuteType executeType) {
+		this.sql = sql;
+		this.completeSql = completeSql;
+		this.bindArgs = bindArgs;
+		this.bindArgTypes = bindArgTypes;
+		this.executeType = executeType;
+	}
+
+	public List<Object> getBindArgs() {
+		return bindArgs;
+	}
+
+	public List<Integer> getBindArgTypes() {
+		return bindArgTypes;
+	}
+
+	public String getCompleteSql() {
+		return completeSql;
+	}
+
+	public String getRawSql() {
+		return sql;
+	}
+
+	public ExecuteType getSqlType() {
+		return executeType;
+	}
+
+	@Override
+	public String toString() {
+		return sql;
+	}
+}

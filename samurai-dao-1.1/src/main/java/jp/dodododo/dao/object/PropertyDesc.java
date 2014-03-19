@@ -1,0 +1,596 @@
+package jp.dodododo.dao.object;
+
+import static jp.dodododo.janerics.GenericsTypeUtil.*;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import jp.dodododo.dao.annotation.Internal;
+import jp.dodododo.dao.annotation.Property;
+import jp.dodododo.dao.exception.IllegalPropertyRuntimeException;
+import jp.dodododo.dao.message.Message;
+import jp.dodododo.dao.object.aop.field.FieldAccess;
+import jp.dodododo.dao.object.aop.field.FieldAccess.AccessType;
+import jp.dodododo.dao.object.aop.field.FieldInterceptor;
+import jp.dodododo.dao.object.aop.field.FieldInterceptors;
+import jp.dodododo.dao.types.JavaType;
+import jp.dodododo.dao.util.MethodUtil;
+import jp.dodododo.dao.util.StringUtil;
+import jp.dodododo.dao.util.ThreadLocalUtil;
+import jp.dodododo.dao.util.TypesUtil;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+@Internal
+public class PropertyDesc implements AnnotatedElement {
+
+	private static final Log logger = LogFactory.getLog(PropertyDesc.class);
+
+	protected String propertyName;
+
+	protected Class<?> propertyType;
+
+	protected Type genericPropertyType;
+
+	private Method readMethod;
+
+	private Method writeMethod;
+
+	private Field field;
+
+	protected ObjectDesc<?> objectDesc;
+
+	private boolean readable = false;
+
+	private boolean writable = false;
+
+	private boolean isOneDimensionalArray;
+
+	private Collection<Class<? extends Throwable>> ignoreExceptions = new ArrayList<Class<? extends Throwable>>();
+
+	protected String toString;
+
+	protected PropertyDesc() {
+	}
+
+	private PropertyDesc(String propertyName, ObjectDesc<?> objectDesc) {
+		if (propertyName == null) {
+			throw new NullPointerException("propertyName");
+		}
+		this.propertyName = StringUtil.decapitalize(propertyName);
+		this.objectDesc = objectDesc;
+	}
+
+	public Class<?> getDeclaringClass() {
+		if (readMethod != null) {
+			return readMethod.getDeclaringClass();
+		}
+		if (writeMethod != null) {
+			return writeMethod.getDeclaringClass();
+		}
+		if (field != null) {
+			return field.getDeclaringClass();
+		}
+		throw new IllegalStateException();
+	}
+
+	public <A extends Annotation> Class<?> getDeclaringClass(Class<A> annotation) {
+		if (readMethod != null && readMethod.getAnnotation(annotation) != null) {
+			return readMethod.getDeclaringClass();
+		}
+		if (writeMethod != null && writeMethod.getAnnotation(annotation) != null) {
+			return writeMethod.getDeclaringClass();
+		}
+		if (field != null && field.getAnnotation(annotation) != null) {
+			return field.getDeclaringClass();
+		}
+		return null;
+	}
+
+	protected PropertyDesc(String propertyName, Method readMethod, Method writeMethod, ObjectDesc<?> objectDesc) {
+		this(propertyName, objectDesc);
+		setReadMethod(readMethod);
+		setWriteMethod(writeMethod);
+	}
+
+	protected PropertyDesc(String propertyName, Field f, ObjectDesc<?> objectDesc) {
+		this(propertyName, objectDesc);
+		this.field = f;
+		setPropertyType(f.getType());
+		this.genericPropertyType = f.getGenericType();
+
+		setupReadableWritable(f);
+	}
+
+	private void setupReadableWritable(Field field) {
+		Property p = field.getAnnotation(Property.class);
+		if (p != null) {
+			this.readable = p.readable().toBoolean(false);
+			this.writable = p.writable().toBoolean(false);
+			if (this.writable || this.readable) {
+				field.setAccessible(true);
+			}
+		} else if (Modifier.isPublic(field.getModifiers()) == true && Modifier.isPublic(field.getDeclaringClass().getModifiers()) == true) {
+			this.readable = true;
+			this.writable = true;
+		}
+	}
+
+	public String getPropertyName() {
+		return propertyName;
+	}
+
+	public Class<?> getPropertyType() {
+		return propertyType;
+	}
+
+	public Method getReadMethod() {
+		return readMethod;
+	}
+
+	public Field getField() {
+		return field;
+	}
+
+	public AccessibleObject getReadAccessibleObject() {
+		if (isReadable() == false) {
+			return null;
+		}
+		if (readMethod != null) {
+			return readMethod;
+		} else {
+			return field;
+		}
+	}
+
+	protected void setReadMethod(Method readMethod) {
+		this.readMethod = readMethod;
+		if (readMethod != null) {
+			setPropertyType(readMethod.getReturnType());
+			this.genericPropertyType = readMethod.getGenericReturnType();
+			readable = true;
+		}
+	}
+
+	public boolean hasField() {
+		return field != null;
+	}
+
+	public boolean hasReadMethod() {
+		return readMethod != null;
+	}
+
+	public Method getWriteMethod() {
+		return writeMethod;
+	}
+
+	public AccessibleObject getWriteAccessibleObject() {
+		if (isWritable() == false) {
+			return null;
+		}
+		if (writeMethod != null) {
+			return writeMethod;
+		} else {
+			return field;
+		}
+	}
+
+	protected void setWriteMethod(Method writeMethod) {
+		this.writeMethod = writeMethod;
+		if (writeMethod != null) {
+			setPropertyType(writeMethod.getParameterTypes()[0]);
+			this.genericPropertyType = writeMethod.getGenericParameterTypes()[0];
+			writable = true;
+		}
+	}
+
+	public boolean hasWriteMethod() {
+		return writeMethod != null;
+	}
+
+	public boolean isReadable() {
+		return readable;
+	}
+
+	public boolean isWritable() {
+		return writable;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <VALUE> VALUE getValue(Object target) {
+		return (VALUE) getValue(target, false);
+	}
+
+	protected static ThreadLocal<Boolean> cacheMode = new ThreadLocal<Boolean>() {
+		@Override
+		protected Boolean initialValue() {
+			return false;
+		};
+	};
+
+	protected static ThreadLocal<Map<PropertyDesc, Map<Object, Object>>> getValueCache = new ThreadLocal<Map<PropertyDesc, Map<Object, Object>>>() {
+		@Override
+		protected Map<PropertyDesc, Map<Object, Object>> initialValue() {
+			return new HashMap<PropertyDesc, Map<Object, Object>>();
+		}
+	};
+
+	public static void cacheModeOn() {
+		cacheMode.set(true);
+	}
+
+	public static void cacheModeOff() {
+		cacheMode.set(false);
+		ThreadLocalUtil.remove(cacheMode);
+		getValueCache.get().clear();
+		ThreadLocalUtil.remove(getValueCache);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <VALUE> VALUE getValue(Object target, boolean force) {
+		if (cacheMode.get() == false) {
+			return (VALUE) getValue(target, force, true);
+		}
+		Map<Object, Object> map = getValueCache.get().get(this);
+		Object key = target;
+		if (map == null) {
+			map = new HashMap<Object, Object>();
+			getValueCache.get().put(this, map);
+		}
+		if (map.containsKey(key)) {
+			return (VALUE) map.get(key);
+		}
+		VALUE ret = (VALUE) getValue(target, force, true);
+		map.put(key, ret);
+		return ret;
+	}
+
+	public <VALUE> VALUE getValue(Object target, boolean force, boolean useAOP) {
+		if (readable == false && force == false) {
+			throw new IllegalStateException(Message.getMessage("00008", propertyName, "readable", target.getClass().getName()));
+		}
+		try {
+			if (readMethod == null) {
+				if (force == true && field.isAccessible() == false) {
+					field.setAccessible(true);
+				}
+				if (useAOP == false) {
+					@SuppressWarnings("unchecked")
+					VALUE ret = (VALUE) field.get(target);
+					return ret;
+				}
+				FieldInterceptor interceptorChain = FieldInterceptors.getInterceptorChain();
+				FieldAccess fieldRead = new FieldAccess(target, field, AccessType.READ);
+
+				@SuppressWarnings("unchecked")
+				VALUE ret = (VALUE) interceptorChain.get(fieldRead);
+				return ret;
+			}
+			if (force == true && readMethod.isAccessible() == false) {
+				readMethod.setAccessible(true);
+			}
+			try {
+				@SuppressWarnings("unchecked")
+				VALUE ret = (VALUE) MethodUtil.invoke(readMethod, target, (Object[]) null);
+				return ret;
+			} catch (Throwable t) {
+				if (isIgnoreException(t) == true) {
+					return null;
+				}
+				throw t;
+			}
+
+		} catch (Throwable t) {
+			throw new IllegalPropertyRuntimeException(objectDesc.getTargetClass(), propertyName, t);
+		}
+	}
+
+	private boolean isIgnoreException(Throwable t) {
+		for (Class<? extends Throwable> clazz : ignoreExceptions) {
+			if (t.getClass().isAssignableFrom(clazz)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void setValue(Object target, Object value) {
+		setValue(target, value, false);
+	}
+
+	public void setValue(Object target, Object value, boolean force) {
+		setValue(target, value, force, true);
+	}
+
+	public void setValue(Object target, Object value, boolean force, boolean useAOP) {
+		if (writable == false && force == false) {
+			throw new IllegalStateException(Message.getMessage("00008", propertyName, "writable", target.getClass().getName()));
+		}
+		try {
+			Class<?> propertyType = getPropertyType();
+			if (propertyType.isPrimitive()) {
+				propertyType = TypesUtil.toWrapperType(propertyType);
+			}
+			if (value != null && (propertyType.isInstance(value) == false)) {
+				value = convert(value, propertyType);
+			}
+			if (writeMethod == null) {
+				if (force == true && field.isAccessible() == false) {
+					field.setAccessible(true);
+				}
+				if (useAOP == false) {
+					field.set(target, value);
+					return;
+				}
+				FieldInterceptor interceptorChain = FieldInterceptors.getInterceptorChain();
+				FieldAccess fieldWrite = new FieldAccess(target, field, AccessType.WRITE, value);
+
+				// field.set(target, value);
+				interceptorChain.set(fieldWrite);
+
+				return;
+			}
+			if (force == true && writeMethod.isAccessible() == false) {
+				writeMethod.setAccessible(true);
+			}
+			try {
+				MethodUtil.invoke(writeMethod, target, new Object[] { value });
+			} catch (Throwable t) {
+				if (isIgnoreException(t) == true) {
+					return;
+				}
+				throw t;
+			}
+		} catch (Throwable t) {
+			throw new IllegalPropertyRuntimeException(objectDesc.getTargetClass(), propertyName, value, t);
+		}
+	}
+
+	public <V> boolean addValue(Object target, V value) {
+		if (isCollectionType() == false) {
+			throw new UnsupportedOperationException();
+		}
+		Collection<V> collection = getValue(target);
+		if (collection == null) {
+			collection = new ArrayList<V>();
+			setValue(target, collection);
+		}
+		return collection.add(value);
+	}
+
+	public <K, V> V putValue(Object target, K key, V value) {
+		if (isMapType() == false) {
+			throw new UnsupportedOperationException();
+		}
+		Map<K, V> map = getValue(target);
+		if (map == null) {
+			map = new HashMap<K, V>();
+			setValue(target, map);
+		}
+		return map.put(key, value);
+	}
+
+	private Object convert(Object value, Class<?> dest) {
+		if (value == null) {
+			return null;
+		}
+		JavaType<?> javaType = TypesUtil.getJavaType(dest);
+		return javaType.convert(value);
+	}
+
+	public ObjectDesc<?> getObjectDesc() {
+		return objectDesc;
+	}
+
+	@Override
+	public String toString() {
+		return toString;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		return this.toString().equals(o.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
+	protected void setPropertyType(Class<?> propertyType) {
+		if (this.propertyType != null && this.propertyType.equals(propertyType) == false) {
+			logger.info(Message.getMessage("00019", objectDesc.getTargetClass().getName(), getPropertyName()));
+		}
+		this.propertyType = propertyType;
+		isOneDimensionalArray = isOneDimensionalArray(propertyType);
+	}
+
+	public Type getGenericPropertyType() {
+		return genericPropertyType;
+	}
+
+	public boolean isCollectionType() {
+		return isTypeOf(getPropertyType(), Collection.class);
+	}
+
+	public boolean isMapType() {
+		return isTypeOf(getPropertyType(), Map.class);
+	}
+
+	public boolean isEnumType() {
+		return getPropertyType().isEnum();
+	}
+
+	public <A extends Annotation> A getAnnotation(Class<A> annotation) {
+		return getAnnotatedElement().getAnnotation(annotation);
+	}
+
+	public Annotation[] getAnnotations() {
+		return getAnnotatedElement().getAnnotations();
+	}
+
+	public Annotation[] getDeclaredAnnotations() {
+		return getAnnotatedElement().getDeclaredAnnotations();
+	}
+
+	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+		return getAnnotatedElement().isAnnotationPresent(annotationClass);
+	}
+
+	private AnnotatedElement getAnnotatedElement() {
+		return new AnnotatedElementImpl(this.readMethod, this.writeMethod, this.field);
+	}
+
+	static class AnnotatedElementImpl implements AnnotatedElement {
+		private Method readMethod;
+
+		private Method writeMethod;
+
+		private Field field;
+
+		AnnotatedElementImpl(Method readMethod, Method writeMethod, Field field) {
+			this.readMethod = readMethod;
+			this.writeMethod = writeMethod;
+			this.field = field;
+		}
+
+		public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
+			if (writeMethod != null) {
+				T ret = writeMethod.getAnnotation(annotationType);
+				if (ret != null) {
+					return ret;
+				}
+			}
+			if (readMethod != null) {
+				T ret = readMethod.getAnnotation(annotationType);
+				if (ret != null) {
+					return ret;
+				}
+			}
+			if (field != null) {
+				return field.getAnnotation(annotationType);
+			}
+			return null;
+		}
+
+		public Annotation[] getAnnotations() {
+			List<Annotation> ret = new ArrayList<Annotation>();
+			if (writeMethod != null) {
+				ret.addAll(Arrays.asList(writeMethod.getAnnotations()));
+			}
+			if (readMethod != null) {
+				ret.addAll(Arrays.asList(readMethod.getAnnotations()));
+			}
+			if (field != null) {
+				ret.addAll(Arrays.asList(field.getAnnotations()));
+			}
+			return ret.toArray(new Annotation[ret.size()]);
+		}
+
+		public Annotation[] getDeclaredAnnotations() {
+			List<Annotation> ret = new ArrayList<Annotation>();
+			if (writeMethod != null) {
+				ret.addAll(Arrays.asList(writeMethod.getDeclaredAnnotations()));
+			}
+			if (readMethod != null) {
+				ret.addAll(Arrays.asList(readMethod.getDeclaredAnnotations()));
+			}
+			if (field != null) {
+				ret.addAll(Arrays.asList(field.getDeclaredAnnotations()));
+			}
+			return ret.toArray(new Annotation[ret.size()]);
+		}
+
+		public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
+			if (writeMethod != null) {
+				boolean ret = writeMethod.isAnnotationPresent(annotationType);
+				if (ret == true) {
+					return ret;
+				}
+			}
+			if (readMethod != null) {
+				boolean ret = readMethod.isAnnotationPresent(annotationType);
+				if (ret == true) {
+					return ret;
+				}
+			}
+			if (field != null) {
+				return field.isAnnotationPresent(annotationType);
+			}
+			return false;
+		}
+	}
+
+	public boolean isOneDimensionalArrayType() {
+		return isOneDimensionalArray;
+	}
+
+	private boolean isOneDimensionalArray(Class<?> propertyType) {
+		boolean isArray = propertyType.isArray();
+		if (isArray == false) {
+			return false;
+		}
+		boolean isArrayComponentType = propertyType.getComponentType().isArray();
+		return isArrayComponentType == false;
+	}
+
+	public void init() {
+		initWithReadMethod();
+		initWithWriteMethod();
+		initWithField();
+		this.toString = getDeclaringClass().getName() + "#" + getPropertyName();
+	}
+
+	private void initWithField() {
+		if (hasField() == false) {
+			return;
+		}
+		Property p = field.getAnnotation(Property.class);
+		if (p == null) {
+			return;
+		}
+		this.readable = p.readable().toBoolean(this.readable);
+		this.writable = p.writable().toBoolean(this.writable);
+		this.ignoreExceptions.addAll(Arrays.asList(p.ignoreExceptions()));
+	}
+
+	private void initWithWriteMethod() {
+		if (hasWriteMethod() == false) {
+			return;
+		}
+		Property p = writeMethod.getAnnotation(Property.class);
+		if (p == null) {
+			return;
+		}
+		this.writable = p.writable().toBoolean(this.writable);
+		this.ignoreExceptions.addAll(Arrays.asList(p.ignoreExceptions()));
+	}
+
+	private void initWithReadMethod() {
+		if (hasReadMethod() == false) {
+			return;
+		}
+		Property p = readMethod.getAnnotation(Property.class);
+		if (p == null) {
+			return;
+		}
+		this.readable = p.readable().toBoolean(this.readable);
+		this.ignoreExceptions.addAll(Arrays.asList(p.ignoreExceptions()));
+	}
+
+}

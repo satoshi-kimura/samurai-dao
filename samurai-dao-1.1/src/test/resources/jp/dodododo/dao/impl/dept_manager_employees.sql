@@ -1,0 +1,22 @@
+SELECT
+	  d.DEPTNO AS DEPTNO
+	, d.DNAME  AS DNAME
+	, m.EMPNO  AS MGR_NO
+	, m.ENAME  AS manager_name
+	, e.EMPNO  AS EMPNO
+	, e.ENAME  AS ENAME
+	, e.JOB    AS JOB
+	, e.MGR    AS MGR
+FROM
+	  EMP  AS m
+	, EMP  AS e
+	, DEPT AS d
+WHERE
+	m.DEPTNO = d.DEPTNO
+	AND 
+	m.EMPNO = e.MGR
+ORDER BY
+	  d.DEPTNO
+	, m.EMPNO
+	, e.EMPNO
+;
