@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @see com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider
+ * see com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider
  */
 public class Sun14ReflectionUtil { // because this class use sun.reflect packages.
 

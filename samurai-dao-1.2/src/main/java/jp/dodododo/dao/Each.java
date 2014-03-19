@@ -16,7 +16,7 @@ public abstract class Each<T> implements IterationCallback<T> {
 	}
 
 	/**
-	 * @param x
+	 * @param it it
 	 */
 	protected void each(T it) {
 	}

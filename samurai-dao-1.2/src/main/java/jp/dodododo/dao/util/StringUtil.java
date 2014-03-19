@@ -28,7 +28,7 @@ public abstract class StringUtil {
 	}
 
 	/**
-	 * fooBarBaz -> FOO_BAR_BAZ
+	 * fooBarBaz → FOO_BAR_BAZ
 	 */
 	public static String decamelize(String s) {
 		if (isEmpty(s)) {
@@ -49,7 +49,7 @@ public abstract class StringUtil {
 	}
 
 	/**
-	 * FOO_BAR_BAZ -> fooBarBaz
+	 * FOO_BAR_BAZ → fooBarBaz
 	 */
 	public static String camelize(String targetStr) {
 		if (targetStr == null) {
@@ -67,7 +67,7 @@ public abstract class StringUtil {
 	}
 
 	/**
-	 * fooBarBaz -> FooBarBaz
+	 * fooBarBaz → FooBarBaz
 	 */
 	public static String capitalize(String s) {
 		if (s == null || isEmpty(s)) {
@@ -77,7 +77,7 @@ public abstract class StringUtil {
 	}
 
 	/**
-	 * FooBarBaz -> fooBarBaz
+	 * FooBarBaz → fooBarBaz
 	 */
 	public static String decapitalize(String s) {
 		if (s == null) {

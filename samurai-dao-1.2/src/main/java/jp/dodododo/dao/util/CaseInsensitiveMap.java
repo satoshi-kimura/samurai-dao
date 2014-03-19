@@ -11,13 +11,13 @@ import java.util.Map.Entry;
 /**
  * Ignore UpperCase,LowerCase,CamelCase and SnakeCase. 
  *
- * <br />
+ * <br>
  *
  * UpperCase,LowerCase,CamelCase,SnakeCaseを無視。
  *
  * @author Satoshi Kimura
  *
- * @param <V>
+ * @param <V> valueType
  */
 public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 	private static final long serialVersionUID = -5454924302411799023L;
@@ -207,13 +207,13 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 	/**
 	 * Ignore UpperCase and LowerCase. 
 	 *
-	 * <br />
+	 * <br>
 	 *
 	 * UpperCase,LowerCaseを無視。
 	 *
 	 * @author Satoshi Kimura
 	 *
-	 * @param <V>
+	 * @param <V> valueType
 	 */
 	private static class CaseInsensitiveMap0<V> extends HashMap<String, V> {
 

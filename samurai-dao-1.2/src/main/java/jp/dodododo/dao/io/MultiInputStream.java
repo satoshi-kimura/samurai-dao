@@ -9,7 +9,7 @@ import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipException;
 
 /**
- * 圧縮されている状態でもそのまま読み込めるようにするためのStream.<br/>
+ * 圧縮されている状態でもそのまま読み込めるようにするためのStream.<br>
  * 以下に対応したい。
  *
  * <pre>

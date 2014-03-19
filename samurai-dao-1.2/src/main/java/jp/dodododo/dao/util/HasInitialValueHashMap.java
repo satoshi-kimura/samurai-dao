@@ -15,7 +15,7 @@ public class HasInitialValueHashMap<K, V> extends HashMap<K, V> {
 	protected Factory<V> factory;
 
 	/**
-	 * @deprecated use {@link #NF} .
+	 * @deprecated use {@link HasInitialValueHashMap.NF} .
 	 */
 	@Deprecated
 	public HasInitialValueHashMap(V value) {

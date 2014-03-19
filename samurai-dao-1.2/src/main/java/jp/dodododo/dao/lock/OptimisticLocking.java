@@ -3,7 +3,7 @@ package jp.dodododo.dao.lock;
 /**
  * Optimistic locking. 
  * 
- * <br />
+ * <br>
  * 
  * 楽観的ロック
  * 

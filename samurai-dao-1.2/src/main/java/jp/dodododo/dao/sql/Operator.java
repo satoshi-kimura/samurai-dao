@@ -10,28 +10,28 @@ public class Operator {
 		return new OperatorAndValues("= /*${name}*/'dummy'".intern(), value);
 	}
 
-	/** <> (not equals) */
+	/** &lt;&gt; (not equals) */
 	public static OperatorAndValues ne(Object value) {
 		return new OperatorAndValues("<> /*${name}*/'dummy'".intern(), value);
 
 	}
 
-	/** < (less than) */
+	/** &lt; (less than) */
 	public static OperatorAndValues lt(Object value) {
 		return new OperatorAndValues("< /*${name}*/'dummy'".intern(), value);
 	}
 
-	/** <= (less than or equal) */
+	/** &lt;= (less than or equal) */
 	public static OperatorAndValues le(Object value) {
 		return new OperatorAndValues("<= /*${name}*/'dummy'".intern(), value);
 	}
 
-	/** > (greater than) */
+	/** &gt; (greater than) */
 	public static OperatorAndValues gt(Object value) {
 		return new OperatorAndValues("> /*${name}*/'dummy'".intern(), value);
 	}
 
-	/** >= (greater than or equal) */
+	/** &gt;= (greater than or equal) */
 	public static OperatorAndValues ge(Object value) {
 		return new OperatorAndValues(">= /*${name}*/'dummy'".intern(), value);
 	}

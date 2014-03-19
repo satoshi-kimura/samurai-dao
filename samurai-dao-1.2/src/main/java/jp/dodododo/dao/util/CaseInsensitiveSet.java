@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Ignore UpperCase,LowerCase,CamelCase and SnakeCase. 
  *
- * <br />
+ * <br>
  *
  * UpperCase,LowerCase,CamelCase,SnakeCaseを無視。
  *
