@@ -8,11 +8,11 @@
   <artifactId>samurai-dao</artifactId>
   <packaging>jar</packaging>
   <name>dao</name>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.0-RC1</version>
 <!--
   <version>1.2.0-SNAPSHOT</version>
 -->
-  <description></description>
+  <description>samurai-dao is a simple, high performance object/relational persistence and query service.</description>
   <url>http://code.google.com/p/samurai-dao/</url>
   <inceptionYear>2008-2014</inceptionYear>
 
@@ -48,13 +48,13 @@
   </issueManagement>
   <distributionManagement>
     <repository>
-      <id>sonatype-nexus-staging</id>
+      <id>ossrh</id>
       <name>Nexus Release Repository</name>
       <uniqueVersion>false</uniqueVersion>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
-      <id>sonatype-nexus-staging-snapshots</id>
+      <id>ossrh</id>
       <name>Nexus Release Repository Snapshots</name>
       <uniqueVersion>false</uniqueVersion>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -74,7 +74,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.0-alpha-4</version>
+            <version>1.5</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -88,6 +88,29 @@
         </plugins>
       </build>
     </profile>
+
+    <profile> 
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
   <build>
     <extensions>
@@ -99,6 +122,16 @@
     <defaultGoal>validate</defaultGoal>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6</version>
+          <extensions>true</extensions>
+          <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
