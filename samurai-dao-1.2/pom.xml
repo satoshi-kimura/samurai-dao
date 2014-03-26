@@ -231,19 +231,6 @@
             <link>http://aopalliance.sourceforge.net/doc/</link>
           </links>
           -->
-
-<!--
-          <taglets>
-           <taglet>
-            <tagletClass>jp.dodododo.javadoc.doclet.localization.LanguageTaglet</tagletClass>
-            <tagletArtifact>
-             <groupId>jp.dodododo.localization-doclet</groupId>
-             <artifactId>localization-doclet</artifactId>
-             <version>0.2.0</version>
-            </tagletArtifact>
-           </taglet>
-          </taglets>
--->
         </configuration>
         <executions>
           <execution>
