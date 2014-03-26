@@ -12,7 +12,7 @@
 <!--
   <version>1.1.32-SNAPSHOT</version>
 -->
-  <description></description>
+  <description>samurai-dao is a simple, high performance object/relational persistence and query service.</description>
   <url>http://code.google.com/p/samurai-dao/</url>
   <inceptionYear>2008-2014</inceptionYear>
 
@@ -24,7 +24,7 @@
     </license>
   </licenses>
   <scm>
-    <url>https://github.com/satoshi-kimura/samurai-dao/</url>
+    <url>https://github.com/satoshi-kimura/samurai-dao</url>
     <connection>scm:git:git://github.com/satoshi-kimura/samurai-dao.git</connection>
     <developerConnection>scm:git:git://github.com/satoshi-kimura/samurai-dao.git</developerConnection>
   </scm>
@@ -48,13 +48,13 @@
   </issueManagement>
   <distributionManagement>
     <repository>
-      <id>sonatype-nexus-staging</id>
+      <id>ossrh</id>
       <name>Nexus Release Repository</name>
       <uniqueVersion>false</uniqueVersion>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
-      <id>sonatype-nexus-staging-snapshots</id>
+      <id>ossrh</id>
       <name>Nexus Release Repository Snapshots</name>
       <uniqueVersion>false</uniqueVersion>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -74,7 +74,28 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.0-alpha-4</version>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile> 
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -99,6 +120,16 @@
     <defaultGoal>validate</defaultGoal>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6</version>
+          <extensions>true</extensions>
+          <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -198,19 +229,6 @@
             <link>http://aopalliance.sourceforge.net/doc/</link>
           </links>
           -->
-
-<!--
-          <taglets>
-           <taglet>
-            <tagletClass>jp.dodododo.javadoc.doclet.localization.LanguageTaglet</tagletClass>
-            <tagletArtifact>
-             <groupId>jp.dodododo.localization-doclet</groupId>
-             <artifactId>localization-doclet</artifactId>
-             <version>0.2.0</version>
-            </tagletArtifact>
-           </taglet>
-          </taglets>
--->
         </configuration>
         <executions>
           <execution>
