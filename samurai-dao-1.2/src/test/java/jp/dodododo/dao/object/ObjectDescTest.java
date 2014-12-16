@@ -27,7 +27,7 @@ public class ObjectDescTest extends TestCase {
 			ObjectDesc<?> od= ObjectDescFactory.getObjectDesc(value);
 			List<PropertyDesc> propertyDescs2 = od.getPropertyDescs();
 			for (PropertyDesc propertyDesc2 : propertyDescs2) {
-				System.out.println("" + propertyDesc2.getValue(value));
+				System.out.println(propertyDesc2.getValue(value));
 			}
 		}
 	}
@@ -49,11 +49,11 @@ public class ObjectDescTest extends TestCase {
 		ObjectDesc<Bean> objectDesc = ObjectDescFactory.getObjectDesc(Bean.class);
 		PropertyDesc fooDesc = objectDesc.getPropertyDesc("foo");
 		PropertyDesc barDesc = objectDesc.getPropertyDesc("bar");
-		assertEquals(0, fooDesc.getValue(bean));
+		assertEquals(0, (int)fooDesc.getValue(bean));
 		assertEquals("", barDesc.getValue(bean));
 		fooDesc.setValue(bean, 10);
 		barDesc.setValue(bean, "val");
-		assertEquals(10, fooDesc.getValue(bean));
+		assertEquals(10, (int)fooDesc.getValue(bean));
 		assertEquals("val", barDesc.getValue(bean));
 	}
 
@@ -63,15 +63,15 @@ public class ObjectDescTest extends TestCase {
 		PropertyDesc fooDesc = objectDesc.getPropertyDesc("foo");
 		PropertyDesc barDesc = objectDesc.getPropertyDesc("bar");
 		PropertyDesc bazDesc = objectDesc.getPropertyDesc("baz");
-		assertEquals(0, fooDesc.getValue(bean));
+		assertEquals(0, (int)fooDesc.getValue(bean));
 		assertEquals("", barDesc.getValue(bean));
-		assertEquals(0, bazDesc.getValue(bean));
+		assertEquals(0, (int)bazDesc.getValue(bean));
 		fooDesc.setValue(bean, 10);
 		barDesc.setValue(bean, "val");
 		bazDesc.setValue(bean, 10);
-		assertEquals(10, fooDesc.getValue(bean));
+		assertEquals(10, (int)fooDesc.getValue(bean));
 		assertEquals("val", barDesc.getValue(bean));
-		assertEquals(10, bazDesc.getValue(bean));
+		assertEquals(10, (int)bazDesc.getValue(bean));
 	}
 
 	public void testGetPropertyDescNoException() {
@@ -159,9 +159,5 @@ public class ObjectDescTest extends TestCase {
 		public int getA() {
 			return 10;
 		}
-	}
-
-	protected void assertEquals(int expected, Object actual) {
-		assertEquals(new Integer(expected), actual);
 	}
 }

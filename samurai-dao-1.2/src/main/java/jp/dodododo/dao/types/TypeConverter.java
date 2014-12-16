@@ -6,6 +6,16 @@ import java.math.BigInteger;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -234,6 +244,86 @@ public class TypeConverter {
 		return JavaTypes.CALENDAR.convert(val, formats);
 	}
 
+	public Instant getInstant(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.INSTANT.convert(val, formats);
+	}
+
+	public LocalDate getLocalDate(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.LOCAL_DATE.convert(val, formats);
+	}
+
+	public LocalDateTime getLocalDateTime(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.LOCAL_DATE_TIME.convert(val, formats);
+	}
+
+	public LocalTime getLocalTime(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.LOCAL_TIME.convert(val, formats);
+	}
+
+	public MonthDay getMonthDay(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.MONTH_DAY.convert(val, formats);
+	}
+
+	public OffsetDateTime getOffsetDateTime(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.OFFSET_DATE_TIME.convert(val, formats);
+	}
+
+	public OffsetTime getOffsetTime(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.OFFSET_TIME.convert(val, formats);
+	}
+
+	public Year getYear(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.YEAR.convert(val, formats);
+	}
+
+	public YearMonth getYearMonth(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.YEAR_MONTH.convert(val, formats);
+	}
+
+	public ZonedDateTime getZonedDateTime(String key) {
+		Object val = getValue(key);
+		if (val == null) {
+			return null;
+		}
+		return JavaTypes.ZONED_DATE_TIME.convert(val, formats);
+	}
+
 	public InputStream getInputStream(String key) {
 		Object val = getValue(key);
 		if (val == null) {
@@ -265,9 +355,6 @@ public class TypeConverter {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T convert(Object value, Class<T> to) {
-		if (value == null && to.isPrimitive() == true) {
-			value = 0;
-		}
 		return (T) TypesUtil.getJavaType(to).convert(value);
 	}
 

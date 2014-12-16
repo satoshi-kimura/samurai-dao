@@ -10,12 +10,12 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.impl.RdbDao;
 import jp.dodododo.dao.object.PropertyDesc;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class UnitTestUtil {
 
@@ -61,13 +61,13 @@ public class UnitTestUtil {
 			Method m = Dao.class.getMethod(method.getName(), method.getParameterTypes());
 			long start = System.currentTimeMillis();
 			try {
-				logger.debug("START : " + m.getName() );
+				logger.debug("START : " + m.getName());
 				return m.invoke(dao, args);
 			} catch (InvocationTargetException e) {
 				throw e.getCause();
 			} finally {
 				long end = System.currentTimeMillis();
-				logger.debug("END : " + m.getName() );
+				logger.debug("END : " + m.getName());
 				logger.debug("TIME : " + m.getName() + " : " + (end - start));
 				Field field = PropertyDesc.class.getDeclaredField("getValueCache");
 				field.setAccessible(true);

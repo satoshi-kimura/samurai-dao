@@ -12,7 +12,7 @@ import jp.dodododo.dao.util.OgnlUtil;
 public class ValueProxy {
 	protected static enum Objects {
 		UNDEFINE
-	};
+	}
 
 	protected PropertyDesc pd;
 	protected Object target;

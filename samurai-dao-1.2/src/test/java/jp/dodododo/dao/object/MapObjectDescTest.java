@@ -37,7 +37,7 @@ public class MapObjectDescTest {
 		assertEquals(3, objectDesc.getReadablePropertyDescs().size());
 		assertEquals(3, objectDesc.getWritablePropertyDescs().size());
 
-		assertEquals(new Integer(1), objectDesc.getPropertyDesc("a").getValue(map));
+		assertEquals(1,(int) objectDesc.getPropertyDesc("a").getValue(map));
 		assertEquals("str", objectDesc.getPropertyDesc("b").getValue(map));
 		assertEquals(new Emp().toString(), objectDesc.getPropertyDesc("c").getValue(map).toString());
 

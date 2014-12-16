@@ -6,10 +6,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 /**
- * Ignore UpperCase,LowerCase,CamelCase and SnakeCase. 
+ * Ignore UpperCase,LowerCase,CamelCase and SnakeCase.
  *
  * <br>
  *
@@ -205,7 +204,7 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 	}
 
 	/**
-	 * Ignore UpperCase and LowerCase. 
+	 * Ignore UpperCase and LowerCase.
 	 *
 	 * <br>
 	 *

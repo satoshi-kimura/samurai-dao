@@ -28,12 +28,29 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,8 +68,10 @@ import jp.dodododo.dao.util.FieldUtil;
 import jp.dodododo.dao.util.FileInputStreamUtil;
 import jp.dodododo.dao.util.IOUtil;
 import jp.dodododo.dao.util.StringUtil;
+import jp.dodododo.dao.util.TimeUtil;
 import jp.dodododo.dao.util.URIUtil;
 import jp.dodododo.dao.util.URLUtil;
+import jp.dodododo.dao.util.ZoneUtil;
 
 public class JavaTypes<T> implements JavaType<T> {
 
@@ -104,7 +123,7 @@ public class JavaTypes<T> implements JavaType<T> {
 				return convert(bytes);
 			}
 			return value.toString();
-		};
+		}
 	};
 
 	public static final JavaType<StringBuffer> STRING_BUFFER = new JavaTypes<StringBuffer>() {
@@ -443,6 +462,9 @@ public class JavaTypes<T> implements JavaType<T> {
 
 		@Override
 		protected Integer doConvert(Object value) {
+			if (value == null) {
+				value = 0;
+			}
 			Integer v = INTEGER.convert(value);
 			return toPrimitive(v);
 		}
@@ -759,6 +781,9 @@ public class JavaTypes<T> implements JavaType<T> {
 
 		@Override
 		protected Short doConvert(Object value) {
+			if (value == null) {
+				value = 0;
+			}
 			Short v = SHORT.convert(value);
 			return toPrimitive(v);
 		}
@@ -1015,6 +1040,409 @@ public class JavaTypes<T> implements JavaType<T> {
 		@Override
 		protected java.util.Date doConvert(Object value) {
 			return doConvert(value, DaoConfig.getDefaultConfig().getFormats());
+		}
+	};
+
+	//
+	public static final JavaType<Instant> INSTANT = new JavaTypes<Instant>() {
+		@Override
+		protected Instant doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected Instant doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnLabel);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected Instant doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected Instant doConvert(Object value, String... formats) {
+			Date date = toDate(value, true, formats);
+			return Instant.ofEpochMilli(date.getTime());
+		}
+	};
+	//
+	public static final JavaType<LocalDate> LOCAL_DATE = new JavaTypes<LocalDate>() {
+		@Override
+		protected LocalDate doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected LocalDate doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnLabel);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected LocalDate doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected LocalDate doConvert(Object value, String... formats) {
+			Date date = toDate(value, true, formats);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+		}
+	};
+
+	//
+	public static final JavaType<LocalDateTime> LOCAL_DATE_TIME = new JavaTypes<LocalDateTime>() {
+		@Override
+		protected LocalDateTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected LocalDateTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnLabel);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected LocalDateTime doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected LocalDateTime doConvert(Object value, String... formats) {
+			Date date = toDate(value, true, formats);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return LocalDateTime.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),//
+					calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),//
+					calendar.get(Calendar.MILLISECOND) * 1000000// nanoOfSecond
+					);
+		}
+	};
+
+	//
+	public static final JavaType<LocalTime> LOCAL_TIME = new JavaTypes<LocalTime>() {
+		@Override
+		protected LocalTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Object o = rs.getObject(columnIndex);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected LocalTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Object o = rs.getObject(columnLabel);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected LocalTime doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected LocalTime doConvert(Object value, String... formats) {
+			if (value instanceof CharSequence) {
+				if (formats == null) {
+					formats = defaultFormats(new String[] { "HHmm", "HHmmss", "HHmmssSSS", "HH:mm:ss", "HH:mm:ss.SSS" });
+				}
+				for (String format : formats) {
+					try {
+						return LocalTime.parse((CharSequence) value, DateTimeFormatter.ofPattern(format));
+					} catch (DateTimeParseException | IllegalArgumentException ignore) {
+					}
+				}
+			}
+			if (value instanceof Number) {
+				String str = value.toString();
+				if (str.length() == 3 || str.length() == 5) {
+					str = "0" + str;
+				}
+				if (str.length() == 4) {
+					return LocalTime.of(Integer.parseInt(str.substring(0, 2)), Integer.parseInt(str.substring(2, 4)));
+				} else if (str.length() == 6) {
+					return LocalTime.of(Integer.parseInt(str.substring(0, 2)), Integer.parseInt(str.substring(2, 4)),
+							Integer.parseInt(str.substring(4, 6)));
+				}
+			}
+			Date date = toDate(value, true, formats);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),//
+					calendar.get(Calendar.MILLISECOND) * 1000000// nanoOfSecond
+					);
+		}
+	};
+
+	//
+	public static final JavaType<Year> YEAR = new JavaTypes<Year>() {
+		@Override
+		protected Year doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Object o = rs.getObject(columnIndex);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected Year doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Object o = rs.getObject(columnLabel);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected Year doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected Year doConvert(Object value, String... formats) {
+			if (value instanceof CharSequence) {
+				if (formats == null) {
+					formats = defaultFormats(new String[] { "yyyy", "uuuu", "yy", "uu" });
+				}
+				for (String format : formats) {
+					try {
+						return Year.parse((CharSequence) value, DateTimeFormatter.ofPattern(format));
+					} catch (DateTimeParseException | IllegalArgumentException ignore) {
+					}
+				}
+			}
+			if (value instanceof Number) {
+				return Year.of(((Number) value).intValue());
+			}
+			Date date = toDate(value, true, formats);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return Year.of(calendar.get(Calendar.YEAR));
+		}
+	};
+
+	//
+	public static final JavaType<YearMonth> YEAR_MONTH = new JavaTypes<YearMonth>() {
+		@Override
+		protected YearMonth doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Object o = rs.getObject(columnIndex);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected YearMonth doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Object o = rs.getObject(columnLabel);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected YearMonth doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected YearMonth doConvert(Object value, String... formats) {
+			if (value instanceof CharSequence) {
+				if (formats == null) {
+					formats = defaultFormats(TimeUtil.getYearMonthFormats());
+				}
+				for (String format : formats) {
+					try {
+						CharSequence text = (CharSequence) value;
+						if (format.length() == text.length()) {
+							return YearMonth.parse(text, DateTimeFormatter.ofPattern(format));
+						}
+					} catch (DateTimeParseException | IllegalArgumentException ignore) {
+					}
+				}
+			}
+			if (value instanceof Number) {
+				String str = value.toString();
+				if (str.length() == 3 || str.length() == 5) {
+					str = "0" + str;
+				}
+				if (str.length() == 4) {
+					return YearMonth.of(Integer.parseInt(str.substring(0, 2)), Integer.parseInt(str.substring(2, 4)));
+				} else if (str.length() == 6) {
+					return YearMonth.of(Integer.parseInt(str.substring(0, 4)), Integer.parseInt(str.substring(4, 6)));
+				}
+			}
+			Date date = toDate(value, true, formats);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return YearMonth.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+		}
+	};
+
+	//
+	public static final JavaType<MonthDay> MONTH_DAY = new JavaTypes<MonthDay>() {
+		@Override
+		protected MonthDay doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Object o = rs.getObject(columnIndex);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected MonthDay doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Object o = rs.getObject(columnLabel);
+			return doConvert(o, (String[]) null);
+		}
+
+		@Override
+		protected MonthDay doConvert(Object value) {
+			return doConvert(value, (String[]) null);
+		}
+
+		@Override
+		protected MonthDay doConvert(Object value, String... formats) {
+			if (value instanceof CharSequence) {
+				if (formats == null) {
+					formats = defaultFormats(TimeUtil.getMonthDayFormats());
+				}
+				for (String format : formats) {
+					try {
+						CharSequence text = (CharSequence) value;
+						if (format.length() == text.length()) {
+							return MonthDay.parse(text, DateTimeFormatter.ofPattern(format, Locale.US));
+						}
+					} catch (DateTimeParseException | IllegalArgumentException ignore) {
+					}
+				}
+			}
+			if (value instanceof Number) {
+				String str = value.toString();
+				if (str.length() == 3) {
+					str = "0" + str;
+				}
+				if (str.length() == 4) {
+					return doConvert(str, formats);
+				}
+			}
+			Date date = toDate(value, true, formats);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return MonthDay.of(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+		}
+	};
+
+	//
+	public static final JavaType<OffsetDateTime> OFFSET_DATE_TIME = new JavaTypes<OffsetDateTime>() {
+		@Override
+		protected OffsetDateTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected OffsetDateTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnLabel);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected OffsetDateTime doConvert(Object value) {
+			return doConvert(value,(ZoneId)null, (String[]) null);
+		}
+
+		@Override
+		protected OffsetDateTime doConvert(Object value, ZoneId zoneId , String... formats) {
+			return OffsetDateTime.ofInstant(INSTANT.convert(value, formats), zoneId);
+		}
+	};
+
+	//
+	public static final JavaType<OffsetTime> OFFSET_TIME = new JavaTypes<OffsetTime>() {//
+		@Override
+		protected OffsetTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected OffsetTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnLabel);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected OffsetTime doConvert(Object value) {
+			return doConvert(value, (ZoneOffset) null, (String[]) null);
+		}
+
+		@Override
+		protected OffsetTime doConvert(Object value, ZoneOffset zoneOffset, String... formats) {
+			return OffsetTime.of(LOCAL_TIME.convert(value, formats), zoneOffset);
+		}
+	};
+
+	//
+	public static final JavaType<ZonedDateTime> ZONED_DATE_TIME = new JavaTypes<ZonedDateTime>() {
+		@Override
+		protected ZonedDateTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected ZonedDateTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnLabel);
+			return doConvert(timestamp, (String[]) null);
+		}
+
+		@Override
+		protected ZonedDateTime doConvert(Object value) {
+			return doConvert(value, (ZoneId) null, (String[]) null);
+		}
+
+		@Override
+		protected ZonedDateTime doConvert(Object value, ZoneId zoneId, String... formats) {
+			return ZonedDateTime.ofInstant(INSTANT.convert(value, formats), zoneId);
+		}
+	};
+
+	//
+	public static final JavaType<ZoneId> ZONE_ID = new JavaTypes<ZoneId>() {
+		@Override
+		protected ZoneId doConvert(Object value) {
+			if (value == null) {
+				return null;
+			}
+			if (value instanceof ZoneId) {
+				return (ZoneId) value;
+			}
+			if (value instanceof Number) {
+				String s = String.valueOf(((Number) value).intValue());
+				if(!s.startsWith("-")) {
+					s = "+"+ s;
+				}
+				return ZoneId.of(s);
+			}
+			return ZoneUtil.zoneId(value.toString());
+		}
+	};
+
+	//
+	public static final JavaType<ZoneOffset> ZONE_OFFSET = new JavaTypes<ZoneOffset>() {
+		@Override
+		protected ZoneOffset doConvert(Object value) {
+			if (value == null) {
+				return null;
+			}
+			if (value instanceof ZoneOffset) {
+				return (ZoneOffset) value;
+			}
+			if (value instanceof ZoneId) {
+				return ZoneUtil.zoneOffset((ZoneId) value);
+			}
+			if (value instanceof Number) {
+				return ZoneUtil.zoneOffset(ZONE_ID.convert(value));
+			}
+			try {
+				return ZoneOffset.of(value.toString());
+			} catch (DateTimeException e) {
+				return ZoneUtil.zoneOffset(ZONE_ID.convert(value));
+			}
 		}
 	};
 
@@ -1372,6 +1800,22 @@ public class JavaTypes<T> implements JavaType<T> {
 		public Class<?> getWrapperType() {
 			return null;
 		}
+
+		public T convert(Object value, ZoneId zoneId) {
+			return this.convert(value);
+		}
+
+		public T convert(Object value, ZoneOffset zoneOffset) {
+			return this.convert(value);
+		}
+
+		public T convert(Object value, ZoneId zoneId, String... formats) {
+			return this.convert(value);
+		}
+
+		public T convert(Object value, ZoneOffset zoneOffset, String... formats) {
+			return this.convert(value);
+		}
 	}
 
 	@Override
@@ -1397,11 +1841,46 @@ public class JavaTypes<T> implements JavaType<T> {
 		return FlyweightFactory.get(doConvert(value));
 	}
 
+	@Override
+	public final T convert(Object value, ZoneId zoneId) {
+		return FlyweightFactory.get(doConvert(value, zoneId));
+	}
+
+	@Override
+	public final T convert(Object value, ZoneOffset zoneOffset) {
+		return FlyweightFactory.get(doConvert(value, zoneOffset));
+	}
+
+	@Override
+	public final T convert(Object value, String... formats) {
+		return FlyweightFactory.get(this.doConvert(value, formats));
+	}
+
+	public T convert(Object value, ZoneId zoneId, String... formats) {
+		return FlyweightFactory.get(doConvert(value, zoneId, formats));
+	}
+
+	public T convert(Object value, ZoneOffset zoneOffset, String... formats) {
+		return FlyweightFactory.get(doConvert(value, zoneOffset, formats));
+	}
+
 	protected T doConvert(Object value) {
 		if (value == null) {
 			return null;
 		}
 		throw new UnsupportedOperationException(value + " => " + this.getClass());
+	}
+
+	protected T doConvert(Object value, String... formats) {
+		return this.convert(value);
+	}
+
+	protected T doConvert(Object value, ZoneId zoneId, String... formats) {
+		return this.convert(value);
+	}
+
+	protected T doConvert(Object value, ZoneOffset zoneOffset, String... formats) {
+		return this.convert(value);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1469,6 +1948,9 @@ public class JavaTypes<T> implements JavaType<T> {
 			throw new UnsupportedOperationException(value + " => " + java.util.Date.class);
 		}
 		if (value instanceof CharSequence) {
+			if (formats == null) {
+				formats = defaultFormats();
+			}
 			for (String format : formats) {
 				try {
 					Date date = new SimpleDateFormat(format).parse(value.toString());
@@ -1489,13 +1971,16 @@ public class JavaTypes<T> implements JavaType<T> {
 		return new Date(num.longValue());
 	}
 
-	@Override
-	public final T convert(Object value, String... formats) {
-		return FlyweightFactory.get(this.doConvert(value, formats));
-	}
-
-	protected T doConvert(Object value, String... formats) {
-		return this.convert(value);
+	private static String[] defaultFormats(String... addFormats) {
+		if (EmptyUtil.isNotEmpty(addFormats)) {
+			List<String> list = new ArrayList<>();
+			for (String format : addFormats) {
+				list.add(format);
+			}
+			list.addAll(Arrays.asList(TimeUtil.getDefaultFormats()));
+			return list.toArray(new String[list.size()]);
+		}
+		return TimeUtil.getDefaultFormats();
 	}
 
 	public static JavaType<?>[] values() {

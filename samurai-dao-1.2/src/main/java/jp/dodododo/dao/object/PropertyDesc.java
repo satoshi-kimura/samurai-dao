@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import jp.dodododo.dao.annotation.Internal;
 import jp.dodododo.dao.annotation.Property;
@@ -217,7 +218,7 @@ public class PropertyDesc implements AnnotatedElement {
 		@Override
 		protected Boolean initialValue() {
 			return false;
-		};
+		}
 	};
 
 	protected static ThreadLocal<Map<PropertyDesc, Map<Object, Object>>> getValueCache = new ThreadLocal<Map<PropertyDesc, Map<Object, Object>>>() {
@@ -240,9 +241,10 @@ public class PropertyDesc implements AnnotatedElement {
 
 	@SuppressWarnings("unchecked")
 	public <VALUE> VALUE getValue(Object target, boolean force) {
+		VALUE ret;
 		if (cacheMode.get() == false) {
-			return (VALUE) getValue(target, force, true);
-		}
+			ret = (VALUE) getValue(target, force, true);
+		} else {
 		Map<Object, Object> map = getValueCache.get().get(this);
 		Object key = target;
 		if (map == null) {
@@ -250,10 +252,15 @@ public class PropertyDesc implements AnnotatedElement {
 			getValueCache.get().put(this, map);
 		}
 		if (map.containsKey(key)) {
-			return (VALUE) map.get(key);
+				ret = (VALUE) map.get(key);
+			} else {
+				ret = (VALUE) getValue(target, force, true);
+				map.put(key, ret);
+			}
 		}
-		VALUE ret = (VALUE) getValue(target, force, true);
-		map.put(key, ret);
+		if (ret == null && isOptionalType()) {
+			return (VALUE) Optional.empty();
+		}
 		return ret;
 	}
 
@@ -323,8 +330,16 @@ public class PropertyDesc implements AnnotatedElement {
 			if (propertyType.isPrimitive()) {
 				propertyType = TypesUtil.toWrapperType(propertyType);
 			}
-			if (value != null && (propertyType.isInstance(value) == false)) {
-				value = convert(value, propertyType);
+			if (value != null && value instanceof Optional
+					&& getRawClass(getTypeParameter(genericPropertyType, 0)).isInstance(((Optional<?>) value).get()) == false) {
+				value = ((Optional<?>) value).get();
+			}
+			if (value != null && propertyType.isInstance(value) == false) {
+				if (isOptionalType()) {
+					value = Optional.of(convert(value, getRawClass(getTypeParameter(genericPropertyType, 0))));
+				} else {
+					value = convert(value, propertyType);
+				}
 			}
 			if (writeMethod == null) {
 				if (force == true && field.isAccessible() == false) {
@@ -422,6 +437,10 @@ public class PropertyDesc implements AnnotatedElement {
 
 	public Type getGenericPropertyType() {
 		return genericPropertyType;
+	}
+
+	public boolean isOptionalType() {
+		return isTypeOf(getPropertyType(), Optional.class);
 	}
 
 	public boolean isCollectionType() {

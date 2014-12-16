@@ -17,6 +17,18 @@ import java.sql.NClob;
 import java.sql.SQLXML;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,6 +79,14 @@ public abstract class TypesUtil {
 		 addType(float.class, NUMBER, JavaTypes.PRIMITIVE_FLOAT);
 		 addType(double.class, NUMBER, JavaTypes.PRIMITIVE_DOUBLE);
 
+		 addType(Boolean.TYPE, BOOLEAN, JavaTypes.PRIMITIVE_BOOLEAN);
+		 addType(Byte.TYPE, NUMBER, JavaTypes.PRIMITIVE_BYTE);
+		 addType(Short.TYPE, NUMBER, JavaTypes.PRIMITIVE_SHORT);
+		 addType(Integer.TYPE, NUMBER, JavaTypes.PRIMITIVE_INT);
+		 addType(Long.TYPE, NUMBER, JavaTypes.PRIMITIVE_LONG);
+		 addType(Float.TYPE, NUMBER, JavaTypes.PRIMITIVE_FLOAT);
+		 addType(Double.TYPE, NUMBER, JavaTypes.PRIMITIVE_DOUBLE);
+
 //		addType(boolean.class, BOOLEAN, JavaTypes.BOOLEAN);
 //		addType(byte.class, NUMBER, JavaTypes.BYTE);
 //		addType(short.class, NUMBER, JavaTypes.SHORT);
@@ -105,6 +125,22 @@ public abstract class TypesUtil {
 		addType(Timestamp.class, TIMESTAMP, JavaTypes.TIMESTAMP);
 		addType(java.util.Date.class, DATE, JavaTypes.DATE);
 		addType(Calendar.class, TIMESTAMP, JavaTypes.CALENDAR);
+	}
+
+	static {
+		addType(Instant.class, TIMESTAMP, JavaTypes.INSTANT);
+		addType(LocalDate.class, SQL_DATE, JavaTypes.LOCAL_DATE);
+		addType(LocalDateTime.class, TIMESTAMP, JavaTypes.LOCAL_DATE_TIME);
+		addType(LocalTime.class, OBJECT, JavaTypes.LOCAL_TIME);
+		addType(MonthDay.class, OBJECT, JavaTypes.MONTH_DAY);
+		addType(OffsetDateTime.class, TIMESTAMP, JavaTypes.OFFSET_DATE_TIME);
+		addType(OffsetTime.class, OBJECT, JavaTypes.OFFSET_TIME);
+		addType(Year.class, OBJECT, JavaTypes.YEAR);
+		addType(YearMonth.class, OBJECT, JavaTypes.YEAR_MONTH);
+		addType(ZonedDateTime.class, TIMESTAMP, JavaTypes.ZONED_DATE_TIME);
+
+		addType(ZoneId.class, OBJECT, JavaTypes.ZONE_ID);
+		addType(ZoneOffset.class, OBJECT, JavaTypes.ZONE_OFFSET);
 	}
 
 	static {

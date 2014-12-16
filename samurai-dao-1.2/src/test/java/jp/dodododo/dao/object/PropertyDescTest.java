@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import jp.dodododo.dao.annotation.Property;
 import jp.dodododo.dao.exception.FailLazyLoadException;
@@ -19,8 +20,7 @@ public class PropertyDescTest {
 
 	@Test
 	public void testReadable() {
-		ObjectDesc<Target> objectDesc = ObjectDescFactory
-				.getObjectDesc(Target.class);
+		ObjectDesc<Target> objectDesc = ObjectDescFactory.getObjectDesc(Target.class);
 
 		try {
 			objectDesc.getPropertyDesc("property0");
@@ -49,8 +49,7 @@ public class PropertyDescTest {
 
 	@Test
 	public void testWriteable() {
-		ObjectDesc<Target> objectDesc = ObjectDescFactory
-				.getObjectDesc(Target.class);
+		ObjectDesc<Target> objectDesc = ObjectDescFactory.getObjectDesc(Target.class);
 
 		try {
 			objectDesc.getPropertyDesc("property0");
@@ -131,14 +130,12 @@ public class PropertyDescTest {
 		HasProxyField hasProxyField = new HasProxyField();
 		assertNull(hasProxyField.proxy.real);
 
-		ObjectDesc<Proxy> objectDesc = ObjectDescFactory
-				.getObjectDesc(Proxy.class);
+		ObjectDesc<Proxy> objectDesc = ObjectDescFactory.getObjectDesc(Proxy.class);
 		PropertyDesc propertyDesc = objectDesc.getPropertyDesc("dummy");
 		Object val = propertyDesc.getValue(hasProxyField.proxy);
 		assertNotNull(val);
 		assertNotNull(hasProxyField.proxy.real);
-		assertNotNull(objectDesc.getPropertyDesc("property2").getValue(
-				hasProxyField.proxy));
+		assertNotNull(objectDesc.getPropertyDesc("property2").getValue(hasProxyField.proxy));
 	}
 
 	@Test
@@ -148,8 +145,7 @@ public class PropertyDescTest {
 		HasProxyField hasProxyField = new HasNullProxyField();
 		assertNull(hasProxyField.proxy.real);
 
-		ObjectDesc<Proxy> objectDesc = ObjectDescFactory
-				.getObjectDesc(Proxy.class);
+		ObjectDesc<Proxy> objectDesc = ObjectDescFactory.getObjectDesc(Proxy.class);
 		PropertyDesc propertyDesc = objectDesc.getPropertyDesc("dummy");
 		try {
 			@SuppressWarnings("unused")
@@ -187,8 +183,8 @@ public class PropertyDescTest {
 			return null;
 		}
 	}
-	public static class Proxy extends Target implements
-			LazyLoadingProxy<Target> {
+
+	public static class Proxy extends Target implements LazyLoadingProxy<Target> {
 		public Object dummy = new Object();
 
 		public Target real;
@@ -211,14 +207,12 @@ public class PropertyDescTest {
 
 	@Test
 	public void testPropName() throws Exception {
-		ObjectDesc<PropNamesTarget> objectDesc = ObjectDescFactory
-				.getObjectDesc(PropNamesTarget.class);
+		ObjectDesc<PropNamesTarget> objectDesc = ObjectDescFactory.getObjectDesc(PropNamesTarget.class);
 		assertEquals("foo", objectDesc.getPropertyDesc("foo").getPropertyName());
 		assertEquals("BAr", objectDesc.getPropertyDesc("bar").getPropertyName());
 		assertEquals("BAZ", objectDesc.getPropertyDesc("baz").getPropertyName());
 		assertEquals("qUX", objectDesc.getPropertyDesc("qux").getPropertyName());
-		assertEquals("quux", objectDesc.getPropertyDesc("Quux")
-				.getPropertyName());
+		assertEquals("quux", objectDesc.getPropertyDesc("Quux").getPropertyName());
 	}
 
 	public static class PropNamesTarget {
@@ -231,17 +225,14 @@ public class PropertyDescTest {
 
 	@Test
 	public void testIgnoreException() throws Exception {
-		ObjectDesc<IgnoreExceptionTarget> objectDesc = ObjectDescFactory
-				.getObjectDesc(IgnoreExceptionTarget.class);
+		ObjectDesc<IgnoreExceptionTarget> objectDesc = ObjectDescFactory.getObjectDesc(IgnoreExceptionTarget.class);
 
-		Object valueA = objectDesc.getPropertyDesc("a").getValue(
-				new IgnoreExceptionTarget());
+		Object valueA = objectDesc.getPropertyDesc("a").getValue(new IgnoreExceptionTarget());
 		assertNull(valueA);
 
 		try {
 			@SuppressWarnings("unused")
-			Object valueB = objectDesc.getPropertyDesc("b").getValue(
-					new IgnoreExceptionTarget());
+			Object valueB = objectDesc.getPropertyDesc("b").getValue(new IgnoreExceptionTarget());
 			fail();
 		} catch (IllegalPropertyRuntimeException success) {
 			assertTrue(success.getCause() instanceof NullPointerException);
@@ -262,5 +253,46 @@ public class PropertyDescTest {
 			String s = null;
 			return s.toString();
 		}
+	}
+
+	@Test
+	public void testJava8() {
+		OptionalBean bean = new OptionalBean();
+		ObjectDesc<OptionalBean> objectDesc = ObjectDescFactory.getObjectDesc(OptionalBean.class);
+		PropertyDesc sPropertyDesc = objectDesc.getPropertyDesc("s");
+		PropertyDesc iPropertyDesc = objectDesc.getPropertyDesc("i");
+
+		assertEquals(Optional.empty(), sPropertyDesc.getValue(bean));
+		assertEquals(Optional.empty(), iPropertyDesc.getValue(bean));
+
+		sPropertyDesc.setValue(bean, "a");
+		iPropertyDesc.setValue(bean, 1);
+		assertEquals(Optional.of("a"), sPropertyDesc.getValue(bean));
+		assertEquals(Optional.of(1), iPropertyDesc.getValue(bean));
+
+		sPropertyDesc.setValue(bean, Optional.of("b"));
+		iPropertyDesc.setValue(bean, Optional.of(2));
+		assertEquals(Optional.of("b"), sPropertyDesc.getValue(bean));
+		assertEquals(Optional.of(2), iPropertyDesc.getValue(bean));
+
+		sPropertyDesc.setValue(bean, 3);
+		iPropertyDesc.setValue(bean, "13");
+		assertEquals(Optional.of("3"), sPropertyDesc.getValue(bean));
+		assertEquals(Optional.of(13), iPropertyDesc.getValue(bean));
+
+		sPropertyDesc.setValue(bean, Optional.of(14));
+		iPropertyDesc.setValue(bean, Optional.of("4"));
+		assertEquals(Optional.of("14"), sPropertyDesc.getValue(bean));
+		assertEquals(Optional.of(4), iPropertyDesc.getValue(bean));
+
+		sPropertyDesc.setValue(bean, null);
+		iPropertyDesc.setValue(bean, null);
+		assertEquals(Optional.empty(), sPropertyDesc.getValue(bean));
+		assertEquals(Optional.empty(), iPropertyDesc.getValue(bean));
+	}
+
+	public static class OptionalBean {
+		public Optional<String> s;
+		public Optional<Integer> i;
 	}
 }

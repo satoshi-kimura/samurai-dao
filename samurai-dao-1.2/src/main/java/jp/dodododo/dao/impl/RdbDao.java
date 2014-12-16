@@ -2140,28 +2140,28 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	public <ROW> List<ROW> select(String sql, Class<ROW> as, Consumer<ROW> callback) {
-		return select(sql, as, new ConsumerWrapper(callback));
+		return select(sql, as, new ConsumerWrapper<ROW>(callback));
 	}
 
 	public <ROW> List<ROW> select(String sql, Map<String, Object> arg, Class<ROW> as, Consumer<ROW> callback) {
-		return select(sql, arg, as, new ConsumerWrapper(callback));
+		return select(sql, arg, as, new ConsumerWrapper<ROW>(callback));
 	}
 
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg, Consumer<Map<String, Object>> callback) {
-		return selectMap(sql, arg, new ConsumerWrapper(callback));
+		return selectMap(sql, arg, new ConsumerWrapper<Map<String, Object>>(callback));
 	}
 
 	public List<Map<String, Object>> selectMap(String sql, Consumer<Map<String, Object>> callback) {
-		return selectMap(sql, new ConsumerWrapper(callback));
+		return selectMap(sql, new ConsumerWrapper<Map<String, Object>>(callback));
 	}
 
 	public <ROW> List<ROW> select(Sql sql, ROW query, Consumer<ROW> callback) {
-		return select(sql, query, new ConsumerWrapper(callback));
+		return select(sql, query, new ConsumerWrapper<ROW>(callback));
 	}
 
 	public List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query, Consumer<Map<String, Object>> callback) {
-		return selectMap(sql, query, new ConsumerWrapper(callback));
+		return selectMap(sql, query, new ConsumerWrapper<Map<String, Object>>(callback));
 	}
 
-	
+
 }

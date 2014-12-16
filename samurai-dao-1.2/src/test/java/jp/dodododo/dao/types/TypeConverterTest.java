@@ -11,6 +11,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -137,6 +139,26 @@ public class TypeConverterTest extends TestCase {
 
 		i = convert(null, Integer.TYPE);
 		assertEquals(0, i);
+	}
+
+	public void testZone() {
+		ZoneId zoneId = convert(9, ZoneId.class);
+		assertEquals("+09:00", zoneId.getId());
+		zoneId = convert(-9, ZoneId.class);
+		assertEquals("-09:00", zoneId.getId());
+		zoneId = convert("JST", ZoneId.class);
+		assertEquals("Asia/Tokyo", zoneId.getId());
+		zoneId = convert("Asia/Tokyo", ZoneId.class);
+		assertEquals("Asia/Tokyo", zoneId.getId());
+
+		ZoneOffset zoneOffset = convert(9, ZoneOffset.class);
+		assertEquals("+09:00", zoneOffset.getId());
+		zoneOffset = convert(-9, ZoneOffset.class);
+		assertEquals("-09:00", zoneOffset.getId());
+		zoneOffset = convert("JST", ZoneOffset.class);
+		assertEquals("+09:00", zoneOffset.getId());
+		zoneOffset = convert("Asia/Tokyo", ZoneOffset.class);
+		assertEquals("+09:00", zoneOffset.getId());
 	}
 
 	public void testNumComma() {

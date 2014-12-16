@@ -34,13 +34,13 @@ public class MapPropertyDescTest extends TestCase {
 		PropertyDesc listPropertyDesc = objectDesc.getPropertyDesc("list");
 		PropertyDesc mapPropertyDesc = objectDesc.getPropertyDesc("map");
 
-		assertEquals(1, aPropertyDesc.getValue(map));
+		assertEquals(1, (int)aPropertyDesc.getValue(map));
 		assertEquals("str", bPropertyDesc.getValue(map));
 
 		aPropertyDesc.setValue(map, 2);
-		assertEquals(2, aPropertyDesc.getValue(map));
+		assertEquals(2, (int)aPropertyDesc.getValue(map));
 		aPropertyDesc.setValue(map, 1);
-		assertEquals(1, aPropertyDesc.getValue(map));
+		assertEquals(1, (int)aPropertyDesc.getValue(map));
 
 		listPropertyDesc.addValue(map, "a");
 		listPropertyDesc.addValue(map, "b");
@@ -73,10 +73,6 @@ public class MapPropertyDescTest extends TestCase {
 		assertEquals("val1", dMap.get("key1"));
 		assertEquals("val2", dMap.get("key2"));
 		dPropertyDesc.setValue(map, null);
-	}
-
-	protected void assertEquals(int expected, Object actual) {
-		assertEquals(new Integer(expected), actual);
 	}
 
 }
