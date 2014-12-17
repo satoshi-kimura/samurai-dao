@@ -11,6 +11,8 @@ import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +28,7 @@ import jp.dodododo.dao.annotation.Arg;
 import jp.dodododo.dao.annotation.Bean;
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Compress;
+import jp.dodododo.dao.annotation.Zone;
 import jp.dodododo.dao.columns.ResultSetColumn;
 import jp.dodododo.dao.commons.Null;
 import jp.dodododo.dao.exception.NoParameterizedException;
@@ -45,10 +48,12 @@ import jp.dodododo.dao.util.CacheUtil;
 import jp.dodododo.dao.util.CaseInsensitiveSet;
 import jp.dodododo.dao.util.ConstructorUtil;
 import jp.dodododo.dao.util.DaoUtil;
+import jp.dodododo.dao.util.EmptyUtil;
 import jp.dodododo.dao.util.OgnlUtil;
 import jp.dodododo.dao.util.StringUtil;
 import jp.dodododo.dao.util.Sun14ReflectionUtil;
 import jp.dodododo.dao.util.TypesUtil;
+import jp.dodododo.dao.util.ZoneUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -320,21 +325,22 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 			return;
 		}
 		Column column = pd.getAnnotation(Column.class);
+		Zone zone = pd.getAnnotation(Zone.class);
 		if (column == null) {
-			Object value = getValue(pd, resultSetColumnList, rs);
+			Object value = getValue(pd, resultSetColumnList, rs, row, zone);
 			setValue(row, pd, value);
 			return;
 		}
 		String[] alias = column.alias();
 		if (isNotEmpty(alias)) {
 			for (String colName : alias) {
-				Object value = getValue(pd, colName, resultSetColumnList, rs);
+				Object value = getValue(pd, colName, resultSetColumnList, rs, row, zone);
 				if (setValue(row, pd, value)) {
 					return;
 				}
 			}
 		}
-		Object value = getValue(pd, column.value(), resultSetColumnList, rs);
+		Object value = getValue(pd, column.value(), resultSetColumnList, rs, row, zone);
 		setValue(row, pd, value);
 	}
 
@@ -399,18 +405,50 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 		data.append("]");
 	}
 
-	private Object getValue(PropertyDesc pd, List<ResultSetColumn> resultSetColumnList, ResultSet rs) throws SQLException {
+	private Object getValue(PropertyDesc pd, List<ResultSetColumn> resultSetColumnList, ResultSet rs, T row, Zone zone) throws SQLException {
 		String colName = pd.getPropertyName();
-		return getValue(pd, colName, resultSetColumnList, rs);
+		return getValue(pd, colName, resultSetColumnList, rs, row, zone);
 	}
 
-	private Object getValue(PropertyDesc pd, String colName, List<ResultSetColumn> resultSetColumnList, ResultSet rs) throws SQLException {
+	private Object getValue(PropertyDesc pd, String colName, List<ResultSetColumn> resultSetColumnList, ResultSet rs, T row, Zone zone) throws SQLException {
+		ZoneId zoneId = null;
+		ZoneOffset zoneOffset = null;
+		if(zone!= null) {
+			if (EmptyUtil.isNotEmpty(zone.id())) {
+				zoneId = ZoneUtil.zoneId(zone.id());
+			}
+			if (EmptyUtil.isNotEmpty(zone.idPropertyName())) {
+				Object value = ObjectDescFactory.getObjectDesc(row).getPropertyDesc(zone.idPropertyName()).getValue(row);
+				zoneId = ZoneUtil.zoneId(value);
+			}
+			if (EmptyUtil.isNotEmpty(zone.idColumnName())) {
+				String value = rs.getString(zone.idColumnName());
+				zoneId = ZoneUtil.zoneId(value);
+			}
+			if (EmptyUtil.isNotEmpty(zone.offset())) {
+				zoneOffset = ZoneUtil.zoneOffset(zone.offset());
+			}
+			if (EmptyUtil.isNotEmpty(zone.offsetPropertyName())) {
+				Object value = ObjectDescFactory.getObjectDesc(row).getPropertyDesc(zone.offsetPropertyName()).getValue(row);
+				zoneOffset = ZoneUtil.zoneOffset(value);
+			}
+			if (EmptyUtil.isNotEmpty(zone.offsetColumnName())) {
+				String value = rs.getString(zone.offsetColumnName());
+				zoneOffset = ZoneUtil.zoneOffset(value);
+			}
+		}
 
 		for (ResultSetColumn resultSetColumn : resultSetColumnList) {
 			if (StringUtil.equalsIgnoreCase(colName, resultSetColumn.getName())) {
 				JavaType<?> javaType = TypesUtil.getJavaType(pd.getPropertyType());
 				try {
-					return javaType.getValue(rs, resultSetColumn.getName());
+					if(zoneOffset != null) {
+						return javaType.getValue(rs, resultSetColumn.getName(), zoneOffset);
+					} else if (zoneId != null) {
+						return javaType.getValue(rs, resultSetColumn.getName(), zoneId);
+					} else {
+						return javaType.getValue(rs, resultSetColumn.getName());
+					}
 				} catch (UnsupportedOperationException ignore) {
 				}
 			}

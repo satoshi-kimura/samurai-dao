@@ -9,14 +9,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Table;
+import jp.dodododo.dao.annotation.Zone;
 import jp.dodododo.dao.log.SqlLogRegistry;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -50,13 +54,15 @@ public class TimeTest extends S2TestCase {
 
 		List<TimeBean1> list1 = dao.select(ALL, TimeBean1.class);
 		list1.stream().forEach(bean -> System.out.println(bean));
+		// TODO assert
 
 		List<TimeBean2> list2 = dao.select(ALL, TimeBean2.class);
 		list2.stream().forEach(bean -> System.out.println(bean));
+		// TODO assert
 	}
 
 	@Table("EMP")
-	public static class TimeBean1 { // HIREDATE
+	public static class TimeBean1 {
 
 		@Column("EMPNO")
 		public int id;
@@ -88,15 +94,41 @@ public class TimeTest extends S2TestCase {
 		@Column("TSTAMP")
 		public MonthDay monthDay;
 
-		// TODO add @Zone Annotation
-		//	@Column("TSTAMP")
-		//	public OffsetDateTime offsetDateTime;
+		@Zone(id = "EST")
+		@Column("TSTAMP")
+		public OffsetDateTime offsetDateTime;
 
-		//	@Column("TSTAMP")
-		//	public OffsetTime offsetTime;
+		@Zone(idPropertyName = "zoneId")
+		@Column("TSTAMP")
+		public OffsetDateTime offsetDateTime2;
 
-		//	@Column("TSTAMP")
-		//	public ZonedDateTime zonedDateTime;
+		@Zone(offset = "+01:00")
+		@Column("TSTAMP")
+		public OffsetTime offsetTime;
+
+		@Zone(offsetPropertyName = "zoneOffset")
+		@Column("TSTAMP")
+		public OffsetTime offsetTime2;
+
+		@Zone(offset = "+03:00")
+		@Column("TSTAMP")
+		public ZonedDateTime zonedDateTime;
+
+		@Zone(offsetPropertyName = "zoneOffset2")
+		@Column("TSTAMP")
+		public ZonedDateTime zonedDateTime2;
+
+		public String getZoneId() {
+			return "HST";
+		}
+
+		public String getZoneOffset() {
+			return "+02:00";
+		}
+
+		public String getZoneOffset2() {
+			return "+04:00";
+		}
 
 		@Override
 		public String toString() {
@@ -113,9 +145,88 @@ public class TimeTest extends S2TestCase {
 			return HashCodeBuilder.reflectionHashCode(this);
 		}
 	}
+
 	@Table("EMP")
-	public static class TimeBean2 { // HIREDATE
+	public static class TimeBean2 {
+		@Column("EMPNO")
+		public int id;
 
+		@Column("HIREDATE")
+		public Date date;
+
+		@Column("HIREDATE")
+		public Timestamp timestamp;
+
+		@Column("HIREDATE")
+		public Instant instant;
+
+		@Column("HIREDATE")
+		public LocalDate localDate;
+
+		@Column("HIREDATE")
+		public LocalDateTime localDateTime;
+
+		@Column("HIREDATE")
+		public LocalTime localTime;
+
+		@Column("HIREDATE")
+		public Year year;
+
+		@Column("HIREDATE")
+		public YearMonth yearMonth;
+
+		@Column("HIREDATE")
+		public MonthDay monthDay;
+
+		@Zone(id = "EST")
+		@Column("HIREDATE")
+		public OffsetDateTime offsetDateTime;
+
+		@Zone(idPropertyName = "zoneId")
+		@Column("HIREDATE")
+		public OffsetDateTime offsetDateTime2;
+
+		@Zone(offset = "+01:00")
+		@Column("HIREDATE")
+		public OffsetTime offsetTime;
+
+		@Zone(offsetPropertyName = "zoneOffset")
+		@Column("HIREDATE")
+		public OffsetTime offsetTime2;
+
+		@Zone(offset = "+03:00")
+		@Column("HIREDATE")
+		public ZonedDateTime zonedDateTime;
+
+		@Zone(offsetPropertyName = "zoneOffset2")
+		@Column("HIREDATE")
+		public ZonedDateTime zonedDateTime2;
+
+		public String getZoneId() {
+			return "HST";
+		}
+
+		public String getZoneOffset() {
+			return "+02:00";
+		}
+
+		public String getZoneOffset2() {
+			return "+04:00";
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			return EqualsBuilder.reflectionEquals(this, o);
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
 	}
-
 }

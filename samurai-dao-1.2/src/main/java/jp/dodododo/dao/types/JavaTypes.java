@@ -265,7 +265,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Character> getWrapperType() {
 			return Character.class;
 		}
 	};
@@ -356,7 +356,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Boolean> getWrapperType() {
 			return Boolean.class;
 		}
 	};
@@ -412,7 +412,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Byte> getWrapperType() {
 			return Byte.class;
 		}
 	};
@@ -470,7 +470,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Integer> getWrapperType() {
 			return Integer.class;
 		}
 	};
@@ -594,7 +594,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Double> getWrapperType() {
 			return Double.class;
 		}
 	};
@@ -650,7 +650,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Float> getWrapperType() {
 			return Float.class;
 		}
 	};
@@ -706,7 +706,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Long> getWrapperType() {
 			return Long.class;
 		}
 	};
@@ -789,7 +789,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
-		public Class<?> getWrapperType() {
+		public Class<Short> getWrapperType() {
 			return Short.class;
 		}
 	};
@@ -1064,8 +1064,7 @@ public class JavaTypes<T> implements JavaType<T> {
 
 		@Override
 		protected Instant doConvert(Object value, String... formats) {
-			Date date = toDate(value, true, formats);
-			return Instant.ofEpochMilli(date.getTime());
+			return Instant.ofEpochMilli(toDate(value, true, formats).getTime());
 		}
 	};
 	//
@@ -1089,9 +1088,8 @@ public class JavaTypes<T> implements JavaType<T> {
 
 		@Override
 		protected LocalDate doConvert(Object value, String... formats) {
-			Date date = toDate(value, true, formats);
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			calendar.setTime(toDate(value, true, formats));
 			return LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 		}
 	};
@@ -1117,9 +1115,8 @@ public class JavaTypes<T> implements JavaType<T> {
 
 		@Override
 		protected LocalDateTime doConvert(Object value, String... formats) {
-			Date date = toDate(value, true, formats);
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			calendar.setTime(toDate(value, true, formats));
 			return LocalDateTime.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),//
 					calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),//
 					calendar.get(Calendar.MILLISECOND) * 1000000// nanoOfSecond
@@ -1171,9 +1168,8 @@ public class JavaTypes<T> implements JavaType<T> {
 							Integer.parseInt(str.substring(4, 6)));
 				}
 			}
-			Date date = toDate(value, true, formats);
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			calendar.setTime(toDate(value, true, formats));
 			return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),//
 					calendar.get(Calendar.MILLISECOND) * 1000000// nanoOfSecond
 					);
@@ -1215,9 +1211,8 @@ public class JavaTypes<T> implements JavaType<T> {
 			if (value instanceof Number) {
 				return Year.of(((Number) value).intValue());
 			}
-			Date date = toDate(value, true, formats);
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			calendar.setTime(toDate(value, true, formats));
 			return Year.of(calendar.get(Calendar.YEAR));
 		}
 	};
@@ -1268,9 +1263,8 @@ public class JavaTypes<T> implements JavaType<T> {
 					return YearMonth.of(Integer.parseInt(str.substring(0, 4)), Integer.parseInt(str.substring(4, 6)));
 				}
 			}
-			Date date = toDate(value, true, formats);
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			calendar.setTime(toDate(value, true, formats));
 			return YearMonth.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
 		}
 	};
@@ -1319,9 +1313,8 @@ public class JavaTypes<T> implements JavaType<T> {
 					return doConvert(str, formats);
 				}
 			}
-			Date date = toDate(value, true, formats);
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			calendar.setTime(toDate(value, true, formats));
 			return MonthDay.of(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 		}
 	};
@@ -1330,19 +1323,38 @@ public class JavaTypes<T> implements JavaType<T> {
 	public static final JavaType<OffsetDateTime> OFFSET_DATE_TIME = new JavaTypes<OffsetDateTime>() {
 		@Override
 		protected OffsetDateTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
-			Timestamp timestamp = rs.getTimestamp(columnIndex);
-			return doConvert(timestamp, (String[]) null);
+			throw new RuntimeException("ZoneId was null.");
 		}
 
 		@Override
 		protected OffsetDateTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			throw new RuntimeException("ZoneId was null.");
+		}
+
+		@Override
+		protected OffsetDateTime doGetValue(ResultSet rs, int columnIndex, ZoneId zoneId) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, zoneId, (String[]) null);
+		}
+		@Override
+		protected OffsetDateTime doGetValue(ResultSet rs, int columnIndex, ZoneOffset zoneOffset) throws SQLException {
+			return doGetValue(rs, columnIndex, (ZoneId) zoneOffset);
+		}
+
+		@Override
+		protected OffsetDateTime doGetValue(ResultSet rs, String columnLabel, ZoneId zoneId) throws SQLException {
 			Timestamp timestamp = rs.getTimestamp(columnLabel);
-			return doConvert(timestamp, (String[]) null);
+			return doConvert(timestamp, zoneId, (String[]) null);
+		}
+
+		@Override
+		protected OffsetDateTime doGetValue(ResultSet rs, String columnLabel, ZoneOffset zoneOffset) throws SQLException {
+			return doGetValue(rs, columnLabel, (ZoneId) zoneOffset);
 		}
 
 		@Override
 		protected OffsetDateTime doConvert(Object value) {
-			return doConvert(value,(ZoneId)null, (String[]) null);
+			return doConvert(value, (ZoneId) null, (String[]) null);
 		}
 
 		@Override
@@ -1355,14 +1367,32 @@ public class JavaTypes<T> implements JavaType<T> {
 	public static final JavaType<OffsetTime> OFFSET_TIME = new JavaTypes<OffsetTime>() {//
 		@Override
 		protected OffsetTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
-			Timestamp timestamp = rs.getTimestamp(columnIndex);
-			return doConvert(timestamp, (String[]) null);
+			throw new RuntimeException("ZoneOffset was null.");
 		}
 
 		@Override
 		protected OffsetTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			throw new RuntimeException("ZoneOffset was null.");
+		}
+
+		@Override
+		protected OffsetTime doGetValue(ResultSet rs, int columnIndex, ZoneOffset zoneOffset) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, zoneOffset, (String[]) null);
+		}
+		@Override
+		protected OffsetTime doGetValue(ResultSet rs, int columnIndex, ZoneId zoneId) throws SQLException {
+			return doGetValue(rs, columnIndex, ZoneUtil.zoneOffset(zoneId));
+		}
+
+		@Override
+		protected OffsetTime doGetValue(ResultSet rs, String columnLabel, ZoneOffset zoneOffset) throws SQLException {
 			Timestamp timestamp = rs.getTimestamp(columnLabel);
-			return doConvert(timestamp, (String[]) null);
+			return doConvert(timestamp, zoneOffset, (String[]) null);
+		}
+		@Override
+		protected OffsetTime doGetValue(ResultSet rs, String columnLabel, ZoneId zoneId) throws SQLException {
+			return doGetValue(rs, columnLabel, ZoneUtil.zoneOffset(zoneId));
 		}
 
 		@Override
@@ -1380,14 +1410,34 @@ public class JavaTypes<T> implements JavaType<T> {
 	public static final JavaType<ZonedDateTime> ZONED_DATE_TIME = new JavaTypes<ZonedDateTime>() {
 		@Override
 		protected ZonedDateTime doGetValue(ResultSet rs, int columnIndex) throws SQLException {
-			Timestamp timestamp = rs.getTimestamp(columnIndex);
-			return doConvert(timestamp, (String[]) null);
+			throw new RuntimeException("ZoneId was null.");
 		}
 
 		@Override
 		protected ZonedDateTime doGetValue(ResultSet rs, String columnLabel) throws SQLException {
+			throw new RuntimeException("ZoneId was null.");
+		}
+
+		@Override
+		protected ZonedDateTime doGetValue(ResultSet rs, int columnIndex, ZoneId zoneId) throws SQLException {
+			Timestamp timestamp = rs.getTimestamp(columnIndex);
+			return doConvert(timestamp, zoneId, (String[]) null);
+		}
+
+		@Override
+		protected ZonedDateTime doGetValue(ResultSet rs, int columnIndex, ZoneOffset zoneOffset) throws SQLException {
+			return doGetValue(rs, columnIndex, (ZoneId) zoneOffset);
+		}
+
+		@Override
+		protected ZonedDateTime doGetValue(ResultSet rs, String columnLabel, ZoneId zoneId) throws SQLException {
 			Timestamp timestamp = rs.getTimestamp(columnLabel);
-			return doConvert(timestamp, (String[]) null);
+			return doConvert(timestamp, zoneId, (String[]) null);
+		}
+
+		@Override
+		protected ZonedDateTime doGetValue(ResultSet rs, String columnLabel, ZoneOffset zoneOffset) throws SQLException {
+			return doGetValue(rs, columnLabel, (ZoneId) zoneOffset);
 		}
 
 		@Override
@@ -1767,6 +1817,26 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 
 		@Override
+		public T getValue(ResultSet rs, int columnIndex, ZoneId zoneId) throws SQLException {
+			return getValue(rs, columnIndex);
+		}
+
+		@Override
+		public T getValue(ResultSet rs, int columnIndex, ZoneOffset zoneOffset) throws SQLException {
+			return getValue(rs, columnIndex);
+		}
+
+		@Override
+		public T getValue(ResultSet rs, String columnLabel, ZoneId zoneId) throws SQLException {
+			return getValue(rs, columnLabel);
+		}
+
+		@Override
+		public T getValue(ResultSet rs, String columnLabel, ZoneOffset zoneOffset) throws SQLException {
+			return getValue(rs, columnLabel);
+		}
+
+		@Override
 		public T convert(Object value) {
 			if (value == null) {
 				return null;
@@ -1822,18 +1892,50 @@ public class JavaTypes<T> implements JavaType<T> {
 	public final T getValue(ResultSet rs, int columnIndex) throws SQLException {
 		return FlyweightFactory.get(doGetValue(rs, columnIndex));
 	}
+	@Override
+	public final T getValue(ResultSet rs, int columnIndex, ZoneId zoneId) throws SQLException {
+		return FlyweightFactory.get(doGetValue(rs, columnIndex, zoneId));
+	}
+	@Override
+	public final T getValue(ResultSet rs, int columnIndex, ZoneOffset zoneOffset) throws SQLException {
+		return FlyweightFactory.get(doGetValue(rs, columnIndex, zoneOffset));
+	}
 
 	protected T doGetValue(ResultSet rs, int columnIndex) throws SQLException {
 		throw new UnsupportedOperationException(this.getClass().getSimpleName() + ", " + columnIndex);
+	}
+
+	protected T doGetValue(ResultSet rs, int columnIndex, ZoneId zoneId) throws SQLException {
+		return doGetValue(rs, columnIndex);
+	}
+
+	protected T doGetValue(ResultSet rs, int columnIndex, ZoneOffset zoneOffset) throws SQLException {
+		return doGetValue(rs, columnIndex);
 	}
 
 	@Override
 	public final T getValue(ResultSet rs, String columnLabel) throws SQLException {
 		return FlyweightFactory.get(doGetValue(rs, columnLabel));
 	}
+	@Override
+	public final T getValue(ResultSet rs, String columnLabel, ZoneId zoneId) throws SQLException {
+		return FlyweightFactory.get(doGetValue(rs, columnLabel, zoneId));
+	}
+	@Override
+	public final T getValue(ResultSet rs, String columnLabel, ZoneOffset zoneOffset) throws SQLException {
+		return FlyweightFactory.get(doGetValue(rs, columnLabel, zoneOffset));
+	}
 
 	protected T doGetValue(ResultSet rs, String columnLabel) throws SQLException {
 		throw new UnsupportedOperationException(this.getClass().getSimpleName() + ", " + columnLabel);
+	}
+
+	protected T doGetValue(ResultSet rs, String columnLabel, ZoneId zoneId) throws SQLException {
+		return doGetValue(rs, columnLabel);
+	}
+
+	protected T doGetValue(ResultSet rs, String columnLabel, ZoneOffset zoneOffset) throws SQLException {
+		return doGetValue(rs, columnLabel);
 	}
 
 	@Override
