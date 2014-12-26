@@ -84,12 +84,8 @@ public class CandidateValue implements Serializable {
 		Collections.sort(values, new CandidateValue.Comparator());
 
 		if (logger.isTraceEnabled() && 2 <= values.size()) {
-			List<CandidateValue> matchTableValues = new ArrayList<CandidateValue>();
-			for (CandidateValue value : values) {
-				if (value.matchTableName == true) {
-					matchTableValues.add(value);
-				}
-			}
+			List<CandidateValue> matchTableValues = new ArrayList<CandidateValue>(values.size());
+			values.stream().filter(value -> value.matchTableName).forEach(value -> matchTableValues.add(value));
 			List<CandidateValue> list = new ArrayList<CandidateValue>();
 			if(matchTableValues.isEmpty() == false) {
 				list.addAll(matchTableValues);

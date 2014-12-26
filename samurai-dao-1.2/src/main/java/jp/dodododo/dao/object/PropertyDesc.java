@@ -567,11 +567,11 @@ public class PropertyDesc implements AnnotatedElement {
 		}
 		@Override
 		public <T extends Annotation> T[] getDeclaredAnnotationsByType(Class<T> annotationClass) {
-			return null; // TODO impl
+	        return getAnnotationsByType(annotationClass);
 		}
 		@Override
 		public <T extends Annotation> T getDeclaredAnnotation(Class<T> annotationClass) {
-			return null; // TODO impl
+	        return getAnnotation(annotationClass);
 		}
 		@Override
 		public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass) {

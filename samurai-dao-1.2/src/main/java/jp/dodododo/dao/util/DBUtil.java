@@ -11,9 +11,7 @@ public class DBUtil {
 		DatabaseMetaData dmd = ConnectionUtil.getMetaData(connection);
 		Set<String> tableNames = DatabaseMetaDataUtil.getTableNames(dmd);
 		Map<String, String> ret = new CaseInsensitiveMap<String>(tableNames.size());
-		for (String tableName : tableNames) {
-			ret.put(tableName, tableName);
-		}
+		tableNames.forEach(tableName -> ret.put(tableName, tableName));
 		return ret;
 	}
 
@@ -21,9 +19,7 @@ public class DBUtil {
 		DatabaseMetaData dmd = ConnectionUtil.getMetaData(connection);
 		Set<String> viewNames = DatabaseMetaDataUtil.getViewNames(dmd);
 		Map<String, String> ret = new CaseInsensitiveMap<String>(viewNames.size());
-		for (String viewName : viewNames) {
-			ret.put(viewName, viewName);
-		}
+		viewNames.forEach(viewName -> ret.put(viewName, viewName));
 		return ret;
 	}
 }

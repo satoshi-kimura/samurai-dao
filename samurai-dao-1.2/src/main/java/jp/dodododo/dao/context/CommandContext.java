@@ -2,7 +2,6 @@ package jp.dodododo.dao.context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -117,13 +116,12 @@ public class CommandContext {
 
 	public void addArgs(Map<String, ParameterValue> values) {
 		Set<Entry<String, ParameterValue>> entrySet = values.entrySet();
-		for (Iterator<Entry<String, ParameterValue>> iter = entrySet.iterator(); iter.hasNext();) {
-			Entry<String, ParameterValue> element = iter.next();
-			ParameterValue value = element.getValue();
+		entrySet.forEach(set -> {
+			ParameterValue value = set.getValue();
 			String name = value.getName();
 			args.put(name, value.getValue());
 			argTypes.put(name, value.getDataType());
-		}
+		});
 	}
 
 	public Dialect getDialect() {

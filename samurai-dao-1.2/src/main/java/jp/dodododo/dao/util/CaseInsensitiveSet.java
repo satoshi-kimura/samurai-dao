@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Ignore UpperCase,LowerCase,CamelCase and SnakeCase. 
+ * Ignore UpperCase,LowerCase,CamelCase and SnakeCase.
  *
  * <br>
  *
@@ -65,9 +65,7 @@ public class CaseInsensitiveSet extends HashSet<String> {
 
 	@Override
 	public boolean addAll(Collection<? extends String> c) {
-		for (String string : c) {
-			map.put(string, null);
-		}
+		c.forEach(string -> map.put(string, null));
 		return true;
 	}
 
@@ -124,19 +122,13 @@ public class CaseInsensitiveSet extends HashSet<String> {
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		for (Object object : c) {
-			remove(object);
-		}
+		c.forEach(object -> remove(object));
 		return true;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		for (Object object : c) {
-			if (map.containsKey(object) == false) {
-				map.remove(object);
-			}
-		}
+		c.stream().filter(object -> map.containsKey(object) == false).forEach(object -> map.remove(object));
 		return true;
 	}
 
@@ -156,7 +148,7 @@ public class CaseInsensitiveSet extends HashSet<String> {
 	}
 
 	public String getFirstElement() {
-		List<String> tmp = new ArrayList<String>();
+		List<String> tmp = new ArrayList<String>(map.size());
 		tmp.addAll(map.keySet());
 		return tmp.get(0);
 	}

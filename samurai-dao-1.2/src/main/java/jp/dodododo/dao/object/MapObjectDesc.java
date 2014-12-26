@@ -42,7 +42,7 @@ public class MapObjectDesc extends ObjectDesc<Map> {
 	@Override
 	protected void setupPropertyDescs() {
 		Set<Entry<String, Object>> entrySet = this.target.entrySet();
-		for (Entry<String, Object> entry : entrySet) {
+		entrySet.forEach(entry -> {
 			String propertyName = entry.getKey();
 			Object value = entry.getValue();
 			MapPropertyDesc propertyDesc = new MapPropertyDesc(this, propertyName, value);
@@ -51,7 +51,7 @@ public class MapObjectDesc extends ObjectDesc<Map> {
 			readablePropertyDescList.add(propertyDesc);
 
 			propertyDescCache.put(propertyName, propertyDesc);
-		}
+		});
 	}
 
 	@Override

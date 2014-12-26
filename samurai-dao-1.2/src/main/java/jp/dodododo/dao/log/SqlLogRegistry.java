@@ -86,8 +86,8 @@ public class SqlLogRegistry {
 	}
 
 	public List<String> getSqls(ExecuteType executeType) {
-		List<String> ret = new ArrayList<String>();
 		LinkedList<SqlLog> sqlLogList = getSqlLogList();
+		List<String> ret = new ArrayList<String>(sqlLogList.size());
 		for (SqlLog sqlLog : sqlLogList) {
 			if (ExecuteType.ALL.equals(executeType) || executeType.equals(sqlLog.getSqlType())) {
 				ret.add(sqlLog.getCompleteSql());
@@ -97,8 +97,8 @@ public class SqlLogRegistry {
 	}
 
 	public List<String> getAllSql() {
-		List<String> ret = new ArrayList<String>();
 		LinkedList<SqlLog> sqlLogList = getSqlLogList();
+		List<String> ret = new ArrayList<String>(sqlLogList.size());
 		for (SqlLog sqlLog : sqlLogList) {
 			ret.add(sqlLog.getCompleteSql());
 		}

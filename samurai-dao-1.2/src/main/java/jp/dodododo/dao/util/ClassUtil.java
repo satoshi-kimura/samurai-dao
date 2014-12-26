@@ -70,10 +70,8 @@ public abstract class ClassUtil {
 	}
 
 	public static <T> List<Constructor<T>> getConstructors(Class<T> clazz, int modifier) {
-
-		List<Constructor<T>> ret = new ArrayList<Constructor<T>>();
-
 		Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+		List<Constructor<T>> ret = new ArrayList<Constructor<T>>(constructors.length);
 		for (Constructor<?> constructor : constructors) {
 			if ((modifier & constructor.getModifiers()) != 0) {
 				@SuppressWarnings("unchecked")
@@ -90,12 +88,8 @@ public abstract class ClassUtil {
 
 	public static Method getPublicMethod(Class<?> clazz, String methodName) {
 		List<Method> methods = getPublicMethod(clazz);
-		List<Method> nominee = new ArrayList<Method>();
-		for (Method method : methods) {
-			if (method.getName().equals(methodName)) {
-				nominee.add(method);
-			}
-		}
+		List<Method> nominee = new ArrayList<Method>(2);
+		methods.stream().filter(method -> method.getName().equals(methodName)).forEach(method -> nominee.add(method));
 		if (nominee.size() == 1) {
 			return nominee.get(0);
 		}
@@ -107,8 +101,8 @@ public abstract class ClassUtil {
 
 	public static List<Method> getMethod(Class<?> clazz, int modifier) {
 
-		List<Method> ret = new ArrayList<Method>();
 		Method[] methods = clazz.getMethods();
+		List<Method> ret = new ArrayList<Method>(methods.length);
 		for (Method method : methods) {
 			if ((modifier & method.getModifiers()) != 0) {
 				ret.add(method);

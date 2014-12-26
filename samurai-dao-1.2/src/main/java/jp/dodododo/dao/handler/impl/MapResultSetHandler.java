@@ -2,13 +2,13 @@ package jp.dodododo.dao.handler.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import jp.dodododo.dao.IterationCallback;
 import jp.dodododo.dao.columns.ResultSetColumn;
 import jp.dodododo.dao.util.CaseInsensitiveMap;
+import jp.dodododo.dao.util.ResultSetUtil;
 
 public class MapResultSetHandler extends AbstractResultSetHandler<Map<String, Object>> {
 
@@ -27,15 +27,14 @@ public class MapResultSetHandler extends AbstractResultSetHandler<Map<String, Ob
 	}
 
 	@Override
-	protected Map<String, Object> createRow(ResultSet rs, List<ResultSetColumn> resultSetColumnList) throws SQLException {
+	protected Map<String, Object> createRow(final ResultSet rs, List<ResultSetColumn> resultSetColumnList) throws SQLException {
 		Map<String, Object> row = newInstance();
 
-		for (Iterator<ResultSetColumn> iter = resultSetColumnList.iterator(); iter.hasNext();) {
-			ResultSetColumn column = iter.next();
+		resultSetColumnList.forEach(column -> {
 			String name = column.getName();
-			Object value = rs.getObject(name);
+			Object value = ResultSetUtil.getObject(rs, name);
 			row.put(name, value);
-		}
+		});
 		return row;
 	}
 

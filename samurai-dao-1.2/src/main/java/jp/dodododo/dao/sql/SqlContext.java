@@ -41,11 +41,12 @@ public class SqlContext implements Serializable {
 
 	private void init() {
 		addParameter(DaoConstants.ORDER_BY, Collections.EMPTY_LIST);
-		for (ParameterValue parameterValue : columns) {
+		columns.forEach(parameterValue -> {
 			String name = parameterValue.getName();
 			Object value = parameterValue.getValue();
 			parameters.put(name, value);
-		}
+
+		});
 	}
 
 	public String getTableName() {
@@ -91,9 +92,9 @@ public class SqlContext implements Serializable {
 		}
 		addParameter(DaoUtil.VALUES, values);
 		ObjectDesc<?> objectDesc = ObjectDescFactory.getObjectDesc(values.get(0));
-		for (Object object : values) {
+		values.forEach(object -> {
 			Object map = objectDesc.toMap(object);
 			this.values.add(map);
-		}
+		});
 	}
 }

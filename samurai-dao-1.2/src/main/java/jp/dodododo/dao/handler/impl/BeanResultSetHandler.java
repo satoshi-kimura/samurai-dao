@@ -664,13 +664,8 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 		return true;
 	}
 
-	private boolean contains(List<ResultSetColumn> resultSetColumnList, String columnName) {
-		for (ResultSetColumn resultSetColumn : resultSetColumnList) {
-			if (StringUtil.equalsIgnoreCase(resultSetColumn.getName(), columnName)) {
-				return true;
-			}
-		}
-		return false;
+	protected static boolean contains(List<ResultSetColumn> resultSetColumnList, String columnName) {
+		return resultSetColumnList.stream().anyMatch(resultSetColumn -> StringUtil.equalsIgnoreCase(resultSetColumn.getName(), columnName));
 	}
 
 	private static String getResultSetColumnName(List<ResultSetColumn> resultSetColumnList, String name) {
@@ -775,9 +770,9 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 	}
 
 	private static List<String> getColumnNames(Column column) {
-		List<String> ret = new ArrayList<String>();
 
 		String[] alias = column.alias();
+		List<String> ret = new ArrayList<String>(alias.length);
 		for (String s : alias) {
 			ret.add(s);
 		}

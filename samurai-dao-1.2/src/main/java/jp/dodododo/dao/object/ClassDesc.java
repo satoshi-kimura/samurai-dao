@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.dodododo.dao.util.CacheUtil;
 import jp.dodododo.dao.util.ClassUtil;
 
 public class ClassDesc<T> {
@@ -36,9 +37,9 @@ public class ClassDesc<T> {
 	}
 
 	public <A extends Annotation> List<Constructor<T>> getAnnotatedConstructors(Class<A> annotationClass, int modifier) {
-		List<Constructor<T>> ret = new ArrayList<Constructor<T>>();
 
 		List<Constructor<T>> constructors = getConstructors(modifier);
+		List<Constructor<T>> ret = new ArrayList<Constructor<T>>(constructors.size());
 		for (Constructor<T> constructor : constructors) {
 			if (constructor.getAnnotation(annotationClass) != null) {
 				ret.add(constructor);
@@ -47,15 +48,18 @@ public class ClassDesc<T> {
 		return ret;
 	}
 
+	protected Map<Class<?>, List<Method>> annotatedMethods = CacheUtil.cacheMap();
+
 	public <A extends Annotation> List<Method> getAnnotatedMethods(Class<A> annotationClass, int modifier) {
 
-		List<Method> ret = new ArrayList<Method>();
-		List<Method> methods = getMethods();
-		for (Method method : methods) {
-			if (method.getAnnotation(annotationClass) != null) {
-				ret.add(method);
-			}
+		if(annotatedMethods.containsKey(annotationClass)) {
+			return annotatedMethods.get(annotationClass);
 		}
+
+		List<Method> methods = getMethods();
+		List<Method> ret = new ArrayList<Method>(methods.size());
+		methods.stream().filter(method -> method.getAnnotation(annotationClass) != null).forEach(method -> ret.add(method));
+		annotatedMethods.put(annotationClass, ret);
 		return ret;
 	}
 
@@ -64,13 +68,15 @@ public class ClassDesc<T> {
 	}
 
 	private void setUpMethods() {
-		this.methods = new ArrayList<Method>();
 		Method[] methods = targetClass.getMethods();
+		Method[] declaredMethods = targetClass.getDeclaredMethods();
+
+		this.methods = new ArrayList<Method>(methods.length + declaredMethods.length);
+
 		for (Method method : methods) {
 			this.methods.add(method);
 		}
 
-		Method[] declaredMethods = targetClass.getDeclaredMethods();
 		for (Method method : declaredMethods) {
 			if (this.methods.contains(method)) {
 				continue;

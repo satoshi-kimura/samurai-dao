@@ -237,7 +237,7 @@ public abstract class DaoUtil {
 	}
 
 	public static List<Object> list(Object... args) {
-		List<Object> ret = new ArrayList<Object>();
+		List<Object> ret = new ArrayList<Object>(args.length);
 		for (Object o : args) {
 			ret.add(o);
 		}
@@ -249,7 +249,7 @@ public abstract class DaoUtil {
 	}
 
 	public static List<OrderByArg> orderByList(Object... args) {
-		List<OrderByArg> orderByList = new ArrayList<OrderByArg>();
+		List<OrderByArg> orderByList = new ArrayList<OrderByArg>(args.length);
 		for (int i = 0; i < args.length; i++) {
 			Object arg1 = args[i];
 			Object arg2 = null;

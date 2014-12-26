@@ -512,8 +512,8 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			return columnNames;
 		}
 
-		columnNames = new ArrayList<String>();
 		List<String> allColumnNames = tableMetaData.getColumnNames();
+		columnNames = new ArrayList<String>(allColumnNames.size());
 		Set<String> npc = toCaseInsensitiveSet(noPersistentColumns);
 		for (String columnName : allColumnNames) {
 			if (npc.contains(columnName) == false) {
@@ -955,16 +955,14 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	protected String createInsertSql(String tableName, List<String> updateColumnNames, Map<String, ParameterValue> values) {
 		StringBuilder sql = new StringBuilder(1024);
 		sql.append("INSERT INTO ").append(tableName).append(" ( ");
-		for (String updateColumnName : updateColumnNames) {
-			sql.append(updateColumnName).append(", ");
-		}
+		updateColumnNames.forEach(updateColumnName -> sql.append(updateColumnName).append(", "));
 		if (updateColumnNames.isEmpty() == false) {
 			sql.setLength(sql.length() - 2);
 		}
 		sql.append(" ) VALUES ( ");
-		for (String updateColumnName : updateColumnNames) {
-			sql.append("/*").append(updateColumnName).append("*/").append(getDummyValString(updateColumnName, values)).append(" , ");
-		}
+		updateColumnNames.forEach(
+				updateColumnName -> sql.append("/*").append(updateColumnName).append("*/")
+						.append(getDummyValString(updateColumnName, values)).append(" , "));
 		if (updateColumnNames.isEmpty() == false) {
 			sql.setLength(sql.length() - 2);
 		}
@@ -983,14 +981,14 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	protected Map<String, ParameterValue> getUpdateParameterValues(Object[] entities, List<String> updateColumnNames, TableMetaData tableMetaData) {
 		Map<String, ParameterValue> parameterValues = new HashMap<String, ParameterValue>(updateColumnNames.size());
 		String tableName = tableMetaData.getTableName();
-		for (String columnName : updateColumnNames) {
+		updateColumnNames.forEach(columnName -> {
 			List<CandidateValue> values = new ArrayList<CandidateValue>();
 			gatherValue(entities, tableName, columnName, values);
 			CandidateValue value = CandidateValue.getValue(values, tableName, columnName);
 			int dataType = tableMetaData.getColumnMetaData(columnName).getDataType();
 			ParameterValue pv = createParameterValue(columnName, dataType, value);
 			parameterValues.put(columnName, pv);
-		}
+		});
 		return parameterValues;
 	}
 
@@ -1346,7 +1344,6 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	protected <ENTITY> List<String> getWhereColumnNames(TableMetaData tableMetaData, ENTITY entity, Locking locking, CRUD crud) {
-		List<String> whereColumnNames = new ArrayList<String>();
 		List<String> columnNames = tableMetaData.getPkColumnNames();
 		if (columnNames.isEmpty() == true) {
 			if (crud.equals(CRUD.DELETE) == false) {
@@ -1355,7 +1352,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 				columnNames = tableMetaData.getColumnNames();
 			}
 		}
-		whereColumnNames.addAll(columnNames);
+		List<String> whereColumnNames = new ArrayList<String>(columnNames);
 
 		if (locking == OPTIMISTIC_LOCKING) {
 			addVersionNoColumnNames(entity, tableMetaData, whereColumnNames);
@@ -1378,11 +1375,11 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
 		ObjectDesc<ENTITY> objectDesc = ObjectDescFactory.getObjectDesc(entity);
 		List<PropertyDesc> propertyDescs = objectDesc.getPropertyDescs(annotationClass);
-		for (PropertyDesc propertyDesc : propertyDescs) {
+		propertyDescs.forEach(propertyDesc -> {
 			String propertyName = getColumnName(propertyDesc);
 			ColumnMetaData columnMetaData = tableMetaData.getColumnMetaData(propertyName);
 			whereColumnNames.add(columnMetaData.getColumnName());
-		}
+		});
 	}
 
 	protected String getColumnName(PropertyDesc propertyDesc) {
@@ -1395,24 +1392,24 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		sql.append("UPDATE ");
 		sql.append(tableName);
 		sql.append(" SET ");
-		for (String updateColumnName : updateColumnNames) {
+		updateColumnNames.forEach(updateColumnName -> {
 			sql.append(updateColumnName);
 			sql.append(" = ");
 			sql.append("/*" + updateColumnName + "*/" + getDummyValString(updateColumnName, values) + " ");
 			sql.append(", ");
-		}
+		});
 		if (updateColumnNames.isEmpty() == false) {
 			sql.setLength(sql.length() - 2);
 		}
 		sql.append("WHERE ");
-		for (String columnName : whereColumnNames) {
+		whereColumnNames.forEach(columnName -> {
 			sql.append(columnName);
 			sql.append(" = ");
 			sql.append("/*").append(whereColumnPrefix).append(columnName).append("*/");
 			sql.append(getDummyValString(columnName, values));
 			sql.append(" ");
 			sql.append("AND ");
-		}
+		});
 		if (whereColumnNames.isEmpty() == false) {
 			sql.setLength(sql.length() - 4);
 		}
@@ -1457,12 +1454,12 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		final String AND = "AND ";
 		StringBuilder sql = new StringBuilder(1024);
 		sql.append("DELETE FROM ").append(tableName).append(" WHERE ");
-		for (String columnName : whereColumnNames) {
+		whereColumnNames.forEach(columnName -> {
 			sql.append(columnName).append(" = ");
 			sql.append("/*").append(whereColumnPrefix).append(columnName).append("*/");
 			sql.append(getDummyValString(columnName, values)).append(" ");
 			sql.append(AND);
-		}
+		});
 		sql.setLength(sql.length() - AND.length());
 		return sql.toString();
 	}
@@ -1634,13 +1631,13 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		if (arg == null) {
 			return parameterValues;
 		}
-		for (Entry<String, Object> entry : arg.entrySet()) {
+		arg.entrySet().forEach(entry -> {
 			String name = entry.getKey();
 			Object value = entry.getValue();
 			int dataType = TypesUtil.getSQLType(value).getType();
 			ParameterValue pv = new ParameterValue(name, dataType, value, true);
 			parameterValues.put(name, pv);
-		}
+		});
 		return parameterValues;
 	}
 
@@ -1867,12 +1864,12 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		Map<String, Object> ret = new CaseInsensitiveMap<Object>();
 
 		List<String> columnNames = tableMetaData.getColumnNames();
-		for (String columnName : columnNames) {
+		columnNames.forEach(columnName -> {
 			List<CandidateValue> values = new ArrayList<CandidateValue>();
 			gatherValue(new Object[]{obj}, tableName, columnName, values);
 			CandidateValue value = CandidateValue.getValue(values, tableName, columnName);
 			ret.put(columnName, value.value.getValue());
-		}
+		});
 		ret.put(TABLE_NAME, tableName);
 
 		return ret;
@@ -1881,7 +1878,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	protected List<ParameterValue> getPks(String tableName, List<ParameterValue> columns) {
 		TableMetaData tableMetaData = getTableMetaData(tableName);
 		List<String> pkColumnNames = tableMetaData.getPkColumnNames();
-		List<ParameterValue> pks = new ArrayList<ParameterValue>();
+		List<ParameterValue> pks = new ArrayList<ParameterValue>(pkColumnNames.size());
 		for (String pkColumnName : pkColumnNames) {
 			for (ParameterValue column : columns) {
 				if (StringUtil.equalsIgnoreCase(pkColumnName, column.getName())) {
@@ -2122,10 +2119,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
 	protected Map<String, Object> toPkValues(Map<String, ParameterValue> values) {
 		Map<String, Object> ret = new CaseInsensitiveMap<Object>();
-		Set<String> keySet = values.keySet();
-		for (String key : keySet) {
-			ret.put(key.replaceFirst(whereColumnPrefix, ""), values.get(key).getValue());
-		}
+		values.keySet().forEach(key -> ret.put(key.replaceFirst(whereColumnPrefix, ""), values.get(key).getValue()));
 		return ret;
 	}
 

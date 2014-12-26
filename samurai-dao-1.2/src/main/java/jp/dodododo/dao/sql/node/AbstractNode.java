@@ -35,6 +35,10 @@ public abstract class AbstractNode implements Node {
 		this.parent = parent;
 	}
 
+	public List<Node> getChildren() {
+		return children;
+	}
+
 	public int getChildSize() {
 		return children.size();
 	}

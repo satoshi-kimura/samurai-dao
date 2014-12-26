@@ -3,7 +3,6 @@ package jp.dodododo.dao.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ public abstract class CacheUtil {
 	public static <K, V> Map<K, V> cacheMap() {
 		return cacheMap(new HashMap<K, V>(1024));
 	}
+
 	public static <V> Map<String, V> cacheCaseInsensitiveMap() {
 		return cacheMap(new CaseInsensitiveMap<V>(1024));
 	}
@@ -34,22 +34,12 @@ public abstract class CacheUtil {
 	private static List<CacheObject<?>> cacheObjectList = Collections.synchronizedList(new LinkedList<CacheObject<?>>());
 
 	public static void clearAllCache() {
-		for (Iterator<Map<?, ?>> iter = cacheMapList.iterator(); iter.hasNext();) {
-			Map<?, ?> cacheMap = iter.next();
-			cacheMap.clear();
-		}
+		cacheMapList.stream().parallel().forEach(cacheMap -> cacheMap.clear());
+		cacheListList.stream().parallel().forEach(cacheList -> cacheList.clear());
+		cacheObjectList.stream().parallel().forEach(cacheObject -> cacheObject.clear());
+
 		cacheMapList.clear();
-
-		for (Iterator<List<?>> iter = cacheListList.iterator(); iter.hasNext();) {
-			List<?> cacheList = iter.next();
-			cacheList.clear();
-		}
 		cacheListList.clear();
-
-		for (Iterator<CacheObject<?>> iter = cacheObjectList.iterator(); iter.hasNext();) {
-			CacheObject<?> cacheObject = iter.next();
-			cacheObject.clear();
-		}
 		cacheObjectList.clear();
 	}
 

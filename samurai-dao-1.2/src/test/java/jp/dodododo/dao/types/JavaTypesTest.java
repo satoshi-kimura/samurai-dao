@@ -83,7 +83,8 @@ public class JavaTypesTest {
 		Date date = new Date();
 		LocalDateTime localDateTime = JavaTypes.LOCAL_DATE_TIME.convert(date);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS");
-		assertEquals(simpleDateFormat.format(date), DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime).replaceAll("T|Z", ""));
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm:ss.SSS");
+		assertEquals(simpleDateFormat.format(date), dateTimeFormatter.format(localDateTime));
 
 		localDateTime = JavaTypes.LOCAL_DATE_TIME.convert("201501230405");
 		assertEquals("2015-01-2304:05:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime).replaceAll("T|Z", ""));
@@ -98,22 +99,23 @@ public class JavaTypesTest {
 		Date date = new Date();
 		LocalTime localTime = JavaTypes.LOCAL_TIME.convert(date);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-		assertEquals(simpleDateFormat.format(date), DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+		assertEquals(simpleDateFormat.format(date), dateTimeFormatter.format(localTime));
 
 		localTime = JavaTypes.LOCAL_TIME.convert("0405");
-		assertEquals("04:05:00", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("04:05:00", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 		localTime = JavaTypes.LOCAL_TIME.convert("040506");
-		assertEquals("04:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("04:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 		localTime = JavaTypes.LOCAL_TIME.convert(405);
-		assertEquals("04:05:00", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("04:05:00", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 		localTime = JavaTypes.LOCAL_TIME.convert(40506);
-		assertEquals("04:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("04:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 		localTime = JavaTypes.LOCAL_TIME.convert(130506);
-		assertEquals("13:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("13:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 		localTime = JavaTypes.LOCAL_TIME.convert("04:05:06");
-		assertEquals("04:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("04:05:06", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 		localTime = JavaTypes.LOCAL_TIME.convert(0);
-		assertEquals("09:00:00", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime).replaceAll("T|Z", ""));
+		assertEquals("09:00:00", DateTimeFormatter.ISO_LOCAL_TIME.format(localTime));
 	}
 
 	@Test

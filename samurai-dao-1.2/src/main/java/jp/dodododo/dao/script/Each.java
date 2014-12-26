@@ -1,6 +1,7 @@
 package jp.dodododo.dao.script;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +16,12 @@ public class Each implements IterationCallback<Object> {
 	private Map<Class<?>, Method> methodMap = new HashMap<Class<?>, Method>();
 
 	public Each() {
-		Method[] methods = getClass().getMethods();
-		for (int i = 0; i < methods.length; ++i) {
-			Method m = methods[i];
-			if (MethodUtil.isBridgeMethod(m) || MethodUtil.isSyntheticMethod(m)) {
-				continue;
-			}
-			if (isEach(m)) {
-				methodMap.put(m.getParameterTypes()[0], m);
-			}
-		}
+		Arrays.asList(getClass().getMethods()).stream(). //
+				filter(m -> MethodUtil.isBridgeMethod(m) == false).//
+				filter(m -> MethodUtil.isSyntheticMethod(m) == false).//
+				filter(m -> isEach(m)).//
+				forEach(m -> methodMap.put(m.getParameterTypes()[0], m));
+
 		if (methodMap.isEmpty()) {
 			throw new RuntimeException("Method not found.");
 		}

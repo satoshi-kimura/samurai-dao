@@ -7,7 +7,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -72,20 +71,12 @@ public class ObjectDesc<OBJ> {
 	}
 
 	protected void setupReadablePropertyDescs() {
-		for (PropertyDesc pd : propertyDescList) {
-			if (pd.isReadable() == true) {
-				readablePropertyDescList.add(pd);
-			}
-		}
+		propertyDescList.stream().filter(pd -> pd.isReadable()).forEach(pd -> readablePropertyDescList.add(pd));
 		this.readablePropertyDescList = Collections.unmodifiableList(readablePropertyDescList);
 	}
 
 	protected void setupWritablePropertyDescs() {
-		for (PropertyDesc pd : propertyDescList) {
-			if (pd.isWritable() == true) {
-				writablePropertyDescList.add(pd);
-			}
-		}
+		propertyDescList.stream().filter(pd -> pd.isWritable()).forEach(pd -> writablePropertyDescList.add(pd));
 		this.writablePropertyDescList = Collections.unmodifiableList(writablePropertyDescList);
 	}
 
@@ -96,7 +87,7 @@ public class ObjectDesc<OBJ> {
 			JavaType<?> javaType = TypesUtil.getJavaType(propertyDesc.getPropertyType());
 			List<PropertyDesc> list = javaTypeCache.get(javaType);
 			if (list == null) {
-				list = new ArrayList<PropertyDesc>();
+				list = new ArrayList<PropertyDesc>(size);
 				javaTypeCache.put(javaType, list);
 			}
 			list.add(propertyDesc);
@@ -111,7 +102,7 @@ public class ObjectDesc<OBJ> {
 			for (Annotation annotation : annotations) {
 				List<PropertyDesc> list = annotationCache.get(annotation.getClass());
 				if (list == null) {
-					list = new ArrayList<PropertyDesc>();
+					list = new ArrayList<PropertyDesc>(size);
 					annotationCache.put(annotation.getClass(), list);
 				}
 				list.add(propertyDesc);
@@ -162,24 +153,20 @@ public class ObjectDesc<OBJ> {
 		List<PropertyDesc> propertyDescTmpList = new ArrayList<PropertyDesc>();
 		List<FieldDesc> fieldDescTmpList = new ArrayList<FieldDesc>();
 
-		Field[] fields = getAllDeclaredFields();
-		for (Field f : fields) {
+		for (Field f : getAllDeclaredFields()) {
 			setupPropertyDescs(f, propertyDescTmpCache, propertyDescTmpList, fieldDescTmpCache, fieldDescTmpList);
 		}
-		Method[] methods = targetClass.getMethods();
-		for (Method m : methods) {
+		for (Method m : targetClass.getMethods()) {
 			setupPropertyDescs(m, propertyDescTmpCache, propertyDescTmpList);
 		}
-		for (Iterator<PropertyDesc> iter = propertyDescTmpList.iterator(); iter.hasNext();) {
-			PropertyDesc pd = iter.next();
+		propertyDescTmpList.forEach(pd ->{
 			propertyDescCache.put(pd.getPropertyName(), pd);
 			propertyDescList.add(pd);
-		}
-		for (Iterator<FieldDesc> iter = fieldDescTmpList.iterator(); iter.hasNext();) {
-			FieldDesc fd = iter.next();
+		});
+		fieldDescTmpList.forEach(fd -> {
 			fieldDescCache.put(fd.getFieldName(), fd);
 			fieldDescList.add(fd);
-		}
+		});
 		for (PropertyDesc propertyDesc : propertyDescList) {
 			Annotation[] annotations = propertyDesc.getAnnotations();
 			for (Annotation annotation : annotations) {
@@ -403,11 +390,7 @@ public class ObjectDesc<OBJ> {
 		Map<String, Object> ret = new HashMap<String, Object>();
 
 		List<PropertyDesc> propertyDescs = getPropertyDescs();
-		for (PropertyDesc propertyDesc : propertyDescs) {
-			if (propertyDesc.isReadable()) {
-				ret.put(propertyDesc.getPropertyName(), propertyDesc.getValue(obj));
-			}
-		}
+		propertyDescs.stream().filter(pd -> pd.isReadable()).forEach(pd -> ret.put(pd.getPropertyName(), pd.getValue(obj)));
 		return ret;
 	}
 }

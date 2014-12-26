@@ -20,7 +20,6 @@ import jp.dodododo.dao.util.CacheUtil;
 import jp.dodododo.dao.util.CaseInsensitiveMap;
 import jp.dodododo.dao.util.ConnectionUtil;
 import jp.dodododo.dao.util.DataSourceUtil;
-import jp.dodododo.dao.util.ResultSetUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -73,37 +72,30 @@ public class TableMetaData {
 	private void setUpPks(DatabaseMetaData metaData, String tableName) throws SQLException {
 		String catalog = null;
 		String schemaPattern = null;
-		ResultSet primaryKeys = null;
-		try {
-			try {
-				primaryKeys = metaData.getPrimaryKeys(catalog, schemaPattern, tableName);
-				while (primaryKeys.next()) {
-					String columnName = primaryKeys.getString(4);
-					ColumnMetaData columnMetaData = getColumnMetaData(columnName);
-					columnMetaData.setPrimaryKey(true);
-					pkColumnMetaData.put(columnName, columnMetaData);
-					pkColumnNames.add(columnName);
-				}
-				logger.info("[primary key] setup is success . tableName[" + tableName + "]");
-			} catch (SQLException ignore) {
-				logger.debug("[primary key] setup is fail . tableName[" + tableName + "]");
+		try (ResultSet primaryKeys = metaData.getPrimaryKeys(catalog, schemaPattern, tableName)) {
+			while (primaryKeys.next()) {
+				String columnName = primaryKeys.getString(4);
+				ColumnMetaData columnMetaData = getColumnMetaData(columnName);
+				columnMetaData.setPrimaryKey(true);
+				pkColumnMetaData.put(columnName, columnMetaData);
+				pkColumnNames.add(columnName);
 			}
-			if (pkColumnMetaData.isEmpty() == true && tableName.equals(tableName.toUpperCase()) == false) {
-				setUpPks(metaData, tableName.toUpperCase());
-			}
-		} finally {
-			ResultSetUtil.close(primaryKeys);
+			logger.info("[primary key] setup is success . tableName[" + tableName + "]");
+		} catch (SQLException ignore) {
+			logger.error("[primary key] setup is fail . tableName[" + tableName + "]");
+		}
+		if (pkColumnMetaData.isEmpty() == true && tableName.equals(tableName.toUpperCase()) == false) {
+			setUpPks(metaData, tableName.toUpperCase());
 		}
 	}
 
 	private void setUpColumnMetaData(Connection connection, DatabaseMetaData metaData, String tableName, Dialect dialect) {
-		ResultSet columns = null;
-		try {
-			String catalog = null;
-			String schemaPattern = null;
-			String tableNamePattern = tableName;
-			String columnNamePattern = null;
-			columns = metaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+		String catalog = null;
+		String schemaPattern = null;
+		String tableNamePattern = tableName;
+		String columnNamePattern = null;
+		try (ResultSet columns = metaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);){
+
 			while (columns.next()) {
 				ColumnMetaData columnMetaData = new ColumnMetaData();
 				String tableCatalog = columns.getString(1);
@@ -152,8 +144,6 @@ public class TableMetaData {
 			}
 		} catch (SQLException e) {
 			throw new SQLError(e);
-		} finally {
-			ResultSetUtil.close(columns);
 		}
 	}
 
@@ -165,27 +155,7 @@ public class TableMetaData {
 
 	private void setUpFKs(Connection connection, DatabaseMetaData metaData) throws SQLException {
 		String schemaPattern = null;
-		ResultSet rs = null;
-		// try {
-		// rs = metaData.getExportedKeys(connection.getCatalog(), schemaPattern, tableName);
-		// while (rs.next()) {
-		// String pkTableName = rs.getString("PKTABLE_NAME");
-		// String pkColumnName = rs.getString("PKCOLUMN_NAME");
-		// String fkTableName = rs.getString("FKTABLE_NAME");
-		// String fkColumnName = rs.getString("FKCOLUMN_NAME");
-		// short keySeq = rs.getShort("KEY_SEQ");
-		// exportedKeys.put(keySeq, new ExportedKey());
-		// System.err.println("getExportedKeys(): pkTableName=" + pkTableName);
-		// System.err.println("getExportedKeys(): pkColumnName=" + pkColumnName);
-		// System.err.println("getExportedKeys(): fkTableName=" + fkTableName);
-		// System.err.println("getExportedKeys(): fkColumnName=" + fkColumnName);
-		// System.err.println("getExportedKeys(): keySeq=" + keySeq);
-		// }
-		// } finally {
-		// ResultSetUtil.close(rs);
-		// }
-		try {
-			rs = metaData.getImportedKeys(connection.getCatalog(), schemaPattern, tableName);
+		try (ResultSet rs = metaData.getImportedKeys(connection.getCatalog(), schemaPattern, tableName)) {
 			while (rs.next()) {
 				String pkTableName = rs.getString("PKTABLE_NAME");
 				String pkColumnName = rs.getString("PKCOLUMN_NAME");
@@ -195,8 +165,6 @@ public class TableMetaData {
 				ForeignKey importedKey = getImportedKey(keySeq);
 				importedKey.add(fkTableName, fkColumnName, pkTableName, pkColumnName);
 			}
-		} finally {
-			ResultSetUtil.close(rs);
 		}
 	}
 

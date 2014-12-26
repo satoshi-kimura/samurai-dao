@@ -38,7 +38,7 @@ public class MapPropertyDesc extends PropertyDesc {
 	public <V> boolean addValue(Object target, V value) {
 		Object element = getValue(target);
 		if (element == null) {
-			Collection<V> tmp = new ArrayList<V>();
+			Collection<V> tmp = new ArrayList<V>(2);
 			tmp.add(value);
 			setValue(target, tmp);
 			return false;

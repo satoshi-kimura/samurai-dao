@@ -1,5 +1,6 @@
 package jp.dodododo.dao.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -153,7 +154,7 @@ public abstract class SqlUtil {
 			return "";
 		}
 		StringBuilder sql = new StringBuilder();
-		for (OrderByArg arg : args) {
+		Arrays.asList(args).forEach(arg -> {
 			sql.append(arg.getColumnName());
 			SortType sortType = arg.getSortType();
 			if (sortType != null) {
@@ -161,7 +162,7 @@ public abstract class SqlUtil {
 				sql.append(sortType.toString());
 			}
 			sql.append(", ");
-		}
+		});
 		sql.setLength(sql.length() - ", ".length());
 		return sql.toString();
 	}
@@ -203,7 +204,7 @@ public abstract class SqlUtil {
 			return "";
 		}
 		StringBuilder sql = new StringBuilder();
-		for (Object arg : args) {
+		Arrays.asList(args).forEach(arg -> {
 			if (arg == null) {
 				sql.append("NULL");
 			} else if (arg instanceof CharSequence) {
@@ -212,7 +213,7 @@ public abstract class SqlUtil {
 				sql.append(arg);
 			}
 			sql.append(", ");
-		}
+		});
 		sql.setLength(sql.length() - ", ".length());
 		return sql.toString().trim();
 	}

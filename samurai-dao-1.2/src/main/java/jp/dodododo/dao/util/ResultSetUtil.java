@@ -21,4 +21,12 @@ public abstract class ResultSetUtil {
 			throw new SQLError(e);
 		}
 	}
+
+	public static Object getObject(ResultSet rs, String columnLabel) {
+		try {
+			return rs.getObject(columnLabel);
+		} catch (SQLException e) {
+			throw new SQLError(e);
+		}
+	}
 }

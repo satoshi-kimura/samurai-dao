@@ -97,8 +97,7 @@ public class JavaTypes<T> implements JavaType<T> {
 				return null;
 			}
 			if (value instanceof Enum) {
-				Enum<?> e = (Enum<?>) value;
-				value = EnumConverter.toString(e);
+				value = EnumConverter.toString((Enum<?>) value);
 			} else if (value instanceof Number) {
 				if(EmptyUtil.isNotEmpty(formats)) {
 					return new DecimalFormat(formats[0]).format(value);
@@ -118,9 +117,7 @@ public class JavaTypes<T> implements JavaType<T> {
 			} else if (value instanceof Byte[]) {
 				return StringUtil.newString(BYTE_ARRAY.convert(value), "UTF-8");
 			} else if (value instanceof InputStream) {
-				InputStream is = (InputStream) value;
-				byte[] bytes = BYTE_ARRAY.convert(is);
-				return convert(bytes);
+				return doConvert(BYTE_ARRAY.convert((InputStream) value));
 			}
 			return value.toString();
 		}
@@ -974,9 +971,7 @@ public class JavaTypes<T> implements JavaType<T> {
 			if (timestamp == null) {
 				return null;
 			}
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(timestamp);
-			return calendar;
+			return doConvert(timestamp);
 		}
 
 		@Override
@@ -985,9 +980,7 @@ public class JavaTypes<T> implements JavaType<T> {
 			if (timestamp == null) {
 				return null;
 			}
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(timestamp);
-			return calendar;
+			return doConvert(timestamp);
 		}
 
 		@Override
@@ -1004,9 +997,8 @@ public class JavaTypes<T> implements JavaType<T> {
 				return (Calendar) value;
 			}
 			if (value instanceof Date) {
-				Date date = (Date) value;
 				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(date);
+				calendar.setTime((Date) value);
 				return calendar;
 			}
 			Date date = DATE.convert(value, formats);
@@ -1064,7 +1056,7 @@ public class JavaTypes<T> implements JavaType<T> {
 
 		@Override
 		protected Instant doConvert(Object value, String... formats) {
-			return Instant.ofEpochMilli(toDate(value, true, formats).getTime());
+			return toDate(value, true, formats).toInstant();
 		}
 	};
 	//
@@ -2040,6 +2032,9 @@ public class JavaTypes<T> implements JavaType<T> {
 		if (value == null) {
 			return null;
 		}
+		if (value.getClass().equals(java.util.Date.class)) {
+			return (Date) value;
+		}
 		if (value instanceof Date) {
 			return new Date(((Date) value).getTime());
 		}
@@ -2075,7 +2070,7 @@ public class JavaTypes<T> implements JavaType<T> {
 
 	private static String[] defaultFormats(String... addFormats) {
 		if (EmptyUtil.isNotEmpty(addFormats)) {
-			List<String> list = new ArrayList<>();
+			List<String> list = new ArrayList<>(addFormats.length);
 			for (String format : addFormats) {
 				list.add(format);
 			}
@@ -2086,8 +2081,8 @@ public class JavaTypes<T> implements JavaType<T> {
 	}
 
 	public static JavaType<?>[] values() {
-		List<JavaType<?>> values = new ArrayList<JavaType<?>>();
 		Field[] fields = JavaTypes.class.getFields();
+		List<JavaType<?>> values = new ArrayList<JavaType<?>>(fields.length);
 		for (Field field : fields) {
 			if (Modifier.isStatic(field.getModifiers()) == false) {
 				continue;

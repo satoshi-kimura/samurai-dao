@@ -3,7 +3,6 @@ package jp.dodododo.dao.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -175,10 +174,7 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 		}
 		@SuppressWarnings("unchecked")
 		Set<Entry<String, V>> entrySet = map.entrySet();
-		for (Iterator<Entry<String, V>> iterator = entrySet.iterator(); iterator.hasNext();) {
-			Entry<String, V> entry = iterator.next();
-			put(entry.getKey(), entry.getValue());
-		}
+		entrySet.forEach(entry -> put(entry.getKey(), entry.getValue()));
 	}
 
 	@Override
@@ -244,10 +240,7 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 		public final void putAll(@SuppressWarnings("rawtypes") Map map) {
 			@SuppressWarnings("unchecked")
 			Set<Entry<String, V>> entrySet = map.entrySet();
-			for (Iterator<Entry<String, V>> iterator = entrySet.iterator(); iterator.hasNext();) {
-				Entry<String, V> entry = iterator.next();
-				put(convertKey(entry.getKey()), entry.getValue());
-			}
+			entrySet.forEach(entry -> put(convertKey(entry.getKey()), entry.getValue()));
 		}
 
 		@Override

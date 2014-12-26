@@ -40,6 +40,19 @@ public class BeanResultSetHandlerTest {
 		}
 	}
 
+	@Test
+	public void testContains() throws Exception {
+		List<ResultSetColumn> resultSetColumnList = new ArrayList<>();
+		resultSetColumnList.add(new ResultSetColumn("a", 1, 1));
+		resultSetColumnList.add(new ResultSetColumn("b", 1, 1));
+		assertTrue(BeanResultSetHandler.contains(resultSetColumnList, "a"));
+		assertTrue(BeanResultSetHandler.contains(resultSetColumnList, "A"));
+		assertTrue(BeanResultSetHandler.contains(resultSetColumnList, "b"));
+		assertTrue(BeanResultSetHandler.contains(resultSetColumnList, "B"));
+		assertFalse(BeanResultSetHandler.contains(resultSetColumnList, "c"));
+		assertFalse(BeanResultSetHandler.contains(resultSetColumnList, "C"));
+	}
+
 	public static class Target {
 		public Target() {
 		}

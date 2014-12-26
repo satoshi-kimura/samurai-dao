@@ -56,7 +56,7 @@ public abstract class AbstractResultSetHandler<T> implements ResultSetHandler<T>
 	}
 
 	private List<Object> getRowData(ResultSet rs, List<ResultSetColumn> resultSetColumnList) throws SQLException {
-		List<Object> ret = new ArrayList<Object>();
+		List<Object> ret = new ArrayList<Object>(resultSetColumnList.size());
 		for (ResultSetColumn resultSetColumn : resultSetColumnList) {
 			SQLType sqlType = TypesUtil.getSQLType(resultSetColumn.getDataType());
 			Object value = sqlType.toJavaType().getValue(rs, resultSetColumn.getName());

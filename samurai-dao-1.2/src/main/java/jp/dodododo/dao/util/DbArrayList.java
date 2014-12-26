@@ -43,13 +43,13 @@ public class DbArrayList<T> extends ArrayList<T> {
 
 	public void setHeader(List<ResultSetColumn> resultSetColumnList) {
 		setResultSetColumnList(resultSetColumnList);
-		for (ResultSetColumn resultSetColumn : resultSetColumnList) {
+		resultSetColumnList.forEach(resultSetColumn -> {
 			ColMetadata col = new ColMetadata();
 			col.setName(resultSetColumn.getName());
 			col.setDataType(resultSetColumn.getDataType());
 			col.setMaxDataLength(resultSetColumn.getDisplaySize());
 			cols.add(col);
-		}
+		});
 	}
 
 	public void addRow(List<Object> datas) {
@@ -62,10 +62,8 @@ public class DbArrayList<T> extends ArrayList<T> {
 	}
 
 	public List<String> getColumnNames() {
-		List<String> ret = new ArrayList<String>();
-		for (ResultSetColumn column : resultSetColumnList) {
-			ret.add(column.getName());
-		}
+		List<String> ret = new ArrayList<String>(resultSetColumnList.size());
+		resultSetColumnList.forEach(column -> ret.add(column.getName()));
 		return ret;
 	}
 
@@ -79,7 +77,7 @@ public class DbArrayList<T> extends ArrayList<T> {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(1024);
+		StringBuilder buffer = new StringBuilder(1024);
 		buffer.append("\r\n");
 
 		for (ColMetadata col : cols) {
@@ -119,7 +117,7 @@ public class DbArrayList<T> extends ArrayList<T> {
 	}
 
 	protected Object format(Object data, int maxLength, int dataType, boolean header) {
-		StringBuffer ret = new StringBuffer();
+		StringBuilder ret = new StringBuilder();
 		if (header == true) {
 			ret.append(data);
 		} else if (isBinary(dataType) == true) {
@@ -173,7 +171,7 @@ public class DbArrayList<T> extends ArrayList<T> {
 			if (EmptyUtil.isEmpty(datas) == true) {
 				return "";
 			}
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			for (int i = 0; i < datas.size(); i++) {
 				Object data = datas.get(i);
 				buffer.append(format(data, getMaxLength(i), getDataType(i), false));

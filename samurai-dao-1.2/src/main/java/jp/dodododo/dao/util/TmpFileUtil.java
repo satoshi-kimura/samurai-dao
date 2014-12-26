@@ -30,10 +30,7 @@ public class TmpFileUtil {
 
 	public static void deleteThreadLocalTmpFiles() {
 		Set<File> fileSet = tmpFiles.get();
-		for (File file : fileSet) {
-			@SuppressWarnings("unused")
-			boolean delete = file.delete();
-		}
+		fileSet.forEach(file -> file.delete());
 		fileSet.clear();
 		ThreadLocalUtil.remove(tmpFiles);
 	}

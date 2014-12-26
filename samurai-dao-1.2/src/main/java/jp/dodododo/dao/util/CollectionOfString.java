@@ -42,7 +42,7 @@ public abstract class CollectionOfString {
 	}
 
 	public static List<String> list(String... list) {
-		List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<String>(list.length);
 		for (int i = 0; i < list.length; i++) {
 			String value = list[i];
 			ret.add(value);
