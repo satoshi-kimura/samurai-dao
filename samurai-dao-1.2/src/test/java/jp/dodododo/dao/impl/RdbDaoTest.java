@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.Each;
@@ -29,11 +29,14 @@ import jp.dodododo.dao.dialect.Dialect;
 import jp.dodododo.dao.dialect.DialectManager;
 import jp.dodododo.dao.dialect.HSQL;
 import jp.dodododo.dao.dialect.Oracle;
+import jp.dodododo.dao.dialect.sqlite.SQLite;
 import jp.dodododo.dao.exception.NoParameterizedException;
 import jp.dodododo.dao.exception.SQLRuntimeException;
 import jp.dodododo.dao.impl.EmpConstructorHasBeanAnnotatedDept.TestDept;
 import jp.dodododo.dao.log.SqlLogRegistry;
 import jp.dodododo.dao.log4j.MemoryAppender;
+import jp.dodododo.dao.metadata.ColumnMetaData;
+import jp.dodododo.dao.metadata.TableMetaData;
 import jp.dodododo.dao.paging.LimitOffset;
 import jp.dodododo.dao.paging.Paging;
 import jp.dodododo.dao.row.Row;
@@ -199,6 +202,10 @@ public class RdbDaoTest extends S2TestCase {
 	}
 
 	public void testInsertBinary() throws Exception {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
 		dao = newTestDao(getDataSource());
 		BinaryTable binaryTable = new BinaryTable();
 		InputStream binary = getClass().getClassLoader().getResourceAsStream("jp/dodododo/dao/dialect.properties");
@@ -270,7 +277,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(1, count);
 	}
 
-	public void testUpdateENTITYHasVersionNo() {
+	public void testUpdateENTITYHasVersionNo() throws Exception {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 		EmpHasVersionNoAnnotation emp = new EmpHasVersionNoAnnotation();
@@ -283,15 +290,20 @@ public class RdbDaoTest extends S2TestCase {
 				"INSERT INTO EMP ( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP ) VALUES ( 1 , 'ename' , NULL , NULL , NULL , NULL , 1 , 10 , NULL )",
 				logRegistry.getLast().getCompleteSql());
 
+		TableMetaData tableMetaData = new TableMetaData(getDataSource().getConnection(), "emp");
+		String empnoColumnName = tableMetaData.getColumnMetaData("empno").getColumnName();
+		String commColumnName = tableMetaData.getColumnMetaData("COMM").getColumnName();
 		count = dao.update(emp);
 		assertEquals(1, count);
 		assertEquals(
-				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = 2 , DEPTNO = 10 , TSTAMP = NULL WHERE EMPNO = 1 AND COMM = 1",
+				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = 2 , DEPTNO = 10 , TSTAMP = NULL WHERE "
+						+ empnoColumnName + " = 1 AND " + commColumnName + " = 1",
 				logRegistry.getLast().getCompleteSql());
 		count = dao.update(emp);
 		assertEquals(1, count);
 		assertEquals(
-				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = 3 , DEPTNO = 10 , TSTAMP = NULL WHERE EMPNO = 1 AND COMM = 2",
+				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = 3 , DEPTNO = 10 , TSTAMP = NULL WHERE "
+						+ empnoColumnName + " = 1 AND " + commColumnName + " = 2",
 				logRegistry.getLast().getCompleteSql());
 		String sql = logRegistry.getLast().getCompleteSql();
 		assertMatches("UPDATE EMP SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
@@ -1224,9 +1236,12 @@ public class RdbDaoTest extends S2TestCase {
 		MemoryAppender.clear(GatherTestBean.class);
 		assertEquals(0, messages.size());
 
+		ColumnMetaData columnMetaData = new TableMetaData(getDataSource().getConnection(), "emp").getColumnMetaData("empno");
+		String empnoColumnName = columnMetaData.getColumnName();
 		dao.update("emp", bean);
 		assertEquals(
-				"UPDATE emp SET EMPNO = 1 , ENAME = 'ename2' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = NULL , DEPTNO = NULL , TSTAMP = NULL WHERE EMPNO = 1",
+				"UPDATE emp SET EMPNO = 1 , ENAME = 'ename2' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = NULL , DEPTNO = NULL , TSTAMP = NULL WHERE "
+						+ empnoColumnName + " = 1",
 				logRegistry.getLast().getCompleteSql());
 		assertEquals(messageSize, messages.size());
 		MemoryAppender.clear(GatherTestBean.class);
@@ -1234,7 +1249,8 @@ public class RdbDaoTest extends S2TestCase {
 
 		dao.update(list);
 		assertEquals(
-				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename2' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = NULL , DEPTNO = NULL , TSTAMP = NULL WHERE EMPNO = 1",
+				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename2' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = NULL , DEPTNO = NULL , TSTAMP = NULL WHERE "
+						+ empnoColumnName + " = 1",
 				logRegistry.getLast().getCompleteSql());
 		assertEquals(messageSize, messages.size());
 		MemoryAppender.clear(GatherTestBean.class);
@@ -1252,7 +1268,7 @@ public class RdbDaoTest extends S2TestCase {
 		MemoryAppender.clear(GatherTestBean.class);
 		assertEquals(0, messages.size());
 	}
-	
+
 	@Test
 	public void testLambda() throws Exception {
 		dao = newTestDao(getConnection());

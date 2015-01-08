@@ -36,7 +36,7 @@ public class Issue38Test extends S2TestCase {
 		dao = newTestDao(getDataSource());
 
 		List<Dept> deptList = dao.select(
-				"select dept.deptno, dept.dname, emp.empno, emp.ename from dept , emp where emp.deptno = dept.deptno order by deptno", Dept.class);
+				"select dept.deptno, dept.dname, emp.empno, emp.ename from dept , emp where emp.deptno = dept.deptno order by dept.deptno", Dept.class);
 
 		assertEquals(3, deptList.size());
 		assertEquals(3, deptList.get(0).empList.size());

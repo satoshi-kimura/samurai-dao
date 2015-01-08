@@ -77,8 +77,8 @@ public class TableMetaData {
 				String columnName = primaryKeys.getString(4);
 				ColumnMetaData columnMetaData = getColumnMetaData(columnName);
 				columnMetaData.setPrimaryKey(true);
-				pkColumnMetaData.put(columnName, columnMetaData);
-				pkColumnNames.add(columnName);
+				pkColumnMetaData.put(columnMetaData.getColumnName(), columnMetaData);
+				pkColumnNames.add(columnMetaData.getColumnName());
 			}
 			logger.info("[primary key] setup is success . tableName[" + tableName + "]");
 		} catch (SQLException ignore) {

@@ -14,7 +14,7 @@
 -->
   <description>samurai-dao is a simple, high performance object/relational persistence and query service.</description>
   <url>http://code.google.com/p/samurai-dao/</url>
-  <inceptionYear>2008-2014</inceptionYear>
+  <inceptionYear>2008-2015</inceptionYear>
 
   <licenses>
     <license>
@@ -89,7 +89,7 @@
       </build>
     </profile>
 
-    <profile> 
+    <profile>
       <id>release</id>
       <build>
         <plugins>
@@ -286,7 +286,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>2.7.3</version>
+      <version>3.0.8</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -323,7 +323,7 @@
     <dependency>
       <groupId>org.seasar.container</groupId>
       <artifactId>s2-extension</artifactId>
-      <version>2.4.47</version>
+      <version>2.4.48</version>
       <type>jar</type>
       <scope>test</scope>
       <exclusions>
@@ -339,26 +339,30 @@
           <groupId>org.apache.poi</groupId>
           <artifactId>poi</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>jboss</groupId>
+          <artifactId>javassist</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
+      <version>1.2.17</version>
       <type>jar</type>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.2.8</version>
+      <version>2.3.2</version>
       <type>jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.7.2</version>
+      <version>3.8.7</version>
       <!--
       <version>3.7.2</version>
       <version>3.7.8-SNAPSHOT</version>
@@ -385,7 +389,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
+      <version>4.12</version>
       <type>jar</type>
       <scope>test</scope>
     </dependency>

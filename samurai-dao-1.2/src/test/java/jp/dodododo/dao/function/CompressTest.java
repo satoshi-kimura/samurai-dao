@@ -18,6 +18,8 @@ import jp.dodododo.dao.annotation.Property;
 import jp.dodododo.dao.annotation.Table;
 import jp.dodododo.dao.commons.Bool;
 import jp.dodododo.dao.compress.CompressType;
+import jp.dodododo.dao.dialect.Dialect;
+import jp.dodododo.dao.dialect.DialectManager;
 import jp.dodododo.dao.dialect.sqlite.SQLite;
 import jp.dodododo.dao.id.Identity;
 import jp.dodododo.dao.id.Sequence;
@@ -48,6 +50,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testNoCompress() {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -67,6 +74,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testGZIPCompressAutoUncompress() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -87,6 +99,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_BEST_COMPRESSION() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -107,6 +124,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_BEST_SPEED() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -127,6 +149,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_DEFAULT_COMPRESSION() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -147,6 +174,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_DEFAULT_STRATEGY() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -167,6 +199,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_DEFLATED() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -187,6 +224,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_FILTERED() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -207,6 +249,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_HUFFMAN_ONLY() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -227,6 +274,10 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testZLIB_NO_COMPRESSION() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -247,6 +298,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testGZIPCompressNoAutoUncompress() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -267,6 +323,11 @@ public class CompressTest extends S2TestCase {
 	}
 
 	public void testConstructorArgHasCompress() throws IOException {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 

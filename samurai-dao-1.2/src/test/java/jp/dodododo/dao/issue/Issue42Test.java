@@ -10,6 +10,9 @@ import jp.dodododo.dao.annotation.Id;
 import jp.dodododo.dao.annotation.IdDefSet;
 import jp.dodododo.dao.annotation.Timestamp;
 import jp.dodododo.dao.annotation.VersionNo;
+import jp.dodododo.dao.dialect.Dialect;
+import jp.dodododo.dao.dialect.DialectManager;
+import jp.dodododo.dao.dialect.sqlite.SQLite;
 import jp.dodododo.dao.id.Sequence;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
@@ -34,6 +37,11 @@ public class Issue42Test extends S2TestCase {
 	}
 
 	public void test() throws Exception {
+		Dialect dialect = DialectManager.getDialect(getConnection());
+		if (dialect instanceof SQLite) {
+			return;
+		}
+
 		dao = newTestDao(getDataSource());
 
 		Emp emp = new Emp();
