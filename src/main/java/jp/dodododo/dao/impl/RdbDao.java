@@ -2061,8 +2061,8 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return result.isEmpty() == false;
 	}
 
-	public <ROW> boolean existsRecord(Sql sql, ROW query) {
-		List<ROW> result = this.select(sql, query);
+	public <QUERY> boolean existsRecord(Sql sql, QUERY query) {
+		List<QUERY> result = this.select(sql, query);
 		return result.isEmpty() == false;
 	}
 

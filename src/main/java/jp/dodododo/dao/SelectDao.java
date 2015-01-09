@@ -96,7 +96,7 @@ public interface SelectDao {
 
 	boolean existsRecord(Sql sql);
 
-	<ROW> boolean existsRecord(Sql sql, ROW query);
+	<QUERY> boolean existsRecord(Sql sql, QUERY query);
 
 	boolean existsRecord(Object... query);
 
