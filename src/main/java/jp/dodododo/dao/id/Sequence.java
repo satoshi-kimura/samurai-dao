@@ -3,6 +3,7 @@ package jp.dodododo.dao.id;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.dialect.Dialect;
@@ -21,8 +22,8 @@ public enum Sequence implements IdGenerator {
 	public Object generate(Connection connection, Dialect dialect, String sequenceName) {
 		String sql = dialect.sequenceNextValSql(sequenceName);
 		Dao dao = new RdbDao(connection);
-		Map<String, Object> result = dao.selectOneMap(sql);
-		Collection<Object> values = result.values();
+		Optional<Map<String, Object>> result = dao.selectOneMap(sql);
+		Collection<Object> values = result.get().values();
 		return values.iterator().next();
 	}
 

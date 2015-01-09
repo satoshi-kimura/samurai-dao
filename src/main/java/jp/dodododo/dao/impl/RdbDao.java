@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -285,7 +286,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return update(entities, OPTIMISTIC_LOCKING);
 	}
 
-	public <ROW> ROW selectOne(Class<ROW> returnType, Object... args) {
+	public <ROW> Optional<ROW> selectOne(Class<ROW> returnType, Object... args) {
 		List<ROW> list = select(returnType, args);
 		return getOne(list, args);
 	}
@@ -416,12 +417,12 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return resultSetHandlerFactory.create(entityClass, javaType, callback, dialect, arg, getConnection());
 	}
 
-	public <ROW> ROW selectOne(String sql, Map<String, Object> arg, Class<ROW> entityClass) {
+	public <ROW> Optional<ROW> selectOne(String sql, Map<String, Object> arg, Class<ROW> entityClass) {
 		List<ROW> rows = select(sql, arg, entityClass);
 		return getOne(rows, arg);
 	}
 
-	public <ROW> ROW selectOne(String sql, Class<ROW> entityClass) {
+	public <ROW> Optional<ROW> selectOne(String sql, Class<ROW> entityClass) {
 		return selectOne(sql, null, entityClass);
 	}
 
@@ -1717,16 +1718,16 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		this.sqlLogRegistry = sqlLogRegistry;
 	}
 
-	public Map<String, Object> selectOneMap(String sql, Map<String, Object> arg) {
+	public Optional<Map<String, Object>> selectOneMap(String sql, Map<String, Object> arg) {
 		List<Map<String, Object>> rows = selectMap(sql, arg);
 		return getOne(rows, arg);
 	}
 
-	public Map<String, Object> selectOneMap(String sql) {
+	public Optional<Map<String, Object>> selectOneMap(String sql) {
 		return selectOneMap(sql, null);
 	}
 
-	public BigDecimal selectOneNumber(String sql, Map<String, Object> arg) {
+	public Optional<BigDecimal> selectOneNumber(String sql, Map<String, Object> arg) {
 		IterationCallback<BigDecimal> callback = new DBListIterationCallback<BigDecimal>();
 		ResultSetHandler<?> handler = createResultSetHandler(BigDecimal.class, callback, this.dialect, arg);
 
@@ -1734,17 +1735,17 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return getOne(rows, arg);
 	}
 
-	protected <T> T getOne(List<T> rows, Object arg) {
+	protected <T> Optional<T> getOne(List<T> rows, Object arg) {
 		if (rows.size() == 0) {
-			return null;
+			return Optional.empty();
 		} else if (rows.size() == 1) {
-			return rows.get(0);
+			return Optional.of(rows.get(0));
 		} else {
 			throw new IllegalStateException(Message.getMessage("00003", ToStringer.toString(arg)));
 		}
 	}
 
-	public BigDecimal selectOneNumber(String sql) {
+	public Optional<BigDecimal> selectOneNumber(String sql) {
 		return selectOneNumber(sql, null);
 	}
 
@@ -2013,29 +2014,29 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return selectMap(sql, query, (IterationCallback<Map<String, Object>>) ((IterationCallback<?>) callback));
 	}
 
-	public <ROW> ROW selectOne(Sql sql, ROW query) {
+	public <ROW> Optional<ROW> selectOne(Sql sql, ROW query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOne(sqlString, context.getParameters(), getClass(query));
 	}
 
-	public Map<String, Object> selectOneMap(Sql sql, Map<String, Object> query) {
+	public Optional<Map<String, Object>> selectOneMap(Sql sql, Map<String, Object> query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOneMap(sqlString, context.getParameters());
 	}
 
-	public Map<String, Object> selectOneMap(Object... query) {
+	public Optional<Map<String, Object>> selectOneMap(Object... query) {
 		return selectOneMap(SIMPLE_WHERE, query(query));
 	}
 
-	public BigDecimal selectOneNumber(Sql sql, Map<String, Object> query) {
+	public Optional<BigDecimal> selectOneNumber(Sql sql, Map<String, Object> query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOneNumber(sqlString, context.getParameters());
 	}
 
-	public <QUERY> BigDecimal selectOneNumber(Sql sql, QUERY query) {
+	public <QUERY> Optional<BigDecimal> selectOneNumber(Sql sql, QUERY query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOneNumber(sqlString, context.getParameters());
@@ -2106,7 +2107,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			Map<String, Object> pks = toPkValues(values);
 			pks.put(TABLE_NAME, tableName);
 
-			BigDecimal count = selectOneNumber(SIMPLE_COUNT_WHERE, pks);
+			BigDecimal count = selectOneNumber(SIMPLE_COUNT_WHERE, pks).orElse(BigDecimal.ZERO);
 			if (count.longValue() == 1) {
 				return true;
 			}

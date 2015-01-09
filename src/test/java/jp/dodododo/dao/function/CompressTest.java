@@ -60,8 +60,8 @@ public class CompressTest extends S2TestCase {
 
 		NoCompress bean = new NoCompress();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), NoCompress.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), NoCompress.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(record.getInputStream("BINARY"), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -84,8 +84,8 @@ public class CompressTest extends S2TestCase {
 
 		GZIPCompress bean = new GZIPCompress();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), GZIPCompress.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), GZIPCompress.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new GZIPInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -109,8 +109,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_BEST_COMPRESSION bean = new ZLIB_BEST_COMPRESSION();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_BEST_COMPRESSION.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_BEST_COMPRESSION.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -134,8 +134,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_BEST_SPEED bean = new ZLIB_BEST_SPEED();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_BEST_SPEED.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_BEST_SPEED.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -159,8 +159,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_DEFAULT_COMPRESSION bean = new ZLIB_DEFAULT_COMPRESSION();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_DEFAULT_COMPRESSION.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_DEFAULT_COMPRESSION.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -184,8 +184,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_DEFAULT_STRATEGY bean = new ZLIB_DEFAULT_STRATEGY();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_DEFAULT_STRATEGY.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_DEFAULT_STRATEGY.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -209,8 +209,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_DEFLATED bean = new ZLIB_DEFLATED();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_DEFLATED.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_DEFLATED.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -234,8 +234,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_FILTERED bean = new ZLIB_FILTERED();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_FILTERED.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_FILTERED.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -259,8 +259,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_HUFFMAN_ONLY bean = new ZLIB_HUFFMAN_ONLY();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_HUFFMAN_ONLY.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_HUFFMAN_ONLY.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -283,8 +283,8 @@ public class CompressTest extends S2TestCase {
 
 		ZLIB_NO_COMPRESSION bean = new ZLIB_NO_COMPRESSION();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_NO_COMPRESSION.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_NO_COMPRESSION.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
@@ -308,8 +308,8 @@ public class CompressTest extends S2TestCase {
 
 		GZIPCompressNoAutoUncompress bean = new GZIPCompressNoAutoUncompress();
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), GZIPCompressNoAutoUncompress.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), GZIPCompressNoAutoUncompress.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new GZIPInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(new GZIPInputStream(bean.binary), String.class));
 	}
@@ -333,8 +333,8 @@ public class CompressTest extends S2TestCase {
 
 		ConstructorArgHasCompress bean = new ConstructorArgHasCompress(new ByteArrayInputStream("abcdefg".getBytes()));
 		dao.insert(bean);
-		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ConstructorArgHasCompress.class);
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class);
+		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ConstructorArgHasCompress.class).get();
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new GZIPInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.getStream(), String.class));
 	}

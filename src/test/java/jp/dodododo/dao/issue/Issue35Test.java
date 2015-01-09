@@ -37,17 +37,17 @@ public class Issue35Test extends S2TestCase {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
-		Emp emp = dao.selectOne("select * from emp where empno = 7369", Emp.class);
+		Emp emp = dao.selectOne("select * from emp where empno = 7369", Emp.class).get();
 		assertNotNull(emp.dept);
 		assertNotNull(emp.dept2);
 		assertNotNull(emp.EMPNO);
 		assertNotNull(emp.ENAME);
 
-		emp = dao.selectOne("select empno, ename, 0 as DEPTNO from emp where empno = 7369", Emp.class);
+		emp = dao.selectOne("select empno, ename, 0 as DEPTNO from emp where empno = 7369", Emp.class).get();
 		assertNotNull(emp.dept);
 		assertNotNull(emp.dept2);
 
-		emp = dao.selectOne("select empno, ename, null as DEPTNO from emp where empno = 7369", Emp.class);
+		emp = dao.selectOne("select empno, ename, null as DEPTNO from emp where empno = 7369", Emp.class).get();
 		assertNull(emp.dept);
 		assertNotNull(emp.EMPNO);
 		assertNotNull(emp.ENAME);

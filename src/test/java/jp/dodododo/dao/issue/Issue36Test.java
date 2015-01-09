@@ -45,7 +45,7 @@ public class Issue36Test extends S2TestCase {
 		int count = dao.execute(GenericSql.INSERT, emp, emp);
 		assertEquals(1, count);
 
-		Row row= dao.selectOne("SELECT * FROM EMP WHERE EMPNO = 1", Row.class);
+		Row row= dao.selectOne("SELECT * FROM EMP WHERE EMPNO = 1", Row.class).get();
 		assertEquals(new SimpleDateFormat("yyyyMMdd").parse("20000202"), TypeConverter.convert(row.getObject("HIREDATE"), Date.class));
 		assertEquals(new SimpleDateFormat("yyyyMMdd").parse("20000101"), TypeConverter.convert(row.getObject("TSTAMP"), Date.class));
 	}

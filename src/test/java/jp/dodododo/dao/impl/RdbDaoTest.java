@@ -213,7 +213,7 @@ public class RdbDaoTest extends S2TestCase {
 		int count = dao.insert(binaryTable);
 		assertEquals(1, count);
 
-		binaryTable = dao.selectOne("select * from Binary_Table where id=/*id*/0", args("id", binaryTable.getId()), BinaryTable.class);
+		binaryTable = dao.selectOne("select * from Binary_Table where id=/*id*/0", args("id", binaryTable.getId()), BinaryTable.class).get();
 		String expected = ReaderUtil.readText(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(
 				"jp/dodododo/dao/dialect.properties"), "UTF-8"));
 		assertEquals(expected, ReaderUtil.readText(new InputStreamReader(binaryTable.getBinary(), "UTF-8")));
@@ -433,7 +433,7 @@ public class RdbDaoTest extends S2TestCase {
 		String sql = "UPDATE EMP SET ENAME = /*name*/'SMITH' WHERE EMPNO = /*no*/1";
 
 		dao.executeUpdate(sql, args("name", "foo", "no", 7369));
-		Emp emp = dao.selectOne("select * from emp where EMPNO = 7369", Emp.class);
+		Emp emp = dao.selectOne("select * from emp where EMPNO = 7369", Emp.class).get();
 		assertEquals("foo", emp.getENAME());
 	}
 
@@ -444,10 +444,10 @@ public class RdbDaoTest extends S2TestCase {
 		List<Object> list = list(args("name", "foo", "no", 7369), args("name", "bar", "no", 7499), args("name", "baz", "no", -1));
 		int[] counts = dao.executeBatch(sql, list);
 
-		Emp emp = dao.selectOne("select * from emp where EMPNO = 7369", Emp.class);
+		Emp emp = dao.selectOne("select * from emp where EMPNO = 7369", Emp.class).get();
 		assertEquals(1, counts[0]);
 		assertEquals("foo", emp.getENAME());
-		emp = dao.selectOne("select * from emp where EMPNO = 7499", Emp.class);
+		emp = dao.selectOne("select * from emp where EMPNO = 7499", Emp.class).get();
 		assertEquals(1, counts[1]);
 		assertEquals("bar", emp.getENAME());
 		assertEquals(0, counts[2]);
@@ -464,19 +464,19 @@ public class RdbDaoTest extends S2TestCase {
 		int count = dao.insert(emp);
 		assertEquals(1, count);
 
-		Emp selectEmp = dao.selectOne("SELECT * FROM EMP WHERE EMPNO = /*no*/0", args("no", 1), Emp.class);
+		Emp selectEmp = dao.selectOne("SELECT * FROM EMP WHERE EMPNO = /*no*/0", args("no", 1), Emp.class).get();
 		assertEquals("1", selectEmp.getEMPNO());
 		assertEquals("ename", selectEmp.getENAME());
 		String completeSql = logRegistry.getLast().getCompleteSql();
 		assertEquals("SELECT * FROM EMP WHERE EMPNO = 1", completeSql);
 
-		selectEmp = dao.selectOne("SELECT * FROM EMP WHERE EMPNO = 1", Emp.class);
+		selectEmp = dao.selectOne("SELECT * FROM EMP WHERE EMPNO = 1", Emp.class).get();
 		assertEquals("1", selectEmp.getEMPNO());
 		assertEquals("ename", selectEmp.getENAME());
 		completeSql = logRegistry.getLast().getCompleteSql();
 		assertEquals("SELECT * FROM EMP WHERE EMPNO = 1", completeSql);
 
-		Map<String, Object> empMap = dao.selectOneMap("SELECT * FROM EMP WHERE EMPNO = 1");
+		Map<String, Object> empMap = dao.selectOneMap("SELECT * FROM EMP WHERE EMPNO = 1").get();
 		assertEquals("1", empMap.get("EMPNO").toString());
 		assertEquals("1", empMap.get("empNo").toString());
 		assertEquals("1", empMap.get("EmPnO").toString());
@@ -503,10 +503,10 @@ public class RdbDaoTest extends S2TestCase {
 		completeSql = logRegistry.getLast().getCompleteSql();
 		assertSql(getText("if_else_result_1.sql"), completeSql);
 
-		Map<String, Object> selectCount = dao.selectOneMap("SELECT COUNT(*) AS CNT FROM EMP");
+		Map<String, Object> selectCount = dao.selectOneMap("SELECT COUNT(*) AS CNT FROM EMP").get();
 		assertEquals(15, ((Number) selectCount.get("cnt")).intValue());
 
-		BigDecimal decimal = dao.selectOneNumber("SELECT COUNT(*) AS CNT FROM EMP");
+		BigDecimal decimal = dao.selectOneNumber("SELECT COUNT(*) AS CNT FROM EMP").get();
 		assertEquals(15, decimal.intValue());
 	}
 
@@ -789,7 +789,7 @@ public class RdbDaoTest extends S2TestCase {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
-		EmpHasEnumDept emp = dao.selectOne("SELECT EMPNO, ENAME, DEPTNO, DEPTNO AS DEPT FROM EMP WHERE EMPNO=7369", EmpHasEnumDept.class);
+		EmpHasEnumDept emp = dao.selectOne("SELECT EMPNO, ENAME, DEPTNO, DEPTNO AS DEPT FROM EMP WHERE EMPNO=7369", EmpHasEnumDept.class).get();
 		assertEquals("7369", emp.getEMPNO());
 		assertEquals("SMITH", emp.getENAME());
 		assertEquals(EnumDept.RESEARCH, emp.getDept());
@@ -890,7 +890,8 @@ public class RdbDaoTest extends S2TestCase {
 		empnoList.add("1");
 		empnoList.add("2");
 		@SuppressWarnings("unused")
-		Map<String, Object> selectOneMap = dao.selectOneMap("SELECT * FROM EMP WHERE EMPNO IN /*empno*/'0'", args("empno", empnoList));
+		Map<String, Object> selectOneMap = dao.selectOneMap("SELECT * FROM EMP WHERE EMPNO IN /*empno*/'0'",
+				args("empno", empnoList)).orElse(new HashMap<>());
 		String completeSql = logRegistry.get(0).getCompleteSql();
 		assertEquals("SELECT * FROM EMP WHERE EMPNO IN ('1', '2')", completeSql);
 	}
@@ -1274,7 +1275,7 @@ public class RdbDaoTest extends S2TestCase {
 		dao = newTestDao(getConnection());
 		dao.setSqlLogRegistry(logRegistry);
 
-		Long sum1 = dao.selectOne("select sum(sal) from emp", Long.class);
+		Long sum1 = dao.selectOne("select sum(sal) from emp", Long.class).get();
 		AtomicLong sum2 = new AtomicLong(0);
 		AtomicLong sum3 = new AtomicLong(0);
 		dao.select("select *   from emp", Row.class, System.out::println);

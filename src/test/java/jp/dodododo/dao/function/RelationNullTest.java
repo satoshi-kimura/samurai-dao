@@ -44,7 +44,7 @@ public class RelationNullTest extends S2TestCase {
 		Emp emp = new Emp(new Dept(null));
 		dao.insert(emp);
 
-		emp = dao.selectOne("select * from emp where empno = /*empno*/0", args("empno", emp.EMPNO), Emp.class);
+		emp = dao.selectOne("select * from emp where empno = /*empno*/0", args("empno", emp.EMPNO), Emp.class).get();
 		assertNull(emp.getDept());
 	}
 

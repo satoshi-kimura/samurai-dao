@@ -49,7 +49,7 @@ public class SomeEntitiesTest extends S2TestCase {
 
 		dao.insert("EMP", e, d, misc);
 
-		Map<String, Object> result = dao.selectOneMap("select * from EMP where EMPNO = 100");
+		Map<String, Object> result = dao.selectOneMap("select * from EMP where EMPNO = 100").get();
 		TypeConverter converter = new TypeConverter(result);
 		assertEquals(new Integer("1"), converter.getInteger("COMM"));
 		assertEquals(new Integer("10"), converter.getInteger("DEPTNO"));
@@ -65,7 +65,7 @@ public class SomeEntitiesTest extends S2TestCase {
 
 		dao.update("EMP", e, d, misc);
 
-		result = dao.selectOneMap("select * from EMP where EMPNO = 100");
+		result = dao.selectOneMap("select * from EMP where EMPNO = 100").get();
 		converter = new TypeConverter(result);
 		assertEquals(new Integer("1"), converter.getInteger("COMM"));
 		assertEquals(new Integer("10"), converter.getInteger("DEPTNO"));

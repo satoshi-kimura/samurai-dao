@@ -60,7 +60,7 @@ public class Issue42Test extends S2TestCase {
 		assertNotNull(emp.tstamp);
 		assertNotNull(emp.comm);
 
-		emp = dao.selectOne(Emp.class, from("emp"), by("empno", emp.empno));
+		emp = dao.selectOne(Emp.class, from("emp"), by("empno", emp.empno)).get();
 		assertNotNull(emp.empno);
 		assertTrue("" + start.getTime() + " : " + end.getTime() + " : " + emp.tstamp.getTime(),
 				start.getTime() <= emp.tstamp.getTime() && emp.tstamp.getTime() <= end.getTime());

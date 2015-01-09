@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.exception.PropertyNotFoundRuntimeException;
@@ -47,6 +49,13 @@ public class TypeConverter {
 	protected void init(Object o) {
 		if (o == null) {
 			this.value = Collections.emptyMap();
+		} else if (o instanceof Optional) {
+			Optional<?> optional = Optional.class.cast(o);
+			try {
+				this.value = optional.get();
+			} catch (NoSuchElementException e) {
+				this.value = Collections.emptyMap();
+			}
 		} else {
 			this.value = o;
 		}

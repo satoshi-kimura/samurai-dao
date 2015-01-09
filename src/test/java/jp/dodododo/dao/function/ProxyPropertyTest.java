@@ -112,7 +112,7 @@ public class ProxyPropertyTest extends S2TestCase {
 		}
 
 		public Dept lazyLoad() {
-			return DeptProxy.dao.selectOne("select * from dept where deptno =" + DEPTNO, Dept.class);
+			return DeptProxy.dao.selectOne("select * from dept where deptno =" + DEPTNO, Dept.class).get();
 		}
 
 		public Dept real() {

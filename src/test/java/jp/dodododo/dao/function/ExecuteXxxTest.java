@@ -6,6 +6,7 @@ import static jp.dodododo.dao.util.DaoUtil.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.NumKey;
@@ -42,28 +43,28 @@ public class ExecuteXxxTest extends S2TestCase {
 				"EMPNO", 100, //
 				"ENAME", "name"));
 
-		Map<String, Object> actual = dao.selectOneMap("select * from emp where empno=100");
+		Map<String, Object> actual = dao.selectOneMap("select * from emp where empno=100").get();
 		assertEquals("name", actual.get("ename"));
 
 		dao.execute(UPDATE, args(TABLE_NAME, "emp", //
 				"EMPNO", 100, //
 				"ENAME", "name2"));
-		actual = dao.selectOneMap("select * from emp where empno=100");
+		actual = dao.selectOneMap("select * from emp where empno=100").get();
 		assertEquals("name2", actual.get("ename"));
 
 		dao.execute(DELETE, args(TABLE_NAME, "emp", //
 				"EMPNO", 100));
-		actual = dao.selectOneMap("select * from emp where empno=100");
-		assertNull(actual);
+		Optional<Map<String, Object>> actual2 = dao.selectOneMap("select * from emp where empno=100");
+		assertFalse(actual2.isPresent());
 
 		dao.execute(DELETE_ALL, args(TABLE_NAME, "emp"));
-		BigDecimal count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp"));
+		BigDecimal count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp")).get();
 		assertEquals(0, count.intValue());
 
 		dao.execute(INSERT, into("emp"), //
 				values("EMPNO", 100, //
 						"ENAME", "name"));
-		count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp"));
+		count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp")).get();
 		assertEquals(1, count.intValue());
 
 		dao.execute(INSERT, into(Emp.class), //
@@ -71,7 +72,7 @@ public class ExecuteXxxTest extends S2TestCase {
 						"ENAME", Ename.TEST_NAME));
 		String sql = logRegistry.getLast().getCompleteSql();
 		assertEquals("INSERT INTO EMP (EMPNO ,ENAME) VALUES (101 ,'TEST_NAME')", sql);
-		count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp"));
+		count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp")).get();
 		assertEquals(2, count.intValue());
 
 		try {

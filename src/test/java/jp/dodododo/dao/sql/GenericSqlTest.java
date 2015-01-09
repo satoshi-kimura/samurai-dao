@@ -161,8 +161,8 @@ public class GenericSqlTest extends S2TestCase {
 		int afterCount = dao.select(SIMPLE_COUNT_WHERE, args(TABLE_NAME, "emp"), Integer.class).get(0);
 
 		assertEquals(beforeCount + 2, afterCount);
-		Emp one = dao.selectOne(SIMPLE_WHERE, new Emp("1", null));
-		Emp two = dao.selectOne(SIMPLE_WHERE, new Emp("2", null));
+		Emp one = dao.selectOne(SIMPLE_WHERE, new Emp("1", null)).get();
+		Emp two = dao.selectOne(SIMPLE_WHERE, new Emp("2", null)).get();
 		assertNull(one.getENAME());
 		assertEquals("ROD", two.getENAME());
 	}
@@ -185,8 +185,8 @@ public class GenericSqlTest extends S2TestCase {
 		int afterCount = dao.select(SIMPLE_COUNT_WHERE, args(TABLE_NAME, "emp"), Integer.class).get(0);
 
 		assertEquals(beforeCount + 2, afterCount);
-		Emp one = dao.selectOne(SIMPLE_WHERE, new Emp("1", null));
-		Emp two = dao.selectOne(SIMPLE_WHERE, new Emp("2", null));
+		Emp one = dao.selectOne(SIMPLE_WHERE, new Emp("1", null)).get();
+		Emp two = dao.selectOne(SIMPLE_WHERE, new Emp("2", null)).get();
 		assertNull(one.getENAME());
 		assertEquals("ROD", two.getENAME());
 	}

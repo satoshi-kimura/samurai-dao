@@ -1,17 +1,18 @@
 package jp.dodododo.dao;
 
 import java.math.BigDecimal;
-import java.util.function.Consumer;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-import jp.dodododo.dao.sql.Sql;
 import jp.dodododo.dao.script.Each;
+import jp.dodododo.dao.sql.Sql;
 
 public interface SelectDao {
 	<ROW> List<ROW> select(Class<ROW> returnType, Object... args);
 
-	<ROW> ROW selectOne(Class<ROW> returnType, Object... args);
+	<ROW> Optional<ROW> selectOne(Class<ROW> returnType, Object... args);
 
 	<ROW> List<ROW> select(String sql, Class<ROW> as);
 
@@ -29,9 +30,9 @@ public interface SelectDao {
 
 	<ROW> List<ROW> select(String sql, Class<ROW> as, IterationCallback<ROW> callback);
 
-	<ROW> ROW selectOne(String sql, Map<String, Object> arg, Class<ROW> as);
+	<ROW> Optional<ROW> selectOne(String sql, Map<String, Object> arg, Class<ROW> as);
 
-	<ROW> ROW selectOne(String sql, Class<ROW> as);
+	<ROW> Optional<ROW> selectOne(String sql, Class<ROW> as);
 
 	List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg);
 
@@ -49,13 +50,13 @@ public interface SelectDao {
 
 	List<Map<String, Object>> selectMap(String sql, Consumer<Map<String, Object>> callback);
 
-	Map<String, Object> selectOneMap(String sql, Map<String, Object> arg);
+	Optional<Map<String, Object>> selectOneMap(String sql, Map<String, Object> arg);
 
-	Map<String, Object> selectOneMap(String sql);
+	Optional<Map<String, Object>> selectOneMap(String sql);
 
-	BigDecimal selectOneNumber(String sql, Map<String, Object> arg);
+	Optional<BigDecimal> selectOneNumber(String sql, Map<String, Object> arg);
 
-	BigDecimal selectOneNumber(String sql);
+	Optional<BigDecimal> selectOneNumber(String sql);
 
 	<ROW> List<ROW> select(Sql sql, Class<ROW> as);
 
@@ -69,7 +70,7 @@ public interface SelectDao {
 
 	<ROW> List<ROW> select(Sql sql, Map<String, Object> arg, Class<ROW> as);
 
-	<ROW> ROW selectOne(Sql sql, ROW query);
+	<ROW> Optional<ROW> selectOne(Sql sql, ROW query);
 
 	List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query);
 
@@ -81,13 +82,13 @@ public interface SelectDao {
 
 	List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query, Consumer<Map<String, Object>> callback);
 
-	Map<String, Object> selectOneMap(Sql sql, Map<String, Object> query);
+	Optional<Map<String, Object>> selectOneMap(Sql sql, Map<String, Object> query);
 
-	Map<String, Object> selectOneMap(Object... query);
+	Optional<Map<String, Object>> selectOneMap(Object... query);
 
-	BigDecimal selectOneNumber(Sql sql, Map<String, Object> query);
+	Optional<BigDecimal> selectOneNumber(Sql sql, Map<String, Object> query);
 
-	<QUERY> BigDecimal selectOneNumber(Sql sql, QUERY query);
+	<QUERY> Optional<BigDecimal> selectOneNumber(Sql sql, QUERY query);
 
 	boolean existsRecord(String sql);
 
