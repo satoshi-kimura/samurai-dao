@@ -455,18 +455,22 @@ public class PropertyDesc implements AnnotatedElement {
 		return getPropertyType().isEnum();
 	}
 
+    @Override
 	public <A extends Annotation> A getAnnotation(Class<A> annotation) {
 		return getAnnotatedElement().getAnnotation(annotation);
 	}
 
+    @Override
 	public Annotation[] getAnnotations() {
 		return getAnnotatedElement().getAnnotations();
 	}
 
+    @Override
 	public Annotation[] getDeclaredAnnotations() {
 		return getAnnotatedElement().getDeclaredAnnotations();
 	}
 
+    @Override
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
 		return getAnnotatedElement().isAnnotationPresent(annotationClass);
 	}
@@ -500,6 +504,7 @@ public class PropertyDesc implements AnnotatedElement {
 			this.field = field;
 		}
 
+	    @Override
 		public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
 			if (writeMethod != null) {
 				T ret = writeMethod.getAnnotation(annotationType);
@@ -519,6 +524,7 @@ public class PropertyDesc implements AnnotatedElement {
 			return null;
 		}
 
+	    @Override
 		public Annotation[] getAnnotations() {
 			List<Annotation> ret = new ArrayList<Annotation>();
 			if (writeMethod != null) {
@@ -533,6 +539,7 @@ public class PropertyDesc implements AnnotatedElement {
 			return ret.toArray(new Annotation[ret.size()]);
 		}
 
+	    @Override
 		public Annotation[] getDeclaredAnnotations() {
 			List<Annotation> ret = new ArrayList<Annotation>();
 			if (writeMethod != null) {
@@ -547,6 +554,7 @@ public class PropertyDesc implements AnnotatedElement {
 			return ret.toArray(new Annotation[ret.size()]);
 		}
 
+	    @Override
 		public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
 			if (writeMethod != null) {
 				boolean ret = writeMethod.isAnnotationPresent(annotationType);

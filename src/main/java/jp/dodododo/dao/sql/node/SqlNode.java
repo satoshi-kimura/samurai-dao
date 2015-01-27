@@ -10,6 +10,7 @@ public class SqlNode extends AbstractNode {
 		this.sql = sql;
 	}
 
+    @Override
 	public void accept(CommandContext ctx) {
 		ctx.addSql(sql);
 	}

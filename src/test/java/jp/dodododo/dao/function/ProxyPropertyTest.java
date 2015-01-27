@@ -111,10 +111,12 @@ public class ProxyPropertyTest extends S2TestCase {
 			this.DEPTNO = DEPTNO;
 		}
 
+	    @Override
 		public Dept lazyLoad() {
 			return DeptProxy.dao.selectOne("select * from dept where deptno =" + DEPTNO, Dept.class).get();
 		}
 
+	    @Override
 		public Dept real() {
 			if (real == null) {
 				real = lazyLoad();
@@ -177,6 +179,7 @@ public class ProxyPropertyTest extends S2TestCase {
 			return real().hashCode();
 		}
 
+	    @Override
 		public void setReal(Dept real) {
 		}
 

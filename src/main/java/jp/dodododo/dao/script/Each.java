@@ -53,6 +53,7 @@ public class Each implements IterationCallback<Object> {
 		return method;
 	}
 
+    @Override
 	public final void iterate(Object o) {
 		Method method = getMethod(o);
 		if (method == null) {

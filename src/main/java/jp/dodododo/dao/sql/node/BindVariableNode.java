@@ -28,6 +28,7 @@ public class BindVariableNode extends AbstractNode {
 		names = StringUtil.split(expression, ".");
 	}
 
+    @Override
 	public void accept(CommandContext ctx) {
 		String name = topObjectName();
 		Object value;

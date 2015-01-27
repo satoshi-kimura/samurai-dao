@@ -11,6 +11,7 @@ public class AbstractNodeTest extends TestCase {
 
 	public void testIsEnclosedBySingleQuot() {
 		AbstractNode node = new AbstractNode() {
+		    @Override
 			public void accept(CommandContext ctx) {
 			}
 		};
@@ -31,6 +32,7 @@ public class AbstractNodeTest extends TestCase {
 
 	public void testGetValueOgnl() {
 		AbstractNode node = new AbstractNode() {
+		    @Override
 			public void accept(CommandContext ctx) {
 			}
 		};
@@ -49,6 +51,7 @@ public class AbstractNodeTest extends TestCase {
 
 	public void testGetValueDialect() {
 		AbstractNode node = new AbstractNode() {
+		    @Override
 			public void accept(CommandContext ctx) {
 			}
 		};

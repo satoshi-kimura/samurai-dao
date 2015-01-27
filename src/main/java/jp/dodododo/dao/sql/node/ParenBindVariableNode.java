@@ -20,6 +20,7 @@ public class ParenBindVariableNode extends AbstractNode {
 		return expression;
 	}
 
+    @Override
 	public void accept(CommandContext ctx) {
 		Object var = OgnlUtil.getValue(parsedExpression, ctx);
 		if (var == null) {

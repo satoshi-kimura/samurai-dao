@@ -15,9 +15,11 @@ public class EmptyIterationCallback<ROW> implements IterationCallback<ROW> {
 		return (IterationCallback<ROW>) instance;
 	}
 
+    @Override
 	public void iterate(ROW object) {
 	}
 
+    @Override
 	public List<ROW> getResult() {
 		return new ArrayList<ROW>();
 	}

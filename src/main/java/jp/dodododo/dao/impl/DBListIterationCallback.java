@@ -8,10 +8,12 @@ import jp.dodododo.dao.util.DbArrayList;
 public class DBListIterationCallback<ROW> implements IterationCallback<ROW> {
 	protected List<ROW> list = new DbArrayList<ROW>();
 
+    @Override
 	public void iterate(ROW object) {
 		list.add(object);
 	}
 
+    @Override
 	public List<ROW> getResult() {
 		return list;
 	}

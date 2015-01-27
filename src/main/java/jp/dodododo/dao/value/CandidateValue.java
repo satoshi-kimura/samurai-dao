@@ -58,6 +58,7 @@ public class CandidateValue implements Serializable {
 
 	public static class Comparator implements java.util.Comparator<CandidateValue> {
 
+	    @Override
 		public int compare(CandidateValue o1, CandidateValue o2) {
 			int level = o1.priorityLevel - o2.priorityLevel;
 			if (level != 0) {

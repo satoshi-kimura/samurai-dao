@@ -23,6 +23,7 @@ public class ForeignKey implements Iterable<ForeignKeyColumn> {
 		return columns.isEmpty();
 	}
 
+    @Override
 	public Iterator<ForeignKeyColumn> iterator() {
 		return columns.iterator();
 	}

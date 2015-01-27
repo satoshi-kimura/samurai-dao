@@ -91,18 +91,21 @@ public enum SQLTypes implements SQLType {
 		}
 	}
 
+    public static SQLType valueOf(int type) {
+        return VALUES.get(type);
+    }
+
+    @Override
 	public int getType() {
 		return type;
 	}
 
-	public static SQLType valueOf(int type) {
-		return VALUES.get(type);
-	}
-
+    @Override
 	public Object convert(Object value) {
 		return convert(value, new String[0]);
 	}
 
+    @Override
 	public Object convert(Object value, String... fromats) {
 		return TypesUtil.getJavaType(javaType).convert(value, fromats);
 	}
@@ -111,10 +114,12 @@ public enum SQLTypes implements SQLType {
 		VALUES.put(type, sqlType);
 	}
 
+    @Override
 	public JavaType<?> toJavaType() {
 		return TypesUtil.getJavaType(this.javaType);
 	}
 
+    @Override
 	public boolean isBinary() {
 		return isBinary;
 	}

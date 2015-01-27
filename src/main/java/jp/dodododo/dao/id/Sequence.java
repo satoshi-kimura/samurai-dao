@@ -13,12 +13,14 @@ import jp.dodododo.dao.impl.RdbDao;
 public enum Sequence implements IdGenerator {
 	SEQUENCE;
 
+    @Override
 	public Object generate(Connection connection, String sequenceName) {
 		Dialect dialect = DialectManager.getDialect(connection);
 		return generate(connection, dialect, sequenceName);
 
 	}
 
+    @Override
 	public Object generate(Connection connection, Dialect dialect, String sequenceName) {
 		String sql = dialect.sequenceNextValSql(sequenceName);
 		Dao dao = new RdbDao(connection);
@@ -27,10 +29,12 @@ public enum Sequence implements IdGenerator {
 		return values.iterator().next();
 	}
 
+    @Override
 	public boolean isPrepare(Connection connection) {
 		return true;
 	}
 
+    @Override
 	public boolean isPrepare(Dialect dialect) {
 		return true;
 	}

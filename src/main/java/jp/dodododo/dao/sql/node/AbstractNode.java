@@ -39,18 +39,22 @@ public abstract class AbstractNode implements Node {
 		return children;
 	}
 
+    @Override
 	public int getChildSize() {
 		return children.size();
 	}
 
+    @Override
 	public boolean isEmpty() {
 		return children.isEmpty();
 	}
 
+    @Override
 	public Node getChild(int index) {
 		return children.get(index);
 	}
 
+    @Override
 	public void addChild(Node node) {
 		children.add(node);
 		node.setParent(this);
@@ -159,10 +163,12 @@ public abstract class AbstractNode implements Node {
 		ctx.addSql(")");
 	}
 
+    @Override
 	public void setSql(String sql) {
 		this.sql = sql;
 	}
 
+    @Override
 	public String getSql() {
 		if (sql == null) {
 			return parent.getSql();
@@ -170,6 +176,7 @@ public abstract class AbstractNode implements Node {
 		return sql;
 	}
 
+    @Override
 	public void setParent(Node parent) {
 		this.parent = parent;
 	}

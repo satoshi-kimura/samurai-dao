@@ -203,10 +203,12 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		}
 	}
 
+    @Override
 	public int insert(String tableName, Object... entity) {
 		return insert(tableName, entity[0], null, null, OPTIMISTIC_LOCKING, entity);
 	}
 
+    @Override
 	public <ENTITY> int insert(ENTITY entity) {
 		return insert(getTableName(entity, getConnection()), entity);
 	}
@@ -258,39 +260,48 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return tableName;
 	}
 
+    @Override
 	public <ENTITY> int delete(String tableName, ENTITY entity) {
 		return delete(tableName, entity, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int delete(ENTITY entity) {
 		return delete(getTableName(entity, getConnection()), entity);
 	}
 
+    @Override
 	public int update(String tableName, Object... entity) {
 		return update(tableName, entity[0], null, null, OPTIMISTIC_LOCKING, entity);
 	}
 
+    @Override
 	public <ENTITY> int update(ENTITY entity) {
 		return update(getTableName(entity, getConnection()), entity);
 	}
 
+    @Override
 	public <ENTITY> int[] delete(Collection<ENTITY> entities) {
 		return delete(entities, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int[] insert(Collection<ENTITY> entities) {
 		return insert(entities, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int[] update(Collection<ENTITY> entities) {
 		return update(entities, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ROW> Optional<ROW> selectOne(Class<ROW> returnType, Object... args) {
 		List<ROW> list = select(returnType, args);
 		return getOne(list, args);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(Class<ROW> returnType, Object... args) {
 		return select(SIMPLE_WHERE, query(args), returnType);
 	}
@@ -417,11 +428,13 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return resultSetHandlerFactory.create(entityClass, javaType, callback, dialect, arg, getConnection());
 	}
 
+    @Override
 	public <ROW> Optional<ROW> selectOne(String sql, Map<String, Object> arg, Class<ROW> entityClass) {
 		List<ROW> rows = select(sql, arg, entityClass);
 		return getOne(rows, arg);
 	}
 
+    @Override
 	public <ROW> Optional<ROW> selectOne(String sql, Class<ROW> entityClass) {
 		return selectOne(sql, null, entityClass);
 	}
@@ -431,74 +444,92 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		initDialect();
 	}
 
+    @Override
 	public <ENTITY> int insert(String tableName, ENTITY entity, NoPersistentColumns npc) {
 		return insert(tableName, entity, null, npc.getColumnList(), OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int insert(ENTITY entity, NoPersistentColumns npc) {
 		return insert(getTableName(entity, getConnection()), entity, npc);
 	}
 
+    @Override
 	public <ENTITY> int insert(String tableName, ENTITY entity, PersistentColumns pc) {
 		return insert(tableName, entity, pc.getColumnList(), null, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int insert(ENTITY entity, PersistentColumns pc) {
 		return insert(getTableName(entity, getConnection()), entity, pc);
 	}
 
+    @Override
 	public <ENTITY> int[] insert(Collection<ENTITY> entities, NoPersistentColumns npc) {
 		return insert(entities, npc, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int insert(String tableName, ENTITY entity, Locking locking) {
 		return insert(tableName, entity, null, null, locking);
 	}
 
+    @Override
 	public <ENTITY> int insert(ENTITY entity, Locking locking) {
 		return insert(getTableName(entity, getConnection()), entity, locking);
 	}
 
+    @Override
 	public <ENTITY> int insert(String tableName, ENTITY entity, NoPersistentColumns npc, Locking locking) {
 		return insert(tableName, entity, null, npc.getColumnList(), locking);
 	}
 
+    @Override
 	public <ENTITY> int insert(ENTITY entity, NoPersistentColumns npc, Locking locking) {
 		return insert(getTableName(entity, getConnection()), entity, npc, locking);
 	}
 
+    @Override
 	public <ENTITY> int[] insert(Collection<ENTITY> entities, PersistentColumns pc) {
 		return insert(entities, pc, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int insert(String tableName, ENTITY entity, PersistentColumns pc, Locking locking) {
 		return insert(tableName, entity, pc.getColumnList(), null, locking);
 	}
 
+    @Override
 	public <ENTITY> int insert(ENTITY entity, PersistentColumns pc, Locking locking) {
 		return insert(getTableName(entity, getConnection()), entity, pc, locking);
 	}
 
+    @Override
 	public <ENTITY> int update(String tableName, ENTITY entity, NoPersistentColumns npc) {
 		return update(tableName, entity, npc, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int update(ENTITY entity, NoPersistentColumns npc) {
 		return update(getTableName(entity, getConnection()), entity, npc);
 	}
 
+    @Override
 	public <ENTITY> int update(String tableName, ENTITY entity, PersistentColumns pc) {
 		return update(tableName, entity, pc, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int update(ENTITY entity, PersistentColumns pc) {
 		return update(getTableName(entity, getConnection()), entity, pc);
 	}
 
+    @Override
 	public <ENTITY> int[] update(Collection<ENTITY> entities, NoPersistentColumns npc) {
 		return update(entities, npc, OPTIMISTIC_LOCKING);
 	}
 
+    @Override
 	public <ENTITY> int[] update(Collection<ENTITY> entities, PersistentColumns pc) {
 		return update(entities, pc, OPTIMISTIC_LOCKING);
 	}
@@ -532,50 +563,62 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return new CaseInsensitiveSet(list);
 	}
 
+    @Override
 	public <ENTITY> int[] insert(Collection<ENTITY> entities, Locking locking) {
 		return insertBatch(entities, null, null, locking);
 	}
 
+    @Override
 	public <ENTITY> int[] insert(Collection<ENTITY> entities, NoPersistentColumns npc, Locking locking) {
 		return insertBatch(entities, null, npc.getColumnList(), locking);
 	}
 
+    @Override
 	public <ENTITY> int[] insert(Collection<ENTITY> entities, PersistentColumns pc, Locking locking) {
 		return insertBatch(entities, pc.getColumnList(), null, locking);
 	}
 
+    @Override
 	public <ENTITY> int update(String tableName, ENTITY entity, Locking locking) {
 		return update(tableName, entity, null, null, locking);
 	}
 
+    @Override
 	public <ENTITY> int update(ENTITY entity, Locking locking) {
 		return update(getTableName(entity, getConnection()), entity, locking);
 	}
 
+    @Override
 	public <ENTITY> int update(String tableName, ENTITY entity, NoPersistentColumns npc, Locking locking) {
 		return update(tableName, entity, null, npc.getColumnList(), locking);
 	}
 
+    @Override
 	public <ENTITY> int update(ENTITY entity, NoPersistentColumns npc, Locking locking) {
 		return update(getTableName(entity, getConnection()), entity, npc, locking);
 	}
 
+    @Override
 	public <ENTITY> int update(String tableName, ENTITY entity, PersistentColumns pc, Locking locking) {
 		return update(tableName, entity, pc.getColumnList(), null, locking);
 	}
 
+    @Override
 	public <ENTITY> int update(ENTITY entity, PersistentColumns pc, Locking locking) {
 		return update(getTableName(entity, getConnection()), entity, pc, locking);
 	}
 
+    @Override
 	public <ENTITY> int[] update(Collection<ENTITY> entities, Locking locking) {
 		return updateBatch(entities, null, null, locking);
 	}
 
+    @Override
 	public <ENTITY> int[] update(Collection<ENTITY> entities, NoPersistentColumns npc, Locking locking) {
 		return updateBatch(entities, null, npc.getColumnList(), locking);
 	}
 
+    @Override
 	public <ENTITY> int[] update(Collection<ENTITY> entities, PersistentColumns pc, Locking locking) {
 		return updateBatch(entities, pc.getColumnList(), null, locking);
 	}
@@ -1172,6 +1215,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	 * <li>Locking
 	 * </ul>
 	 */
+    @Override
 	public int[] executeBatch(String sql, List<Object> list) {
 		if (list.isEmpty() == true) {
 			return new int[] {};
@@ -1417,10 +1461,12 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return sql.toString();
 	}
 
+    @Override
 	public <ENTITY> int delete(ENTITY entity, Locking locking) {
 		return delete(getTableName(entity, getConnection()), entity, locking);
 	}
 
+    @Override
 	public <ENTITY> int delete(String tableName, ENTITY entity, Locking locking) {
 		if (entity == null) {
 			throw new IllegalArgumentException(Message.getMessage("00001"));
@@ -1465,6 +1511,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return sql.toString();
 	}
 
+    @Override
 	public <ENTITY> int[] delete(Collection<ENTITY> entities, Locking locking) {
 		return deleteBatch(entities, locking);
 	}
@@ -1524,26 +1571,32 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		// empty
 	}
 
+    @Override
 	public int executeInsert(String sql) {
 		return executeInsert(sql, new HashMap<String, Object>());
 	}
 
+    @Override
 	public int executeInsert(String sql, Map<String, Object> arg) {
 		return _executeUpdate(sql, arg);
 	}
 
+    @Override
 	public int executeUpdate(String sql) {
 		return executeUpdate(sql, new HashMap<String, Object>());
 	}
 
+    @Override
 	public int executeUpdate(String sql, Map<String, Object> arg) {
 		return _executeUpdate(sql, arg);
 	}
 
+    @Override
 	public int executeDelete(String sql) {
 		return executeDelete(sql, new HashMap<String, Object>());
 	}
 
+    @Override
 	public int executeDelete(String sql, Map<String, Object> arg) {
 		return _executeUpdate(sql, arg);
 	}
@@ -1557,6 +1610,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return executeUpdate(values, sql, null, true);
 	}
 
+    @Override
 	public int execute(Sql sql, Object... entity) throws SQLRuntimeException {
 		List<?> list = getList(entity);
 		SqlContext context = createSqlConetxt(entity, list, false);
@@ -1714,19 +1768,23 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return config.getFormats();
 	}
 
+    @Override
 	public void setSqlLogRegistry(SqlLogRegistry sqlLogRegistry) {
 		this.sqlLogRegistry = sqlLogRegistry;
 	}
 
+    @Override
 	public Optional<Map<String, Object>> selectOneMap(String sql, Map<String, Object> arg) {
 		List<Map<String, Object>> rows = selectMap(sql, arg);
 		return getOne(rows, arg);
 	}
 
+    @Override
 	public Optional<Map<String, Object>> selectOneMap(String sql) {
 		return selectOneMap(sql, null);
 	}
 
+    @Override
 	public Optional<BigDecimal> selectOneNumber(String sql, Map<String, Object> arg) {
 		IterationCallback<BigDecimal> callback = new DBListIterationCallback<BigDecimal>();
 		ResultSetHandler<?> handler = createResultSetHandler(BigDecimal.class, callback, this.dialect, arg);
@@ -1745,14 +1803,17 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		}
 	}
 
+    @Override
 	public Optional<BigDecimal> selectOneNumber(String sql) {
 		return selectOneNumber(sql, null);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(String sql, Map<String, Object> arg, Class<ROW> entityClass) {
 		return select(sql, arg, entityClass, new DBListIterationCallback<ROW>());
 	}
 
+    @Override
 	public <ROW> List<ROW> select(Sql sql, Map<String, Object> arg, Class<ROW> entityClass) throws SQLRuntimeException {
 		IterationCallback<ROW> callback = new DBListIterationCallback<ROW>();
 		SqlContext context = createSqlConetxt(arg);
@@ -1760,33 +1821,40 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return select(sqlString, context.getParameters(), entityClass, callback);
 	}
 
+    @Override
 	@SuppressWarnings("unchecked")
 	public <ROW> List<ROW> select(String sql, Map<String, Object> arg, Class<ROW> entityClass, Each callback) {
 		return select(sql, arg, entityClass, (IterationCallback<ROW>) callback);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(String sql, Map<String, Object> arg, Class<ROW> entityClass, IterationCallback<ROW> callback) {
 		ResultSetHandler<?> handler = createResultSetHandler(entityClass, callback, dialect, arg);
 		return select(sql, arg, callback, handler);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(String sql, Class<ROW> entityClass) {
 		return select(sql, null, entityClass);
 	}
 
+    @Override
 	@SuppressWarnings("unchecked")
 	public <ROW> List<ROW> select(String sql, Class<ROW> entityClass, Each callback) {
 		return select(sql, entityClass, (IterationCallback<ROW>) callback);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(String sql, Class<ROW> entityClass, IterationCallback<ROW> callback) {
 		return select(sql, null, entityClass, callback);
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg) {
 		return selectMap(sql, arg, new DBListIterationCallback<Map<String, Object>>());
 	}
 
+    @Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg, IterationCallback<Map<String, Object>> callback) {
 
@@ -1796,32 +1864,39 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return ret;
 	}
 
+    @Override
 	@SuppressWarnings({  "unchecked" })
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg, Each callback) {
 		return selectMap(sql, arg, (IterationCallback<Map<String, Object>>) ((IterationCallback<?>) callback));
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(String sql) {
 		return selectMap(sql, new DBListIterationCallback<Map<String, Object>>());
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(String sql, IterationCallback<Map<String, Object>> callback) {
 		return selectMap(sql, null, callback);
 	}
 
+    @Override
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> selectMap(String sql, Each callback) {
 		return selectMap(sql, (IterationCallback<Map<String, Object>>) ((IterationCallback<?>) callback));
 	}
 
+    @Override
 	public SqlLogRegistry getSqlLogRegistry() {
 		return sqlLogRegistry;
 	}
 
+    @Override
 	public <ROW> List<ROW> select(Sql sql, Class<ROW> entityClass) {
 		return select(sql, args(TABLE_NAME, getTableName(entityClass)), entityClass);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(Sql sql, ROW query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
@@ -1975,23 +2050,27 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		}
 	}
 
+    @Override
 	@SuppressWarnings("unchecked")
 	public <ROW> List<ROW> select(Sql sql, ROW query, Each callback) {
 		return select(sql, query, (IterationCallback<ROW>) callback);
 	}
 
+    @Override
 	public <ROW> List<ROW> select(Sql sql, ROW query, IterationCallback<ROW> callback) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return select(sqlString, context.getParameters(), getClass(query), callback);
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectMap(sqlString, context.getParameters());
 	}
 
+    @Override
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> selectMap(Object... query) {
 		IterationCallback<Map<String, Object>> callback = new DBListIterationCallback<Map<String, Object>>();
@@ -2003,39 +2082,46 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return selectMap(SIMPLE_WHERE, query(query), callback);
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query, IterationCallback<Map<String, Object>> callback) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectMap(sqlString, context.getParameters(), callback);
 	}
 
+    @Override
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query, Each callback) {
 		return selectMap(sql, query, (IterationCallback<Map<String, Object>>) ((IterationCallback<?>) callback));
 	}
 
+    @Override
 	public <ROW> Optional<ROW> selectOne(Sql sql, ROW query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOne(sqlString, context.getParameters(), getClass(query));
 	}
 
+    @Override
 	public Optional<Map<String, Object>> selectOneMap(Sql sql, Map<String, Object> query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOneMap(sqlString, context.getParameters());
 	}
 
+    @Override
 	public Optional<Map<String, Object>> selectOneMap(Object... query) {
 		return selectOneMap(SIMPLE_WHERE, query(query));
 	}
 
+    @Override
 	public Optional<BigDecimal> selectOneNumber(Sql sql, Map<String, Object> query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
 		return selectOneNumber(sqlString, context.getParameters());
 	}
 
+    @Override
 	public <QUERY> Optional<BigDecimal> selectOneNumber(Sql sql, QUERY query) {
 		SqlContext context = createSqlConetxt(query);
 		String sqlString = sql.getSql(context);
@@ -2046,26 +2132,31 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return ClassUtil.getClass(t);
 	}
 
+    @Override
 	public boolean existsRecord(String sql) {
 		return existsRecord(sql, null);
 	}
 
+    @Override
 	public boolean existsRecord(String sql, Map<String, Object> query) {
 		List<Map<String, Object>> result = selectMap(sql, query);
 		return result.isEmpty() == false;
 	}
 
+    @Override
 	public boolean existsRecord(Sql sql) throws SQLRuntimeException {
 		@SuppressWarnings("rawtypes")
 		List<Map> result = this.select(sql, Map.class);
 		return result.isEmpty() == false;
 	}
 
+    @Override
 	public <QUERY> boolean existsRecord(Sql sql, QUERY query) {
 		List<QUERY> result = this.select(sql, query);
 		return result.isEmpty() == false;
 	}
 
+    @Override
 	public boolean existsRecord(Object... query) {
 		return existsRecord(SIMPLE_WHERE, query(query));
 	}
@@ -2074,19 +2165,23 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return Identity.IDENTITY.generate(getConnection(), dialect, null);
 	}
 
+    @Override
 	public <T> T getLastInsertId(Class<T> returnType) {
 		Object id = getLastInsertId();
 		return TypeConverter.convert(id, returnType);
 	}
 
+    @Override
 	public DaoConfig getConfig() {
 		return config;
 	}
 
+    @Override
 	public <ENTITY> boolean exists(ENTITY entity) {
 		return exists(getTableName(entity, getConnection()), entity);
 	}
 
+    @Override
 	public boolean exists(String tableName, Object... entities) {
 		if (entities == null) {
 			throw new IllegalArgumentException(Message.getMessage("00001"));
@@ -2128,32 +2223,39 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return JndiUtil.lookup(DataSource.class, jndiName);
 	}
 
+    @Override
 	public void setQueryTimeout(int seconds) {
 		if (0 < seconds) {
 			queryTimeout = seconds;
 		}
 	}
 
+    @Override
 	public <ROW> List<ROW> select(String sql, Class<ROW> as, Consumer<ROW> callback) {
 		return select(sql, as, new ConsumerWrapper<ROW>(callback));
 	}
 
+    @Override
 	public <ROW> List<ROW> select(String sql, Map<String, Object> arg, Class<ROW> as, Consumer<ROW> callback) {
 		return select(sql, arg, as, new ConsumerWrapper<ROW>(callback));
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg, Consumer<Map<String, Object>> callback) {
 		return selectMap(sql, arg, new ConsumerWrapper<Map<String, Object>>(callback));
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(String sql, Consumer<Map<String, Object>> callback) {
 		return selectMap(sql, new ConsumerWrapper<Map<String, Object>>(callback));
 	}
 
+    @Override
 	public <ROW> List<ROW> select(Sql sql, ROW query, Consumer<ROW> callback) {
 		return select(sql, query, new ConsumerWrapper<ROW>(callback));
 	}
 
+    @Override
 	public List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query, Consumer<Map<String, Object>> callback) {
 		return selectMap(sql, query, new ConsumerWrapper<Map<String, Object>>(callback));
 	}

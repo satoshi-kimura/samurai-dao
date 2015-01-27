@@ -2,8 +2,6 @@ package jp.dodododo.dao;
 
 import java.util.List;
 
-import jp.dodododo.dao.IterationCallback;
-
 public abstract class Each<T> implements IterationCallback<T> {
 
 	@Override
@@ -11,6 +9,7 @@ public abstract class Each<T> implements IterationCallback<T> {
 		return null;
 	}
 
+    @Override
 	public final void iterate(T x) {
 		each(x);
 	}

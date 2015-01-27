@@ -23,6 +23,7 @@ public class EmbeddedValueNode extends AbstractNode {
 		return expression;
 	}
 
+    @Override
 	public void accept(CommandContext ctx) {
 		String name = names[0];
 		Object value = ctx.getArg(name);

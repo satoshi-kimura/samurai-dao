@@ -189,16 +189,19 @@ public class PropertyDescTest {
 
 		public Target real;
 
+	    @Override
 		public Target lazyLoad() {
 			Target target = new Target();
 			target.property2 = new ArrayList<String>();
 			return target;
 		}
 
+	    @Override
 		public Target real() {
 			return real;
 		}
 
+	    @Override
 		public void setReal(Target real) {
 			this.real = real;
 		}

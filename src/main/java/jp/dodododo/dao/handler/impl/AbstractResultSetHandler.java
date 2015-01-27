@@ -33,6 +33,7 @@ public abstract class AbstractResultSetHandler<T> implements ResultSetHandler<T>
 		this.callback = callback;
 	}
 
+    @Override
 	public void handle(ResultSet rs) throws SQLException {
 		List<ResultSetColumn> resultSetColumnList = getResultSetColumnList(rs);
 		List<T> resultList = callback.getResult();

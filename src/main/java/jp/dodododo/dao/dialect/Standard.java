@@ -18,6 +18,7 @@ import jp.dodododo.dao.util.InputStreamUtil;
 
 public class Standard implements Dialect {
 
+    @Override
 	public String limitOffsetSql(String originalSQL, LimitOffset limitOffset) {
 		long offset = limitOffset.getOffset();
 		long limit = limitOffset.getLimit();
@@ -29,52 +30,64 @@ public class Standard implements Dialect {
 		return sqlBuf.toString();
 	}
 
+    @Override
 	public String sequenceNextValSql(String sequenceName) {
 		throw new UnsupportedOperationException();
 	}
 
+    @Override
 	public String identitySelectSql() {
 		throw new UnsupportedOperationException();
 	}
 
+    @Override
 	public String getSuffix() {
 		throw new UnsupportedOperationException();
 	}
 
+    @Override
 	public ResultSet resultSet(ResultSet rs) {
 		return rs;
 	}
 
+    @Override
 	public String toDateString(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return "'" + sdf.format(date) + "'";
 	}
 
+    @Override
 	public String toTimestampString(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
 		return "'" + sdf.format(date) + "'";
 	}
 
+    @Override
 	public boolean isPrepareIdentitySelectSql() {
 		return true;
 	}
 
+    @Override
 	public PreparedStatement preparedStatement(PreparedStatement ps) {
 		return ps;
 	}
 
+    @Override
 	public BigDecimal getBigDecimal(ResultSet rs, int columnIndex) throws SQLException {
 		return rs.getBigDecimal(columnIndex);
 	}
 
+    @Override
 	public void setBinaryStream(PreparedStatement ps, int index, InputStream inputStream) throws SQLException {
 		ps.setBinaryStream(index, inputStream, InputStreamUtil.available(inputStream));
 	}
 
+    @Override
 	public String getVersion() {
 		return null;
 	}
 
+    @Override
 	public void setId(Object entity, PropertyDesc propertyDesc, Object idValue) {
 		if (idValue == null) {
 			return;
@@ -82,6 +95,7 @@ public class Standard implements Dialect {
 		propertyDesc.setValue(entity, idValue);
 	}
 
+    @Override
 	public void bugfix(ColumnMetaData columnMetaData) {
 	}
 

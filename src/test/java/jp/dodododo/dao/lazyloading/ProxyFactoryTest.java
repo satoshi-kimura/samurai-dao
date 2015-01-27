@@ -50,14 +50,17 @@ public class ProxyFactoryTest extends ProxyFactory {
 			this.i = i;
 		}
 
+	    @Override
 		public NotAuto lazyLoad() {
 			return null;
 		}
 
+	    @Override
 		public NotAuto real() {
 			return null;
 		}
 
+	    @Override
 		public void setReal(NotAuto real) {
 		}
 
@@ -65,14 +68,17 @@ public class ProxyFactoryTest extends ProxyFactory {
 
 	public static class Auto implements AutoLazyLoadingProxy<Auto> {
 
+	    @Override
 		public Auto lazyLoad() {
 			return null;
 		}
 
+	    @Override
 		public Auto real() {
 			return null;
 		}
 
+	    @Override
 		public void setReal(Auto real) {
 		}
 	}

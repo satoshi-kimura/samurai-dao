@@ -22,6 +22,7 @@ public class PrefixSqlNode extends AbstractNode {
 		return sql;
 	}
 
+    @Override
 	public void accept(CommandContext ctx) {
 		if (ctx.isEnabled()) {
 			ctx.addSql(prefix);

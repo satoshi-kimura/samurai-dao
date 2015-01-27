@@ -13,11 +13,13 @@ import jp.dodododo.dao.impl.RdbDao;
 public enum Identity implements IdGenerator {
 	IDENTITY;
 
+    @Override
 	public Object generate(Connection connection, String sequenceName) {
 		Dialect dialect = DialectManager.getDialect(connection);
 		return generate(connection, dialect, sequenceName);
 	}
 
+    @Override
 	public Object generate(Connection connection, Dialect dialect, String sequenceName) {
 		String sql = dialect.identitySelectSql();
 		Dao dao = new RdbDao(connection);
@@ -26,11 +28,13 @@ public enum Identity implements IdGenerator {
 		return values.iterator().next();
 	}
 
+    @Override
 	public boolean isPrepare(Connection connection) {
 		Dialect dialect = DialectManager.getDialect(connection);
 		return isPrepare(dialect);
 	}
 
+    @Override
 	public boolean isPrepare(Dialect dialect) {
 		return dialect.isPrepareIdentitySelectSql();
 	}

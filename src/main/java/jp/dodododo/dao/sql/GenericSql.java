@@ -68,6 +68,7 @@ public enum GenericSql implements Sql {
 		this(genericSql.sqlTemplate);
 	}
 
+    @Override
 	public String getSql(SqlContext context) {
 		return FreeMarkerUtil.process(sqlTemplate, context).trim();
 	}
