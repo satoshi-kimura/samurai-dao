@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 
 import jp.dodododo.dao.exception.IORuntimeException;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  *
  * @author Satoshi Kimura
@@ -134,11 +132,13 @@ public abstract class StringUtil {
 	}
 
 	public static String[] split(String str, String separatorChars) {
-		return StringUtils.split(str, separatorChars);
+		return str.split(separatorChars);
+		// return StringUtils.split(str, separatorChars);
 	}
 
 	public static String replace(String text, String searchString, String replacement) {
-		return StringUtils.replace(text, searchString, replacement);
+		return text.replaceAll(searchString, replacement);
+		// return StringUtils.replace(text, searchString, replacement);
 	}
 
 	public static int length(String s) {

@@ -16,7 +16,7 @@ public class EmbeddedValueNode extends AbstractNode {
 
 	public EmbeddedValueNode(String expression) {
 		this.expression = expression;
-		names = StringUtil.split(expression, ".");
+		names = StringUtil.split(expression, "\\.");
 	}
 
 	public String getExpression() {

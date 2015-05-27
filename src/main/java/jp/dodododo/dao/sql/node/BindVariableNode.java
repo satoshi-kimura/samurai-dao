@@ -25,7 +25,7 @@ public class BindVariableNode extends AbstractNode {
 	}
 
 	private void initNames(String expression) {
-		names = StringUtil.split(expression, ".");
+		names = StringUtil.split(expression, "\\.");
 	}
 
     @Override
