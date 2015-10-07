@@ -2,8 +2,7 @@ package jp.dodododo.dao.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import jp.dodododo.dao.exception.IORuntimeException;
+import java.io.UncheckedIOException;
 
 /**
  *
@@ -14,7 +13,7 @@ public abstract class InputStreamUtil {
 		try {
 			return is.available();
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 }

@@ -10,13 +10,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 
-import jp.dodododo.dao.exception.IORuntimeException;
 import jp.dodododo.dao.io.BufferedOutputStream;
 import jp.dodododo.dao.util.CloseableUtil;
 import jp.dodododo.dao.util.IOUtil;
@@ -53,7 +53,7 @@ public enum CompressType {
 				CloseableUtil.close(out, true);
 				return tmpDataInputStream(tmpDataMode, tmpFile, bufferSize, tmpDataOutputStream);
 			} catch (IOException e) {
-				throw new IORuntimeException(e);
+				throw new UncheckedIOException(e);
 			} finally {
 				CloseableUtil.close(out, true);
 			}
@@ -64,7 +64,7 @@ public enum CompressType {
 			try {
 				return new GZIPInputStream(stream);
 			} catch (IOException e) {
-				throw new IORuntimeException(e);
+				throw new UncheckedIOException(e);
 			}
 		}
 	},

@@ -3,8 +3,7 @@ package jp.dodododo.dao.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
-import jp.dodododo.dao.exception.IORuntimeException;
+import java.io.UncheckedIOException;
 
 public class FileInputStreamUtil {
 
@@ -12,7 +11,7 @@ public class FileInputStreamUtil {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 }

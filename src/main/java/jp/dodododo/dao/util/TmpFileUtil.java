@@ -2,10 +2,9 @@ package jp.dodododo.dao.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import jp.dodododo.dao.exception.IORuntimeException;
 
 public class TmpFileUtil {
 
@@ -24,7 +23,7 @@ public class TmpFileUtil {
 			tmpFile.deleteOnExit();
 			return tmpFile;
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 

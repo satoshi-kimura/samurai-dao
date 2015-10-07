@@ -1,11 +1,11 @@
 package jp.dodododo.dao.util;
 
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import jp.dodododo.dao.exception.IORuntimeException;
 import jp.dodododo.dao.exception.URISyntaxRuntimeException;
 
 public class URIUtil {
@@ -13,7 +13,7 @@ public class URIUtil {
 		try {
 			return uri.toURL();
 		} catch (MalformedURLException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 

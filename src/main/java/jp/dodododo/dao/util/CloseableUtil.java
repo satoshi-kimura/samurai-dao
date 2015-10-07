@@ -2,8 +2,7 @@ package jp.dodododo.dao.util;
 
 import java.io.Closeable;
 import java.io.IOException;
-
-import jp.dodododo.dao.exception.IORuntimeException;
+import java.io.UncheckedIOException;
 
 /**
  *
@@ -23,7 +22,7 @@ public abstract class CloseableUtil {
 			closeable.close();
 		} catch (IOException e) {
 			if (ignoreException == false) {
-				throw new IORuntimeException(e);
+				throw new UncheckedIOException(e);
 			}
 		}
 	}

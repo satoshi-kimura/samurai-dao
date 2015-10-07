@@ -5,8 +5,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import jp.dodododo.dao.exception.IORuntimeException;
+import java.io.UncheckedIOException;
 
 public class AutoCloseFileInputStream extends InputStream {
 
@@ -39,7 +38,7 @@ public class AutoCloseFileInputStream extends InputStream {
 				throw new IllegalStateException();
 			}
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 

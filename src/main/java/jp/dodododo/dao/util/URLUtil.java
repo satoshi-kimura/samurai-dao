@@ -2,12 +2,12 @@ package jp.dodododo.dao.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import jp.dodododo.dao.exception.IORuntimeException;
 import jp.dodododo.dao.exception.URISyntaxRuntimeException;
 
 public class URLUtil {
@@ -16,7 +16,7 @@ public class URLUtil {
 		try {
 			return new URL(spec);
 		} catch (MalformedURLException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 
@@ -24,7 +24,7 @@ public class URLUtil {
 		try {
 			return url.openStream();
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 

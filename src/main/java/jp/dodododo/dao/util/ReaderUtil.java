@@ -3,8 +3,7 @@ package jp.dodododo.dao.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import jp.dodododo.dao.exception.IORuntimeException;
+import java.io.UncheckedIOException;
 
 /**
  *
@@ -25,7 +24,7 @@ public abstract class ReaderUtil {
 				in.close();
 			}
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 		return out.toString();
 	}

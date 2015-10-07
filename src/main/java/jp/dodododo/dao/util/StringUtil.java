@@ -6,11 +6,10 @@ import java.beans.Introspector;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import jp.dodododo.dao.exception.IORuntimeException;
 
 /**
  *
@@ -96,7 +95,7 @@ public abstract class StringUtil {
 			}
 			return ret.toString().trim();
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 

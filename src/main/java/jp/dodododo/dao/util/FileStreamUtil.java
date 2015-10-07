@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
-import jp.dodododo.dao.exception.IORuntimeException;
 import jp.dodododo.dao.io.AutoCloseFileInputStream;
 
 public class FileStreamUtil {
@@ -18,7 +18,7 @@ public class FileStreamUtil {
 		try {
 			return new FileOutputStream(file);
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 
