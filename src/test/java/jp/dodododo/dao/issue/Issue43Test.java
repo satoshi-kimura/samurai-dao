@@ -2,6 +2,7 @@ package jp.dodododo.dao.issue;
 
 import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.Map;
@@ -10,29 +11,21 @@ import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Bean;
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.row.Row;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue43Test extends S2TestCase {
+public class Issue43Test {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() throws Exception {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 
 		List<Emp> empList = dao.select(ALL, Emp.class);
 		for (Emp emp : empList) {

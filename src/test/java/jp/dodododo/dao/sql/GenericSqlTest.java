@@ -3,11 +3,14 @@ package jp.dodododo.dao.sql;
 import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.dialect.Dialect;
@@ -16,30 +19,22 @@ import jp.dodododo.dao.dialect.MySQL;
 import jp.dodododo.dao.dialect.sqlite.SQLite;
 import jp.dodododo.dao.impl.Emp;
 import jp.dodododo.dao.log.SqlLogRegistry;
+import jp.dodododo.dao.unit.DbTestRule;
 import jp.dodododo.dao.value.ParameterValue;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class GenericSqlTest extends S2TestCase {
+public class GenericSqlTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void testGetSql_ALL() {
 		String tableName = "emp";
 		List<ParameterValue> columns = null;
@@ -50,6 +45,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("SELECT * FROM emp /*ORDER BY @SqlUtil@orderBy(orderBy)*/ORDER BY XXX/*END*/", sql);
 	}
 
+	@Test
 	public void testGetSql_SIMPLE_WHERE_0() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -60,6 +56,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("SELECT * FROM emp /*ORDER BY @SqlUtil@orderBy(orderBy)*/ORDER BY XXX/*END*/", sql);
 	}
 
+	@Test
 	public void testGetSql_SIMPLE_WHERE_1() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -71,6 +68,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("SELECT * FROM emp WHERE emp_id = /*emp_id*/'dummy' /*ORDER BY @SqlUtil@orderBy(orderBy)*/ORDER BY XXX/*END*/", sql);
 	}
 
+	@Test
 	public void testGetSql_SIMPLE_WHERE_2() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -85,6 +83,7 @@ public class GenericSqlTest extends S2TestCase {
 				sql);
 	}
 
+	@Test
 	public void testGetSql_INSERT() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -97,6 +96,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("INSERT INTO emp (emp_id ,emp_name) VALUES (/*emp_id*/'dummy' ,/*emp_name*/'dummy')", sql);
 	}
 
+	@Test
 	public void testGetSql_UPDATE() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -111,6 +111,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("UPDATE emp SET emp_id = /*emp_id*/'dummy' ,emp_name = /*emp_name*/'dummy' WHERE emp_id = /*emp_id*/'dummy'", sql);
 	}
 
+	@Test
 	public void testGetSql_DELETE() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -125,6 +126,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("DELETE FROM emp WHERE emp_id = /*emp_id*/'dummy'", sql);
 	}
 
+	@Test
 	public void testINSERT_BATCH_Basic() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -143,6 +145,7 @@ public class GenericSqlTest extends S2TestCase {
 				sql);
 	}
 
+	@Test
 	public void testINSERT_BATCH_DaoMap() {
 		if (DialectManager.getDialect(getDataSource()).isSupportMultiRowInsert() == false) {
 			return;
@@ -167,6 +170,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("ROD", two.getENAME());
 	}
 
+	@Test
 	public void testINSERT_BATCH_DaoBean() {
 		if (DialectManager.getDialect(getDataSource()).isSupportMultiRowInsert() == false) {
 			return;
@@ -191,6 +195,7 @@ public class GenericSqlTest extends S2TestCase {
 		assertEquals("ROD", two.getENAME());
 	}
 
+	@Test
 	public void testGetSql_REPLACE() {
 		String tableName = "emp";
 		List<ParameterValue> columns = new ArrayList<ParameterValue>();
@@ -206,5 +211,9 @@ public class GenericSqlTest extends S2TestCase {
 		context = new SqlContext(tableName, columns, queryClass, dialect);
 		sql = GenericSql.REPLACE.getSql(context);
 		assertEquals("INSERT OR REPLACE INTO emp (emp_id ,emp_name) VALUES (/*emp_id*/'dummy' ,/*emp_name*/'dummy')", sql);
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
 	}
 }

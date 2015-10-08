@@ -2,6 +2,7 @@ package jp.dodododo.dao.issue;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
@@ -9,32 +10,28 @@ import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.exception.DaoRuntimeException;
 import jp.dodododo.dao.log.SqlLogRegistry;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
+public class Issue15Test {
 
-public class Issue15Test extends S2TestCase {
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		include("jdbc.dicon");
 		DaoConfig.getDefaultConfig().setFormats("yyyy/MM/dd", "yyyy-MM-dd");
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() throws ParseException {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
 		try {

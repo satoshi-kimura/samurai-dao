@@ -1,27 +1,23 @@
 package jp.dodododo.dao.metadata;
 
+import static org.junit.Assert.*;
+
+import java.sql.Connection;
 import java.util.List;
 
-import org.seasar.extension.unit.S2TestCase;
+import javax.sql.DataSource;
 
-public class TableMetaDataTest extends S2TestCase {
+import jp.dodododo.dao.unit.DbTestRule;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		include("jdbc.dicon");
-	}
+import org.junit.Rule;
+import org.junit.Test;
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+public class TableMetaDataTest {
 
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
+	@Test
 	public void testTableMetaDataConnectionString() {
 		TableMetaData data = new TableMetaData(getConnection(), "EMP");
 
@@ -38,9 +34,9 @@ public class TableMetaDataTest extends S2TestCase {
 		assertEquals("DEPTNO", column.getColumnName());
 		assertEquals("DEPT", column.getReference().getTable());
 		assertEquals("DEPTNO", column.getReference().getColumn());
-
 	}
 
+	@Test
 	public void testTableMetaDataDataSourceString() {
 		TableMetaData data = new TableMetaData(getDataSource(), "EMP");
 
@@ -48,6 +44,14 @@ public class TableMetaDataTest extends S2TestCase {
 		assertNotNull(columnMetaData);
 		ColumnMetaData pk = data.getColumnMetaData("EMPNO");
 		assertTrue(pk.isPrimaryKey());
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
+	}
+
+	private Connection getConnection() {
+		return dbTestRule.getConnection();
 	}
 
 }

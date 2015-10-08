@@ -1,6 +1,7 @@
 package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 import java.util.List;
@@ -13,31 +14,23 @@ import jp.dodododo.dao.annotation.IdDefSet;
 import jp.dodododo.dao.exception.UnsupportedTypeException;
 import jp.dodododo.dao.id.Sequence;
 import jp.dodododo.dao.log.SqlLogRegistry;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class OneColumnResultSetHandlerTest extends S2TestCase {
+public class OneColumnResultSetHandlerTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void testInsertAndSelect() {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
 		List<String> resultStringList = dao.select("SELECT ename FROM emp ORDER BY empno", String.class);

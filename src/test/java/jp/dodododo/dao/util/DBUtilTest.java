@@ -1,34 +1,30 @@
 package jp.dodododo.dao.util;
 
+import static org.junit.Assert.*;
+
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jp.dodododo.dao.metadata.TableMetaData;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class DBUtilTest extends S2TestCase {
+public class DBUtilTest {
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void testGetTableNames() throws Exception {
 		Map<String, String> tableNames = DBUtil.getTableNames(getConnection());
 		assertTrue(0 < tableNames.size());
 	}
 
+	@Test
 	public void testGetViewNames() throws Exception {
 		Map<String, String> viewNames = DBUtil.getViewNames(getConnection());
 		List<String> viewList = new ArrayList<String>(viewNames.values());
@@ -46,5 +42,9 @@ public class DBUtilTest extends S2TestCase {
 		assertTrue(columnNames.contains("COMM"));
 		assertTrue(columnNames.contains("DEPTNO"));
 		assertTrue(columnNames.contains("TSTAMP"));
+	}
+
+	private Connection getConnection() {
+		return dbTestRule.getConnection();
 	}
 }

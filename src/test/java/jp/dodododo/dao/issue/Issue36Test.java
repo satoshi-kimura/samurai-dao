@@ -1,6 +1,7 @@
 package jp.dodododo.dao.issue;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,31 +12,27 @@ import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.row.Row;
 import jp.dodododo.dao.sql.GenericSql;
 import jp.dodododo.dao.types.TypeConverter;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue36Test extends S2TestCase {
+public class Issue36Test {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		include("jdbc.dicon");
-
 		DaoConfig.getDefaultConfig().setFormats("yyyy/MM/dd", "yyyy-MM-dd");
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() throws ParseException {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 
 		EMP emp = new EMP();
 		emp.EMPNO = "1";

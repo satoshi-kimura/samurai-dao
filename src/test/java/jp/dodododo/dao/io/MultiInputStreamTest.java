@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
@@ -15,7 +16,6 @@ import jp.dodododo.dao.types.TypeConverter;
 import jp.dodododo.dao.util.TmpFileUtil;
 
 import org.junit.Test;
-import org.seasar.framework.util.UUID;
 
 public class MultiInputStreamTest {
 
@@ -115,7 +115,7 @@ public class MultiInputStreamTest {
 		GZIPOutputStream gzipOutput = new GZIPOutputStream(out);
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 1000; i++) {
-			builder.append(UUID.create());
+			builder.append(UUID.randomUUID());
 		}
 		String val = builder.toString();
 		copy(new ByteArrayInputStream(val.getBytes()), gzipOutput);
@@ -135,7 +135,7 @@ public class MultiInputStreamTest {
 		DeflaterOutputStream deflateOutput = new DeflaterOutputStream(out);
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 1000; i++) {
-			builder.append(UUID.create());
+			builder.append(UUID.randomUUID());
 		}
 		String val = builder.toString();
 		copy(new ByteArrayInputStream(val.getBytes()), deflateOutput);
@@ -155,7 +155,7 @@ public class MultiInputStreamTest {
 		DeflaterOutputStream deflateOutput = new DeflaterOutputStream(out);
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 1000; i++) {
-			builder.append(UUID.create());
+			builder.append(UUID.randomUUID());
 		}
 		String val = builder.toString();
 		copy(new ByteArrayInputStream(val.getBytes()), deflateOutput);
@@ -175,7 +175,7 @@ public class MultiInputStreamTest {
 		DeflaterOutputStream deflateOutput = new DeflaterOutputStream(out, new Deflater(Deflater.BEST_SPEED));
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 1000; i++) {
-			builder.append(UUID.create());
+			builder.append(UUID.randomUUID());
 		}
 		String val = builder.toString();
 		copy(new ByteArrayInputStream(val.getBytes()), deflateOutput);
@@ -195,7 +195,7 @@ public class MultiInputStreamTest {
 		DeflaterOutputStream deflateOutput = new DeflaterOutputStream(out, new Deflater(Deflater.BEST_COMPRESSION));
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 1000; i++) {
-			builder.append(UUID.create());
+			builder.append(UUID.randomUUID());
 		}
 		String val = builder.toString();
 		copy(new ByteArrayInputStream(val.getBytes()), deflateOutput);

@@ -5,17 +5,24 @@ import static jp.dodododo.dao.sql.Operator.*;
 import static jp.dodododo.dao.sql.orderby.SortType.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.sql.DataSource;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.Each;
@@ -40,36 +47,26 @@ import jp.dodododo.dao.metadata.TableMetaData;
 import jp.dodododo.dao.paging.LimitOffset;
 import jp.dodododo.dao.paging.Paging;
 import jp.dodododo.dao.row.Row;
+import jp.dodododo.dao.unit.DbTestRule;
 import jp.dodododo.dao.util.ReaderUtil;
 import jp.dodododo.dao.value.CandidateValue;
 import junit.framework.ComparisonFailure;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Rule;
 import org.junit.Test;
-import org.seasar.extension.unit.S2TestCase;
-import org.seasar.framework.util.TextUtil;
 
-public class RdbDaoTest extends S2TestCase {
+public class RdbDaoTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void testInsertENTITY() {
 		dao = newTestDao(getDataSource());
 		Emp emp = new Emp();
@@ -87,6 +84,7 @@ public class RdbDaoTest extends S2TestCase {
 		}
 	}
 
+	@Test
 	public void testSelectClassMaps() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -105,6 +103,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP WHERE JOB = 'CLERK' ORDER BY EMPNO", sql);
 	}
 
+	@Test
 	public void testSelectEntityNotDefaultConstructor() {
 		dao = newTestDao(getDataSource());
 		List<EmpHasNotDefaultConstructor> list = dao.select("select * from EMP order by EMPNO desc", EmpHasNotDefaultConstructor.class);
@@ -115,6 +114,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertNull(emp.getTSTAMP());
 	}
 
+	@Test
 	public void testSelectEntityConstructorHasBean() {
 		dao = newTestDao(getDataSource());
 		List<EmpConstructorHasDept> list = dao
@@ -133,6 +133,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("ACCOUNTING", dept2.getDNAME());
 	}
 
+	@Test
 	public void testSelectEntityConstructorHasBeanAnnotatedDept() {
 		dao = newTestDao(getDataSource());
 		List<EmpConstructorHasBeanAnnotatedDept> list = dao
@@ -153,6 +154,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(TestDept.class, dept2.getClass());
 	}
 
+	@Test
 	public void testSelectEntityEmpHasWritableField() {
 		dao = newTestDao(getDataSource());
 		List<EmpHasWritableField> list = dao.select("select * from EMP order by EMPNO desc", EmpHasWritableField.class);
@@ -163,6 +165,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertNotNull("value=" + emp.getTSTAMP(), emp.getTSTAMP());
 	}
 
+	@Test
 	public void testSelectEntityEmpHasAlias() {
 		dao = newTestDao(getDataSource());
 		List<EmpHasAlias> list = dao.select("select * from EMP order by EMPNO desc", EmpHasAlias.class);
@@ -173,6 +176,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertNotNull("value=" + emp.TSTAMP, emp.TSTAMP);
 	}
 
+	@Test
 	public void testSelectIn() {
 		dao = newTestDao(getDataSource());
 		List<Emp> list = dao.select("SELECT * FROM emp WHERE empno IN /*IN empNoList*/(1, 2)/*END*/ order by empno",
@@ -191,6 +195,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("7934", list.get(11).getEMPNO());
 	}
 
+	@Test
 	public void testSelectSql() {
 		dao = newTestDao(getDataSource());
 		List<Emp> list = dao.select(SIMPLE_WHERE, args(TABLE_NAME, "emp", "EMPNO", 7934), Emp.class);
@@ -201,6 +206,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("MILLER", emp.getENAME());
 	}
 
+	@Test
 	public void testInsertBinary() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
@@ -219,6 +225,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(expected, ReaderUtil.readText(new InputStreamReader(binaryTable.getBinary(), "UTF-8")));
 	}
 
+	@Test
 	public void testInsertENTITYHasIdAnnotation() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -245,6 +252,7 @@ public class RdbDaoTest extends S2TestCase {
 				completeSql);
 	}
 
+	@Test
 	public void testDeleteENTITY() {
 		dao = newTestDao(getDataSource());
 		Emp emp = new Emp();
@@ -261,6 +269,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(1, count);
 	}
 
+	@Test
 	public void testUpdateENTITY() {
 		dao = newTestDao(getDataSource());
 		Emp emp = new Emp();
@@ -277,6 +286,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(1, count);
 	}
 
+	@Test
 	public void testUpdateENTITYHasVersionNo() throws Exception {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -309,6 +319,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertMatches("UPDATE EMP SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
 	}
 
+	@Test
 	public void testInsertCollectionOfENTITY() {
 		dao = newTestDao(getDataSource());
 
@@ -338,6 +349,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(1, count);
 	}
 
+	@Test
 	public void testUpdateCollectionOfENTITY() {
 		dao = newTestDao(getDataSource());
 
@@ -364,6 +376,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(2, counts.length);
 	}
 
+	@Test
 	public void testUpdateCollectionOfENTITYHasVersionNo() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -400,6 +413,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertMatches("UPDATE EMP SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
 	}
 
+	@Test
 	public void testDeleteCollectionOfENTITY() {
 		dao = newTestDao(getDataSource());
 
@@ -428,6 +442,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(2, counts.length);
 	}
 
+	@Test
 	public void testExecuteUpdate() {
 		dao = newTestDao(getDataSource());
 		String sql = "UPDATE EMP SET ENAME = /*name*/'SMITH' WHERE EMPNO = /*no*/1";
@@ -437,6 +452,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("foo", emp.getENAME());
 	}
 
+	@Test
 	public void testExecuteBatch() {
 		dao = newTestDao(getDataSource());
 		String sql = "UPDATE EMP SET ENAME = /*name*/'SMITH' WHERE EMPNO = /*no*/1";
@@ -453,6 +469,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(0, counts[2]);
 	}
 
+	@Test
 	public void testSelect() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -510,6 +527,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(15, decimal.intValue());
 	}
 
+	@Test
 	public void testSelectMap() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -529,6 +547,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP WHERE EMPNO = 1", completeSql);
 	}
 
+	@Test
 	public void testExistsRecord() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -546,7 +565,18 @@ public class RdbDaoTest extends S2TestCase {
 	}
 
 	private String getText(String fileName) {
-		return TextUtil.readText("jp/dodododo/dao/impl/" + fileName);
+		try (InputStream stream = RdbDaoTest.class.getClassLoader().getResourceAsStream("jp/dodododo/dao/impl/" + fileName);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			StringBuffer ret = new StringBuffer(128);
+			char[] buf = new char[1024];
+			int n;
+			while ((n = reader.read(buf)) >= 0) {
+				ret.append(buf, 0, n);
+			}
+			return ret.toString();
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 
 	public static void assertMatches(String message, String pattern, String actual) {
@@ -559,6 +589,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertMatches(((String) (null)), pattern, actual);
 	}
 
+	@Test
 	public void testSelectManyToOne() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -571,6 +602,7 @@ public class RdbDaoTest extends S2TestCase {
 		}
 	}
 
+	@Test
 	public void testSelectOneToMany() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -588,6 +620,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("CLARK", deptList.get(0).getEmpList().get(2).getENAME());
 	}
 
+	@Test
 	public void testNoParameterizedList() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -599,6 +632,7 @@ public class RdbDaoTest extends S2TestCase {
 		}
 	}
 
+	@Test
 	public void testRelationArray() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -620,6 +654,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("CLARK", empList.get(2).getENAME());
 	}
 
+	@Test
 	public void testRelationArray2() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -636,6 +671,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("CLARK", emps[2].getENAME());
 	}
 
+	@Test
 	public void testMixRelation() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -653,6 +689,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertNotNull(deptList2.get(2).getDept());
 	}
 
+	@Test
 	public void testMixRelation2() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -683,6 +720,7 @@ public class RdbDaoTest extends S2TestCase {
 
 	}
 
+	@Test
 	public void testMixRelation3() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -714,6 +752,7 @@ public class RdbDaoTest extends S2TestCase {
 
 	}
 
+	@Test
 	public void testEmbeddedValue() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof HSQL == false) {
@@ -762,6 +801,7 @@ public class RdbDaoTest extends S2TestCase {
 
 	}
 
+	@Test
 	public void testSelectOrderBy() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -785,6 +825,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP WHERE ENAME = 'mike' ORDER BY EMPNO ASC", completeSql.trim());
 	}
 
+	@Test
 	public void testSelectEnum() throws Exception {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -796,6 +837,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("20", emp.getDEPTNO());
 	}
 
+	@Test
 	public void testNestIfSql() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -806,6 +848,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP", completeSql.trim());
 	}
 
+	@Test
 	public void testNestIfSql2() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -816,6 +859,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP", completeSql.trim());
 	}
 
+	@Test
 	public void testNestIfSql3() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -826,6 +870,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP\nwhere\nEMPNO = EMPNO", completeSql.trim());
 	}
 
+	@Test
 	public void testSelectPaging() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -848,6 +893,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(allList.get(3).getEMPNO(), list1.get(1).getEMPNO());
 	}
 
+	@Test
 	public void testIterationCallback1() throws Exception {
 		dao = newTestDao(getDataSource());
 
@@ -866,6 +912,7 @@ public class RdbDaoTest extends S2TestCase {
 	}
 
 	@SuppressWarnings("unused")
+	@Test
 	public void testIterationCallback2() throws Exception {
 		dao = newTestDao(getDataSource());
 
@@ -882,6 +929,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals(14, count.intValue());
 	}
 
+	@Test
 	public void testIn() throws Exception {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -896,6 +944,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP WHERE EMPNO IN ('1', '2')", completeSql);
 	}
 
+	@Test
 	public void testSimpleSql() throws Exception {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -936,6 +985,7 @@ public class RdbDaoTest extends S2TestCase {
 
 	}
 
+	@Test
 	public void testSimpleSqlMap() throws Exception {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -976,6 +1026,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 	}
 
+	@Test
 	public void testOperator() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -1083,6 +1134,7 @@ public class RdbDaoTest extends S2TestCase {
 
 	private static final Log logger = LogFactory.getLog(RdbDaoTest.class);
 
+	@Test
 	public void testGatherValue() throws Exception {
 		TestBean bean = new TestBean();
 		bean.bean = new TestBean();
@@ -1112,6 +1164,7 @@ public class RdbDaoTest extends S2TestCase {
 		assertTrue(values.get(0).matchTableName);
 }
 
+	@Test
 	public void testGatherValueNestedBeanIsNull() throws Exception {
 		TestBean bean = new TestBean();
 		bean.bean = null;
@@ -1176,6 +1229,7 @@ public class RdbDaoTest extends S2TestCase {
 		}
 	}
 
+	@Test
 	public void testDeleteFromTowPk() throws Exception {
 		Dao dao = newTestDao(getConnection());
 		TwoPkTable twoPk = new TwoPkTable();
@@ -1381,5 +1435,13 @@ public class RdbDaoTest extends S2TestCase {
 			logger.debug("getE");
 			return null;
 		}
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
+	}
+
+	private Connection getConnection() throws SQLException {
+		return dbTestRule.getConnection();
 	}
 }

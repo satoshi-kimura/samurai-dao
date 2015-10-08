@@ -2,6 +2,7 @@ package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
+import static org.junit.Assert.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,31 +20,23 @@ import jp.dodododo.dao.id.Identity;
 import jp.dodododo.dao.id.Sequence;
 import jp.dodododo.dao.impl.Dept;
 import jp.dodododo.dao.log.SqlLogRegistry;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class SelectAllTest extends S2TestCase {
+public class SelectAllTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void testSelectAll() {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 
 		dao.setSqlLogRegistry(logRegistry);
 		List<Emp> allEmp = dao.select(ALL, Emp.class);

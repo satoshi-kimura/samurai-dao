@@ -4,33 +4,28 @@ import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.sql.Operator.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.sql.DataSource;
+
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.script.Each;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue46Test extends S2TestCase {
+public class Issue46Test {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test1() throws Exception {
 		dao = newTestDao(getDataSource());
 
@@ -44,6 +39,7 @@ public class Issue46Test extends S2TestCase {
 		assertTrue(invoked.get());
 	}
 
+	@Test
 	public void test2() throws Exception {
 		dao = newTestDao(getDataSource());
 
@@ -57,6 +53,7 @@ public class Issue46Test extends S2TestCase {
 		assertTrue(invoked.get());
 	}
 
+	@Test
 	public void test3() throws Exception {
 		dao = newTestDao(getDataSource());
 
@@ -70,6 +67,7 @@ public class Issue46Test extends S2TestCase {
 		assertTrue(invoked.get());
 	}
 
+	@Test
 	public void test4() throws Exception {
 		dao = newTestDao(getDataSource());
 
@@ -81,5 +79,9 @@ public class Issue46Test extends S2TestCase {
 			}
 		});
 		assertTrue(invoked.get());
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
 	}
 }

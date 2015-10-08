@@ -1,6 +1,9 @@
 package jp.dodododo.dao.value;
 
+import static org.junit.Assert.*;
+
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,16 +13,16 @@ import java.util.Map;
 
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.impl.RdbDao;
+import jp.dodododo.dao.unit.DbTestRule;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.seasar.extension.unit.S2TestCase;
 
-public class CandidateValueTest extends S2TestCase{
+public class CandidateValueTest {
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
+
 	@Test
 	public void testSortLevel() {
 		List<CandidateValue> values = new ArrayList<CandidateValue>();
@@ -87,6 +90,10 @@ public class CandidateValueTest extends S2TestCase{
 		dao.gatherValue(child, "aaa", "order_date", values, path, processedObjects);
 		value = CandidateValue.getValue(values, null, null).value.getValue();
 		assertNull(value);
+	}
+
+	private Connection getConnection() throws SQLException {
+		return dbTestRule.getConnection();
 	}
 
 	public static class Dao extends RdbDao {

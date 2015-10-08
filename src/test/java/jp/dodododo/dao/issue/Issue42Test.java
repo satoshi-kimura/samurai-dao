@@ -2,8 +2,12 @@ package jp.dodododo.dao.issue;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
+import java.sql.Connection;
 import java.util.Date;
+
+import javax.sql.DataSource;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Id;
@@ -14,28 +18,20 @@ import jp.dodododo.dao.dialect.Dialect;
 import jp.dodododo.dao.dialect.DialectManager;
 import jp.dodododo.dao.dialect.sqlite.SQLite;
 import jp.dodododo.dao.id.Sequence;
+import jp.dodododo.dao.unit.DbTestRule;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue42Test extends S2TestCase {
+public class Issue42Test {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
@@ -85,5 +81,13 @@ public class Issue42Test extends S2TestCase {
 		public String toString() {
 			return ReflectionToStringBuilder.toString(this);
 		}
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
+	}
+
+	private Connection getConnection() {
+		return dbTestRule.getConnection();
 	}
 }

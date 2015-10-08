@@ -3,38 +3,34 @@ package jp.dodododo.dao.function;
 import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.sql.DataSource;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.NumKey;
 import jp.dodododo.dao.annotation.StringKey;
 import jp.dodododo.dao.exception.SQLRuntimeException;
 import jp.dodododo.dao.log.SqlLogRegistry;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class ExecuteXxxTest extends S2TestCase {
+public class ExecuteXxxTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
+
 	private Dao dao;
 
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void testInsertUpdateAndDelete() {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
@@ -123,5 +119,9 @@ public class ExecuteXxxTest extends S2TestCase {
 		public String COMM;
 
 		public String TSTAMP;
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
 	}
 }

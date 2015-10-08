@@ -1,34 +1,27 @@
 package jp.dodododo.dao.issue;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
+import static org.junit.Assert.*;
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Table;
 import jp.dodododo.dao.exception.SQLRuntimeException;
 import jp.dodododo.dao.impl.Dept;
 import jp.dodododo.dao.impl.Emp;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue4Test extends S2TestCase {
+public class Issue4Test {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 		RootEntity rootEntity = new RootEntity();
 		rootEntity.emp.setCOMM("2");
 		rootEntity.emp.setDEPTNO("10");

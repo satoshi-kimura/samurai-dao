@@ -2,12 +2,16 @@ package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
+
+import javax.sql.DataSource;
 
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Column;
@@ -26,30 +30,23 @@ import jp.dodododo.dao.id.Sequence;
 import jp.dodododo.dao.log.SqlLogRegistry;
 import jp.dodododo.dao.row.Row;
 import jp.dodododo.dao.types.TypeConverter;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class CompressTest extends S2TestCase {
+public class CompressTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
+
 
 	private Dao dao;
 
 	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
-	public void testNoCompress() {
+	@Test
+	public void testNoCompress() throws SQLException {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -66,6 +63,14 @@ public class CompressTest extends S2TestCase {
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
 	}
 
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
+	}
+
+	private Connection getConnection() throws SQLException {
+		return getDataSource().getConnection();
+	}
+
 	@Table("BINARY_TABLE")
 	public static class NoCompress {
 		@Id(value = { @IdDefSet(type = Sequence.class, name = "sequence"), @IdDefSet(type = Identity.class, db = SQLite.class) })
@@ -73,7 +78,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testGZIPCompressAutoUncompress() throws IOException {
+	@Test
+	public void testGZIPCompressAutoUncompress() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -98,7 +104,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_BEST_COMPRESSION() throws IOException {
+	@Test
+	public void testZLIB_BEST_COMPRESSION() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -123,7 +130,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_BEST_SPEED() throws IOException {
+	@Test
+	public void testZLIB_BEST_SPEED() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -148,7 +156,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_DEFAULT_COMPRESSION() throws IOException {
+	@Test
+	public void testZLIB_DEFAULT_COMPRESSION() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -173,7 +182,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_DEFAULT_STRATEGY() throws IOException {
+	@Test
+	public void testZLIB_DEFAULT_STRATEGY() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -198,7 +208,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_DEFLATED() throws IOException {
+	@Test
+	public void testZLIB_DEFLATED() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -223,7 +234,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_FILTERED() throws IOException {
+	@Test
+	public void testZLIB_FILTERED() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -248,7 +260,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_HUFFMAN_ONLY() throws IOException {
+	@Test
+	public void testZLIB_HUFFMAN_ONLY() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -273,7 +286,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testZLIB_NO_COMPRESSION() throws IOException {
+	@Test
+	public void testZLIB_NO_COMPRESSION() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -297,7 +311,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testGZIPCompressNoAutoUncompress() throws IOException {
+	@Test
+	public void testGZIPCompressNoAutoUncompress() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;
@@ -322,7 +337,8 @@ public class CompressTest extends S2TestCase {
 		public InputStream binary = new ByteArrayInputStream("abcdefg".getBytes());
 	}
 
-	public void testConstructorArgHasCompress() throws IOException {
+	@Test
+	public void testConstructorArgHasCompress() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
 		if (dialect instanceof SQLite) {
 			return;

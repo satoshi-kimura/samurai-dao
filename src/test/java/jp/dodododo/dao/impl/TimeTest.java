@@ -2,6 +2,7 @@ package jp.dodododo.dao.impl;
 
 import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
+import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -20,37 +21,27 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Table;
 import jp.dodododo.dao.annotation.Zone;
-import jp.dodododo.dao.log.SqlLogRegistry;
+import jp.dodododo.dao.unit.DbTestRule;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class TimeTest extends S2TestCase {
+public class TimeTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
+
 	private Dao dao;
-
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		logRegistry.clear();
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
 
 	static final long defaultOffsetHour;
 	static final long defaultOffsetMinutes;
@@ -63,6 +54,7 @@ public class TimeTest extends S2TestCase {
 
 	}
 
+	@Test
 	public void testSelect() {
 		dao = newTestDao(getDataSource());
 
@@ -249,5 +241,9 @@ public class TimeTest extends S2TestCase {
 		public int hashCode() {
 			return HashCodeBuilder.reflectionHashCode(this);
 		}
+	}
+
+	private DataSource getDataSource() {
+		return dbTestRule.getDataSource();
 	}
 }

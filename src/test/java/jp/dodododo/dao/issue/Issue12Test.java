@@ -1,5 +1,7 @@
 package jp.dodododo.dao.issue;
 
+import static org.junit.Assert.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,35 +11,32 @@ import jp.dodododo.dao.annotation.NumKey;
 import jp.dodododo.dao.annotation.StringKey;
 import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.types.JavaTypes.EnumType;
+import jp.dodododo.dao.unit.DbTestRule;
 import jp.dodododo.dao.util.EnumConverter;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue12Test extends S2TestCase {
+public class Issue12Test {
 
-	@Override
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
+
+	@Before
 	public void setUp() throws Exception {
-		include("jdbc.dicon");
-
 		DaoConfig.getDefaultConfig().setFormats("yyyy/MM/dd", "yyyy-MM-dd");
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() throws Exception {
-		Connection connection = getConnection();
+		Connection connection = dbTestRule.getConnection();
 		test(connection, Emp.SMITH);
 		test(connection, Emp.ALLEN);
 		connection.close();
 	}
 
+	@Test
 	public void test2() {
 		try {
 			EnumConverter.convert(1, Emp.class);

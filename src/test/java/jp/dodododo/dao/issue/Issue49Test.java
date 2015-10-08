@@ -2,33 +2,26 @@ package jp.dodododo.dao.issue;
 
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
+import static org.junit.Assert.*;
 import jp.dodododo.dao.Dao;
 import jp.dodododo.dao.annotation.Arg;
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Table;
+import jp.dodododo.dao.unit.DbTestRule;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class Issue49Test extends S2TestCase {
+public class Issue49Test {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
 
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-	}
-
-	@Override
-	protected boolean needTransaction() {
-		return true;
-	}
-
+	@Test
 	public void test() throws Exception {
-		dao = newTestDao(getDataSource());
+		dao = newTestDao(dbTestRule.getDataSource());
 
 		Emp1 emp1 = dao.selectOne(Emp1.class, from("emp"), by("empno", 7369, "argname", "a")).get();
 		assertEquals(7369, emp1.empno);

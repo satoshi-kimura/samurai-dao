@@ -1,13 +1,16 @@
 package jp.dodododo.dao.unit;
 
-import org.seasar.extension.unit.S2TestCase;
+import java.sql.Connection;
 
-public class SqlFileExecuterTest extends S2TestCase {
-	@Override
-	public void setUp() throws Exception {
-		include("jdbc.dicon");
-	}
+import org.junit.Rule;
+import org.junit.Test;
 
+public class SqlFileExecuterTest {
+
+	@Rule
+	public DbTestRule dbTestRule = new DbTestRule();
+
+	@Test
 	public void testExecuteSelect() {
 		SqlFileExecuter executer = new SqlFileExecuter(getConnection());
 		String sqlFilePath = "jp/dodododo/dao/impl/many_to_one.sql";
@@ -17,14 +20,14 @@ public class SqlFileExecuterTest extends S2TestCase {
 		executer.executeSelect(sqlFilePath);
 	}
 
+	@Test
 	public void testExecuteUpdate() {
 		SqlFileExecuter executer = new SqlFileExecuter(getConnection());
 		String sqlFilePath = "jp/dodododo/dao/unit/insert.sql";
 		executer.executeUpdate(sqlFilePath);
 	}
 
-	@Override
-	protected boolean needTransaction() {
-		return true;
+	private Connection getConnection() {
+		return dbTestRule.getConnection();
 	}
 }
