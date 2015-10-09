@@ -1,4 +1,4 @@
-package config;
+package jp.dodododo.dao.unit;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

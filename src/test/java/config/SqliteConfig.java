@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
+import jp.dodododo.dao.unit.DBConfig;
+
 import org.sqlite.SQLiteOpenMode;
 
 public class SqliteConfig implements DBConfig {

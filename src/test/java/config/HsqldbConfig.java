@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import jp.dodododo.dao.unit.DBConfig;
+
 public class HsqldbConfig implements DBConfig {
 
 	@Override

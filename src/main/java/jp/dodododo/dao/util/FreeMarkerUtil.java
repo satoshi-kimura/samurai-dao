@@ -9,7 +9,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public abstract class FreeMarkerUtil {
-	private static final Configuration defaultConfig = new Configuration();
+	private static final Configuration defaultConfig = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 
 	public static void setDefaultEncoding(String enc) {
 		Configuration config = getDefaultConfig();

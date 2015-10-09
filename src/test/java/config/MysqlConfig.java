@@ -1,5 +1,7 @@
 package config;
 
+import jp.dodododo.dao.unit.DBConfig;
+
 public class MysqlConfig implements DBConfig {
 
 	@Override

@@ -18,15 +18,15 @@ import jp.dodododo.dao.wrapper.ConnectionWrapper;
 
 import org.junit.rules.ExternalResource;
 
-import config.DBConfig;
-
 public class DbTestRule extends ExternalResource {
 
-	private DBConfig config;
+	protected DBConfig config;
 
-	private Connection connection;
+	protected Connection connection;
 
-	private DataSource dataSource;
+	protected DataSource dataSource;
+
+	protected Driver driver;
 
 	public DbTestRule() {
 		Properties properties = new Properties();
@@ -45,7 +45,7 @@ public class DbTestRule extends ExternalResource {
 
 	@Override
 	protected void before() throws Throwable {
-		Driver driver = ClassUtil.newInstance(config.driverClassName());
+		driver = ClassUtil.newInstance(config.driverClassName());
 		DriverManager.registerDriver(driver);
 		this.connection = DriverManager.getConnection(config.URL(), config.properties());
 		this.connection.setAutoCommit(false);
@@ -69,6 +69,14 @@ public class DbTestRule extends ExternalResource {
 			this.connection.close();
 		} catch (SQLException e) {
 			throw new SQLError(e);
+		} finally {
+			try {
+				DriverManager.deregisterDriver(driver);
+			} catch (SQLException e) {
+				throw new SQLError(e);
+			} finally {
+				driver = null;
+			}
 		}
 	}
 
