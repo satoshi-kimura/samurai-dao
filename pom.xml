@@ -8,13 +8,13 @@
   <artifactId>samurai-dao</artifactId>
   <packaging>jar</packaging>
   <name>dao</name>
-  <version>1.1.33</version>
+  <version>1.1.34</version>
 <!--
   <version>1.1.32-SNAPSHOT</version>
 -->
   <description>samurai-dao is a simple, high performance object/relational persistence and query service.</description>
   <url>http://code.google.com/p/samurai-dao/</url>
-  <inceptionYear>2008-2014</inceptionYear>
+  <inceptionYear>2008-2017</inceptionYear>
 
   <licenses>
     <license>
@@ -244,21 +244,6 @@
   </build>
   <repositories>
     <repository>
-      <id>janerics.googlecode.com</id>
-      <name>janerics-maven2</name>
-      <url>http://janerics.googlecode.com/svn/maven2/</url>
-    </repository>
-    <repository>
-      <id>snapshot.janerics.googlecode.com</id>
-      <name>janerics-maven2-snapshot</name>
-      <url>http://janerics.googlecode.com/svn/maven2-snapshot/</url>
-    </repository>
-    <repository>
-      <id>localizable-doclet.googlecode.com</id>
-      <name>LocalizableDoclet Maven2 Repository</name>
-      <url>http://localizable-doclet.googlecode.com/svn/maven2/</url>
-    </repository>
-    <repository>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
@@ -290,7 +275,7 @@
     <dependency>
       <groupId>jp.dodododo.janerics</groupId>
       <artifactId>janerics</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
