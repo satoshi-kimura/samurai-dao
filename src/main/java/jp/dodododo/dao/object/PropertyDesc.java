@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import jp.dodododo.dao.annotation.Bean;
 import jp.dodododo.dao.annotation.Internal;
 import jp.dodododo.dao.annotation.Property;
 import jp.dodododo.dao.exception.IllegalPropertyRuntimeException;
@@ -327,6 +328,13 @@ public class PropertyDesc implements AnnotatedElement {
 		}
 		try {
 			Class<?> propertyType = getPropertyType();
+			Bean beanAnnotation = getAnnotation(Bean.class);
+			if (beanAnnotation != null) {
+				// XXX impl some props of Bean.class.
+				if (beanAnnotation.defaultBeanClass() != null) {
+					propertyType = beanAnnotation.defaultBeanClass();
+				}
+			}
 			if (propertyType.isPrimitive()) {
 				propertyType = TypesUtil.toWrapperType(propertyType);
 			}

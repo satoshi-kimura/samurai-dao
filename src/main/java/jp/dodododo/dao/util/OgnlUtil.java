@@ -3,6 +3,9 @@ package jp.dodododo.dao.util;
 import java.util.Map;
 
 import jp.dodododo.dao.message.Message;
+import ognl.ClassResolver;
+import ognl.DefaultMemberAccess;
+import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -11,6 +14,8 @@ import ognl.OgnlException;
  * @author Satoshi Kimura
  */
 public abstract class OgnlUtil {
+
+	private static final ClassResolver CLASS_RESOLVER = new DefaultClassResolver();
 
 	public static Object getValue(String expression, Object root) {
 		return getValue(parseExpression(expression), root);
@@ -36,7 +41,9 @@ public abstract class OgnlUtil {
 			if (ctx != null) {
 				return Ognl.getValue(exp, ctx, root);
 			} else {
-				return Ognl.getValue(exp, root);
+				@SuppressWarnings("rawtypes")
+				Map context = Ognl.createDefaultContext(root, new DefaultMemberAccess(true), CLASS_RESOLVER, new DefaultTypeConverter());
+				return Ognl.getValue(exp, context, root);
 			}
 		} catch (OgnlException ex) {
 			throw new OgnlRuntimeException(ex.getReason() == null ? ex : ex.getReason(), path, lineNumber);
@@ -86,4 +93,26 @@ public abstract class OgnlUtil {
 			return buf.toString();
 		}
 	}
+
+	public static class DefaultClassResolver extends Object implements ClassResolver {
+		private static final Map<String, Class<?>> CLASSES = CacheUtil.cacheMap(128);
+
+		@Override
+		public Class<?> classForName(String className, @SuppressWarnings("rawtypes") Map context) throws ClassNotFoundException		{
+			Class<?> clazz = CLASSES.get(className);
+			if (clazz != null) {
+				return clazz;
+			}
+			try {
+				clazz = Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				if (className.indexOf('.') == -1) {
+					clazz = Class.forName("java.lang." + className);
+				}
+			}
+			CLASSES.put(className, clazz);
+			return clazz;
+		}
+	}
+
 }

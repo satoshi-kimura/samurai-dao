@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -14,15 +15,23 @@ import java.util.Map;
 public abstract class CacheUtil {
 
 	public static <K, V> Map<K, V> cacheMap() {
-		return cacheMap(new HashMap<K, V>(1024));
+		return cacheMap(1024);
+	}
+
+	public static <K, V> Map<K, V> cacheMap(int initialCapacity) {
+		return cacheMap(new HashMap<K, V>(initialCapacity));
 	}
 
 	public static <V> Map<String, V> cacheCaseInsensitiveMap() {
-		return cacheMap(new CaseInsensitiveMap<V>(1024));
+		return cacheCaseInsensitiveMap(1024);
+	}
+
+	public static <V> Map<String, V> cacheCaseInsensitiveMap(int initialCapacity) {
+		return cacheMap(new CaseInsensitiveMap<V>(initialCapacity));
 	}
 
 	public static <K, V> Map<K, V> cacheMap(Map<K, V> map) {
-		Map<K, V> cacheMap = Collections.synchronizedMap(map);
+		Map<K, V> cacheMap = new ConcurrentHashMap<K, V>(map);
 		cacheMapList.add(cacheMap);
 		return cacheMap;
 	}

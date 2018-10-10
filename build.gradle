@@ -52,7 +52,7 @@ repositories {
 
 dependencies {
   compile 'ognl:ognl:2.7.3'
-  compile 'jp.dodododo.janerics:janerics:1.0.0'
+  compile 'jp.dodododo.janerics:janerics:1.0.1'
   compile 'commons-lang:commons-lang:2.6'
   compile 'commons-logging:commons-logging:1.1.3'
   compile 'org.freemarker:freemarker:2.3.19'
