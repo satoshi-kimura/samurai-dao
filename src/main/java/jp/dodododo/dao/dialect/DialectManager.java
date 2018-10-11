@@ -26,10 +26,14 @@ public abstract class DialectManager {
 	private static Map<String, Dialect> dialectInstances = Collections.synchronizedMap(new HashMap<String, Dialect>());
 
 	static {
-		initDialectClassNames();
+		initDefaultDialectClassNames();
 	}
 
-	private static void initDialectClassNames() {
+	public static void register(String productName, String className) {
+		dialectClassNames.put(productName, className);
+	}
+
+	private static void initDefaultDialectClassNames() {
 		RuntimeException cause = null;
 		for (int i = 0; i < 10; i++) {
 			try {
