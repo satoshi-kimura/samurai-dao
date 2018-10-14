@@ -16,11 +16,11 @@ public class MysqlConfig implements DBConfig {
 
 	@Override
 	public String user() {
-		return "xxx";
+		return "root";
 	}
 
 	@Override
 	public String password() {
-		return "xx";
+		return "root";
 	}
 }

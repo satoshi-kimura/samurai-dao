@@ -34,7 +34,7 @@ public abstract class DatabaseMetaDataUtil {
 		Set<String> tableNames = new HashSet<String>();
 		ResultSet rs = null;
 		try {
-			rs = dmd.getTables(null, null, null, types);
+			rs = dmd.getTables(null, null, "%", types);
 			while (rs.next()) {
 				String tableName = rs.getString("TABLE_NAME");
 				tableNames.add(tableName);

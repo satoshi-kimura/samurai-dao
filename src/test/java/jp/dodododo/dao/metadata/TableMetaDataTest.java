@@ -8,6 +8,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import jp.dodododo.dao.unit.DbTestRule;
+import jp.dodododo.dao.util.StringUtil;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,9 +31,9 @@ public class TableMetaDataTest {
 		assertEquals(1, importedKeys.size());
 		ForeignKey foreignKey = importedKeys.get(0);
 		ForeignKeyColumn column = foreignKey.get(0);
-		assertEquals("EMP", column.getTableName());
+		assertTrue(column.getTableName(), StringUtil.equalsIgnoreCase("EMP", column.getTableName()));
 		assertEquals("DEPTNO", column.getColumnName());
-		assertEquals("DEPT", column.getReference().getTable());
+		assertTrue(column.getReference().getTable(), StringUtil.equalsIgnoreCase("DEPT", column.getReference().getTable()));
 		assertEquals("DEPTNO", column.getReference().getColumn());
 	}
 

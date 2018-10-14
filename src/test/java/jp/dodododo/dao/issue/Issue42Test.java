@@ -16,7 +16,9 @@ import jp.dodododo.dao.annotation.Timestamp;
 import jp.dodododo.dao.annotation.VersionNo;
 import jp.dodododo.dao.dialect.Dialect;
 import jp.dodododo.dao.dialect.DialectManager;
+import jp.dodododo.dao.dialect.MySQL;
 import jp.dodododo.dao.dialect.sqlite.SQLite;
+import jp.dodododo.dao.id.Identity;
 import jp.dodododo.dao.id.Sequence;
 import jp.dodododo.dao.unit.DbTestRule;
 
@@ -64,7 +66,7 @@ public class Issue42Test {
 	}
 
 	public static class Emp {
-		@Id(@IdDefSet(type = Sequence.class, name = "sequence"))
+		@Id({ @IdDefSet(type = Sequence.class, name = "sequence"), @IdDefSet(type = Identity.class, db = MySQL.class) })
 		public String empno;
 
 		@Timestamp

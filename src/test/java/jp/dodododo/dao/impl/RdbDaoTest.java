@@ -49,6 +49,7 @@ import jp.dodododo.dao.paging.Paging;
 import jp.dodododo.dao.row.Row;
 import jp.dodododo.dao.unit.DbTestRule;
 import jp.dodododo.dao.util.ReaderUtil;
+import jp.dodododo.dao.util.StringUtil;
 import jp.dodododo.dao.value.CandidateValue;
 import junit.framework.ComparisonFailure;
 
@@ -296,9 +297,7 @@ public class RdbDaoTest {
 		emp.setENAME("ename");
 		int count = dao.insert(emp);
 		assertEquals(1, count);
-		assertEquals(
-				"INSERT INTO EMP ( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP ) VALUES ( 1 , 'ename' , NULL , NULL , NULL , NULL , 1 , 10 , NULL )",
-				logRegistry.getLast().getCompleteSql());
+		assertTrue(logRegistry.getLast().getCompleteSql(), StringUtil.equalsIgnoreCase("INSERT INTO EMP ( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP ) VALUES ( 1 , 'ename' , NULL , NULL , NULL , NULL , 1 , 10 , NULL )", logRegistry.getLast().getCompleteSql()));
 
 		TableMetaData tableMetaData = new TableMetaData(getDataSource().getConnection(), "emp");
 		String empnoColumnName = tableMetaData.getColumnMetaData("empno").getColumnName();
@@ -554,7 +553,7 @@ public class RdbDaoTest {
 
 		boolean existsRecord = dao.existsRecord(from("emp"), where("empno", ge(0)));
 		String sql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO >= 0", sql);
+		assertTrue(sql.trim(), StringUtil.equalsIgnoreCase("SELECT * FROM EMP WHERE EMPNO >= 0", sql));
 		assertTrue(existsRecord);
 	}
 
@@ -818,11 +817,11 @@ public class RdbDaoTest {
 
 		empList = dao.select(BY, query(table("EMP"), orderBy("EMPNO", ASC)), Emp.class);
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP ORDER BY EMPNO ASC", completeSql.trim());
+		assertTrue(completeSql.trim(), StringUtil.equalsIgnoreCase("SELECT * FROM EMP ORDER BY EMPNO ASC", completeSql.trim()));
 
 		empList = dao.select(BY, query(table("EMP"), "ENAME", "mike", orderBy("EMPNO", ASC)), Emp.class);
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME = 'mike' ORDER BY EMPNO ASC", completeSql.trim());
+		assertTrue(completeSql.trim(), StringUtil.equalsIgnoreCase("SELECT * FROM EMP WHERE ENAME = 'mike' ORDER BY EMPNO ASC", completeSql.trim()));
 	}
 
 	@Test
@@ -954,6 +953,7 @@ public class RdbDaoTest {
 		dao.select(ALL, query);
 		String completeSql = logRegistry.get(0).getCompleteSql();
 		assertEquals("SELECT * FROM EMP", completeSql);
+		assertTrue(completeSql, StringUtil.equalsIgnoreCase("SELECT * FROM EMP", completeSql));
 
 		dao.select(SIMPLE_WHERE, query);
 		completeSql = logRegistry.get(1).getCompleteSql();
@@ -1283,9 +1283,7 @@ public class RdbDaoTest {
 			dao.insert(list);
 			fail();
 		} catch (Exception ignore) {
-			assertEquals(
-					"INSERT INTO EMP ( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP ) VALUES ( 1 , 'ename2' , NULL , NULL , NULL , NULL , NULL , NULL , NULL )",
-					logRegistry.getLast().getCompleteSql());
+			assertTrue(logRegistry.getLast().getCompleteSql(), StringUtil.equalsIgnoreCase("INSERT INTO EMP ( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP ) VALUES ( 1 , 'ename2' , NULL , NULL , NULL , NULL , NULL , NULL , NULL )", logRegistry.getLast().getCompleteSql()));
 		}
 		assertEquals(messageSize, messages.size());
 		MemoryAppender.clear(GatherTestBean.class);

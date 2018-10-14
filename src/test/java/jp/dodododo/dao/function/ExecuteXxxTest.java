@@ -17,6 +17,7 @@ import jp.dodododo.dao.annotation.StringKey;
 import jp.dodododo.dao.exception.SQLRuntimeException;
 import jp.dodododo.dao.log.SqlLogRegistry;
 import jp.dodododo.dao.unit.DbTestRule;
+import jp.dodododo.dao.util.StringUtil;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class ExecuteXxxTest {
 				"EMPNO", 100, //
 				"ENAME", "name"));
 
-		Map<String, Object> actual = dao.selectOneMap("select * from emp where empno=100").get();
+		Map<String, Object> actual = dao.selectOneMap("select * from EMP where empno=100").get();
 		assertEquals("name", actual.get("ename"));
 
 		dao.execute(UPDATE, args(TABLE_NAME, "emp", //
@@ -50,7 +51,7 @@ public class ExecuteXxxTest {
 
 		dao.execute(DELETE, args(TABLE_NAME, "emp", //
 				"EMPNO", 100));
-		Optional<Map<String, Object>> actual2 = dao.selectOneMap("select * from emp where empno=100");
+		Optional<Map<String, Object>> actual2 = dao.selectOneMap("select * from EMP where empno=100");
 		assertFalse(actual2.isPresent());
 
 		dao.execute(DELETE_ALL, args(TABLE_NAME, "emp"));
@@ -67,7 +68,7 @@ public class ExecuteXxxTest {
 				values("EMPNO", EmpNo.TEST_NO, //
 						"ENAME", Ename.TEST_NAME));
 		String sql = logRegistry.getLast().getCompleteSql();
-		assertEquals("INSERT INTO EMP (EMPNO ,ENAME) VALUES (101 ,'TEST_NAME')", sql);
+		assertTrue(sql, StringUtil.equalsIgnoreCase("INSERT INTO EMP (EMPNO ,ENAME) VALUES (101 ,'TEST_NAME')", sql));
 		count = dao.selectOneNumber(COUNT_ALL, args(TABLE_NAME, "emp")).get();
 		assertEquals(2, count.intValue());
 

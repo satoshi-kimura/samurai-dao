@@ -32,7 +32,7 @@ public class Standard implements Dialect {
 
     @Override
 	public String sequenceNextValSql(String sequenceName) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("sequenceName : " + sequenceName);
 	}
 
     @Override

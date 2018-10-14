@@ -57,7 +57,7 @@ public class JavaTypesTest {
 	public void testINSTANT() throws Exception {
 		Date date = new Date();
 		Instant instant = JavaTypes.INSTANT.convert(date);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddKK:mm:ss.SSS");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS");
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		assertEquals(simpleDateFormat.format(date), DateTimeFormatter.ISO_INSTANT.format(instant).replaceAll("T|Z", ""));
 	}
@@ -67,7 +67,6 @@ public class JavaTypesTest {
 		Date date = new Date();
 		LocalDate localDate = JavaTypes.LOCAL_DATE.convert(date);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		assertEquals(simpleDateFormat.format(date), DateTimeFormatter.ISO_LOCAL_DATE.format(localDate).replaceAll("T|Z", ""));
 
 		localDate = JavaTypes.LOCAL_DATE.convert("20150123");
