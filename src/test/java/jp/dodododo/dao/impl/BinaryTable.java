@@ -2,6 +2,7 @@ package jp.dodododo.dao.impl;
 
 import java.io.InputStream;
 
+import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Id;
 import jp.dodododo.dao.annotation.IdDefSet;
 import jp.dodododo.dao.dialect.HSQL;
@@ -10,6 +11,7 @@ import jp.dodododo.dao.id.Sequence;
 public class BinaryTable {
 	private int id;
 
+	@Column(value = "bin", alias = { "bin" })
 	private InputStream binary;
 
 	public InputStream getBinary() {

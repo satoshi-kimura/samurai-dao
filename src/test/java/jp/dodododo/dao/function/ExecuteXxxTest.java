@@ -1,6 +1,7 @@
 package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.sql.GenericSql.*;
+import static jp.dodododo.dao.unit.Assert.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
 import static org.junit.Assert.*;
@@ -77,7 +78,7 @@ public class ExecuteXxxTest {
 					args("ENAME", Ename.TEST_NAME, "EMPNO", EmpNo.TEST_NO));
 			fail();
 		} catch (SQLRuntimeException uniqueKeyError) {
-			assertEquals("INSERT INTO EMP (EMPNO ,ENAME) VALUES (101 ,'TEST_NAME')", sql);
+			assertEqualsIgnoreCase("INSERT INTO EMP (EMPNO ,ENAME) VALUES (101 ,'TEST_NAME')", sql);
 		}
 	}
 

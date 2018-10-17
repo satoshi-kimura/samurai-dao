@@ -28,8 +28,7 @@ public class DBUtilTest {
 	public void testGetViewNames() throws Exception {
 		Map<String, String> viewNames = DBUtil.getViewNames(getConnection());
 		List<String> viewList = new ArrayList<String>(viewNames.values());
-		assertEquals(viewNames.toString(), 1, viewNames.size());
-		assertEquals("EMP_VIEW", viewList.get(0));
+		assertTrue(viewList.contains("EMP_VIEW") ||viewList.contains("emp_view") );
 
 		TableMetaData tableMetaData = new TableMetaData(getConnection(), "EMP_VIEW");
 		List<String> columnNames = tableMetaData.getColumnNames();

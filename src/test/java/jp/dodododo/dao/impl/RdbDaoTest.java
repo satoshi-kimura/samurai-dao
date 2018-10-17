@@ -3,6 +3,7 @@ package jp.dodododo.dao.impl;
 import static jp.dodododo.dao.sql.GenericSql.*;
 import static jp.dodododo.dao.sql.Operator.*;
 import static jp.dodododo.dao.sql.orderby.SortType.*;
+import static jp.dodododo.dao.unit.Assert.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
 import static org.junit.Assert.*;
@@ -51,7 +52,6 @@ import jp.dodododo.dao.unit.DbTestRule;
 import jp.dodododo.dao.util.ReaderUtil;
 import jp.dodododo.dao.util.StringUtil;
 import jp.dodododo.dao.value.CandidateValue;
-import junit.framework.ComparisonFailure;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,7 +92,7 @@ public class RdbDaoTest {
 		List<Row> list = dao.select(Row.class, from("EMP"), where("JOB", "CLERK"), orderBy("ENAME", DESC));
 		assertEquals(4, list.size());
 		String sql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE JOB = 'CLERK' ORDER BY ENAME DESC", sql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE JOB = 'CLERK' ORDER BY ENAME DESC", sql);
 		assertEquals("SMITH", list.get(0).getString("ename"));
 		assertEquals("MILLER", list.get(1).getString("ename"));
 		assertEquals("JAMES", list.get(2).getString("ename"));
@@ -101,7 +101,7 @@ public class RdbDaoTest {
 		List<Emp> empList = dao.select(Emp.class, from("EMP"), where("JOB", "CLERK"), orderBy("EMPNO"));
 		assertEquals(4, empList.size());
 		sql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE JOB = 'CLERK' ORDER BY EMPNO", sql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE JOB = 'CLERK' ORDER BY EMPNO", sql);
 	}
 
 	@Test
@@ -304,18 +304,18 @@ public class RdbDaoTest {
 		String commColumnName = tableMetaData.getColumnMetaData("COMM").getColumnName();
 		count = dao.update(emp);
 		assertEquals(1, count);
-		assertEquals(
+		assertEqualsIgnoreCase(
 				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = 2 , DEPTNO = 10 , TSTAMP = NULL WHERE "
 						+ empnoColumnName + " = 1 AND " + commColumnName + " = 1",
 				logRegistry.getLast().getCompleteSql());
 		count = dao.update(emp);
 		assertEquals(1, count);
-		assertEquals(
+		assertEqualsIgnoreCase(
 				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = 3 , DEPTNO = 10 , TSTAMP = NULL WHERE "
 						+ empnoColumnName + " = 1 AND " + commColumnName + " = 2",
 				logRegistry.getLast().getCompleteSql());
 		String sql = logRegistry.getLast().getCompleteSql();
-		assertMatches("UPDATE EMP SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
+		assertMatches("UPDATE .* SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
 	}
 
 	@Test
@@ -401,7 +401,7 @@ public class RdbDaoTest {
 		assertEquals(2, counts.length);
 
 		String sql = logRegistry.getLast().getCompleteSql();
-		assertMatches("UPDATE EMP SET.*COMM = 2.*WHERE.*COMM = 1.*", sql);
+		assertMatches("UPDATE .* SET.*COMM = 2.*WHERE.*COMM = 1.*", sql);
 
 		counts = dao.update(entityList);
 		assertEquals(1, counts[0]);
@@ -409,7 +409,7 @@ public class RdbDaoTest {
 		assertEquals(2, counts.length);
 
 		sql = logRegistry.getLast().getCompleteSql();
-		assertMatches("UPDATE EMP SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
+		assertMatches("UPDATE .* SET.*COMM = 3.*WHERE.*COMM = 2.*", sql);
 	}
 
 	@Test
@@ -576,16 +576,6 @@ public class RdbDaoTest {
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-
-	public static void assertMatches(String message, String pattern, String actual) {
-		if (actual.matches(pattern) == false) {
-			throw new ComparisonFailure(message, pattern, actual);
-		}
-	}
-
-	public static void assertMatches(String pattern, String actual) {
-		assertMatches(((String) (null)), pattern, actual);
 	}
 
 	@Test
@@ -952,37 +942,36 @@ public class RdbDaoTest {
 		query.setEMPNO("1");
 		dao.select(ALL, query);
 		String completeSql = logRegistry.get(0).getCompleteSql();
-		assertEquals("SELECT * FROM EMP", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP", completeSql);
 		assertTrue(completeSql, StringUtil.equalsIgnoreCase("SELECT * FROM EMP", completeSql));
 
 		dao.select(SIMPLE_WHERE, query);
 		completeSql = logRegistry.get(1).getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.select(COUNT_ALL, query);
 		completeSql = logRegistry.get(2).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP", completeSql);
 
 		dao.select(SIMPLE_COUNT_WHERE, query);
 		completeSql = logRegistry.get(3).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.selectOne(SIMPLE_COUNT_WHERE, query);
 		completeSql = logRegistry.get(4).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.selectOneNumber(COUNT_ALL, query);
 		completeSql = logRegistry.get(5).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP", completeSql);
 
 		dao.select(BY, query);
 		completeSql = logRegistry.get(6).getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.select(BY, query("tableName", "EMP", "EMPNO", "1"));
 		completeSql = logRegistry.get(7).getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
-
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 	}
 
 	@Test
@@ -995,35 +984,35 @@ public class RdbDaoTest {
 		query.put("EMPNO", "1");
 		dao.selectMap(ALL, query);
 		String completeSql = logRegistry.get(0).getCompleteSql();
-		assertEquals("SELECT * FROM EMP", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP", completeSql);
 
 		dao.selectMap(SIMPLE_WHERE, query);
 		completeSql = logRegistry.get(1).getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.selectMap(COUNT_ALL, query);
 		completeSql = logRegistry.get(2).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP", completeSql);
 
 		dao.selectMap(SIMPLE_COUNT_WHERE, query);
 		completeSql = logRegistry.get(3).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.selectOneMap(SIMPLE_COUNT_WHERE, query);
 		completeSql = logRegistry.get(4).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.selectOneNumber(COUNT_ALL, query);
 		completeSql = logRegistry.get(5).getCompleteSql();
-		assertEquals("SELECT count(*) FROM EMP", completeSql);
+		assertEqualsIgnoreCase("SELECT count(*) FROM EMP", completeSql);
 
 		dao.selectMap(from("emp"), by("empno", eq("1")));
 		completeSql = logRegistry.get(1).getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 
 		dao.selectOneMap(from("emp"), by("empno", eq("1")));
 		completeSql = logRegistry.get(1).getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = '1'", completeSql);
 	}
 
 	@Test
@@ -1033,84 +1022,83 @@ public class RdbDaoTest {
 
 		List<Row> select = dao.select(Row.class, from("emp"), where("empno", eq(1)));
 		String completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = 1", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = 1", completeSql);
 		assertEquals(0, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", ne(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO <> 1", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO <> 1", completeSql);
 		assertEquals(14, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", lt(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO < 1", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO < 1", completeSql);
 		assertEquals(0, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", le(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO <= 1", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO <= 1", completeSql);
 		assertEquals(0, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", gt(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO > 1", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO > 1", completeSql);
 		assertEquals(14, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", ge(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO >= 1", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO >= 1", completeSql);
 		assertEquals(14, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", in(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO IN (1)", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO IN (1)", completeSql);
 		assertEquals(0, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", in(1, 7369)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO IN (1, 7369)", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO IN (1, 7369)", completeSql);
 		assertEquals(1, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", notIn(1)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO NOT IN (1)", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO NOT IN (1)", completeSql);
 		assertEquals(14, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("empno", notIn(1, 7369)));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE EMPNO NOT IN (1, 7369)", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO NOT IN (1, 7369)", completeSql);
 		assertEquals(13, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("ename", like("I")));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME LIKE '%I%'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE ENAME LIKE '%I%'", completeSql);
 		assertEquals(4, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("ename", notLike("I")));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME NOT LIKE '%I%'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE ENAME NOT LIKE '%I%'", completeSql);
 		assertEquals(10, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("ename", contains("I")));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME LIKE '%I%'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE ENAME LIKE '%I%'", completeSql);
 		assertEquals(4, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("ename", notContains("I")));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME NOT LIKE '%I%'", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE ENAME NOT LIKE '%I%'", completeSql);
 		assertEquals(10, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("ename", isNull()));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME IS NULL", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE ENAME IS NULL", completeSql);
 		assertEquals(0, select.size());
 
 		select = dao.select(Row.class, from("emp"), where("ename", isNotNull()));
 		completeSql = logRegistry.getLast().getCompleteSql();
-		assertEquals("SELECT * FROM EMP WHERE ENAME IS NOT NULL", completeSql);
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE ENAME IS NOT NULL", completeSql);
 		assertEquals(14, select.size());
-
 	}
 
 	public void _testPerformance() throws Exception {
@@ -1301,7 +1289,7 @@ public class RdbDaoTest {
 		assertEquals(0, messages.size());
 
 		dao.update(list);
-		assertEquals(
+		assertEqualsIgnoreCase(
 				"UPDATE EMP SET EMPNO = 1 , ENAME = 'ename2' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = NULL , DEPTNO = NULL , TSTAMP = NULL WHERE "
 						+ empnoColumnName + " = 1",
 				logRegistry.getLast().getCompleteSql());
@@ -1316,7 +1304,7 @@ public class RdbDaoTest {
 		assertEquals(0, messages.size());
 
 		dao.delete(list);
-		assertEquals("DELETE FROM EMP WHERE EMPNO = 1", logRegistry.getLast().getCompleteSql());
+		assertEqualsIgnoreCase("DELETE FROM EMP WHERE EMPNO = 1", logRegistry.getLast().getCompleteSql());
 		assertEquals(5, messages.size());
 		MemoryAppender.clear(GatherTestBean.class);
 		assertEquals(0, messages.size());
