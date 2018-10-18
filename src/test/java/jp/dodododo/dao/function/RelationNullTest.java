@@ -11,6 +11,7 @@ import jp.dodododo.dao.annotation.Bean;
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Id;
 import jp.dodododo.dao.annotation.IdDefSet;
+import jp.dodododo.dao.dialect.MySQL;
 import jp.dodododo.dao.dialect.sqlite.SQLite;
 import jp.dodododo.dao.id.Identity;
 import jp.dodododo.dao.id.Sequence;
@@ -42,7 +43,10 @@ public class RelationNullTest {
 	}
 
 	public static class Emp {
-		@Id(value = { @IdDefSet(type = Sequence.class, name = "sequence"), @IdDefSet(type = Identity.class, db = SQLite.class) }, targetTables = { "emp" })
+		@Id(value = { @IdDefSet(type = Sequence.class, name = "sequence"),
+				@IdDefSet(type = Identity.class, db = SQLite.class),
+				@IdDefSet(type = Identity.class, db = MySQL.class) },
+				targetTables = { "emp" })
 		public String EMPNO;
 
 		public String ename;

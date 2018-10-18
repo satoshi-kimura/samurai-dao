@@ -20,7 +20,7 @@ public class Sun14ReflectionUtil { // because this class use sun.reflect package
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "restriction" })
+	@SuppressWarnings({ "all" })
 	public static <T> Constructor<T> getMungedConstructor(Class<T> type) {
 		try {
 			synchronized (constructorCache) {

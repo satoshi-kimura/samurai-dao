@@ -11,7 +11,7 @@ import jp.dodododo.dao.id.Sequence;
 public class BinaryTable {
 	private int id;
 
-	@Column(value = "bin", alias = { "bin" })
+	@Column(value = "bin", alias = { "binary" })
 	private InputStream binary;
 
 	public InputStream getBinary() {
