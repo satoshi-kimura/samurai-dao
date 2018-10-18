@@ -1,6 +1,7 @@
 package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.sql.GenericSql.*;
+import static jp.dodododo.dao.unit.Assert.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static jp.dodododo.dao.util.DaoUtil.*;
 import static org.junit.Assert.*;
@@ -55,7 +56,7 @@ public class SelectRowTest {
 		assertNotNull(select.get(0).getString("TSTAMP"));
 
 		select = dao.select(SIMPLE_WHERE, args(TABLE_NAME, "emp", "EMPNO", empNo), Row.class);
-		assertEquals("SELECT * FROM EMP WHERE EMPNO = "+ empNo, logRegistry.getLast().getCompleteSql());
+		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = "+ empNo, logRegistry.getLast().getCompleteSql());
 		assertEquals(empNo, select.get(0).getInteger("EMPNO"));
 		assertEquals("" + empNo, select.get(0).getString("EMPNO"));
 		assertEquals(new Integer(2), select.get(0).getInteger("COMM"));

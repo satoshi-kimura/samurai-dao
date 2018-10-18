@@ -92,7 +92,11 @@ public enum SQLTypes implements SQLType {
 	}
 
     public static SQLType valueOf(int type) {
-        return VALUES.get(type);
+    		SQLType ret = VALUES.get(Integer.valueOf(type));
+    		if(ret == null) {
+    			throw new UnsupportedOperationException(Integer.toString(type)+ " : " + VALUES);
+    		}
+        return ret;
     }
 
     @Override

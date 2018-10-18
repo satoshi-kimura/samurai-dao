@@ -3,7 +3,10 @@ package jp.dodododo.dao.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import jp.dodododo.dao.columns.ResultSetColumn;
 import jp.dodododo.dao.error.SQLError;
+import jp.dodododo.dao.types.SQLType;
+import jp.dodododo.dao.types.SQLTypes;
 
 /**
  *
@@ -17,6 +20,16 @@ public abstract class ResultSetUtil {
 		}
 		try {
 			rs.close();
+		} catch (SQLException e) {
+			throw new SQLError(e);
+		}
+	}
+
+	public static Object getObject(ResultSet rs, ResultSetColumn column) {
+		int dataType = column.getDataType();
+		SQLType sqlType = SQLTypes.valueOf(dataType);
+		try {
+			return sqlType.toJavaType().getValue(rs, column.getName());
 		} catch (SQLException e) {
 			throw new SQLError(e);
 		}

@@ -238,7 +238,7 @@ public class RdbDaoTest {
 		assertEquals(1, count);
 		String completeSql = logRegistry.getLast().getCompleteSql();
 		assertMatches(
-				"INSERT INTO EMP \\( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP \\) VALUES \\( .* , 'ename' , NULL , NULL , NULL , NULL , 2 , 10 , NULL \\)",
+				"INSERT INTO .* \\( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP \\) VALUES \\( .* , 'ename' , NULL , NULL , NULL , NULL , 2 , 10 , NULL \\)",
 				completeSql);
 
 		emp = new EmpHasIdAnnotation();
@@ -249,7 +249,7 @@ public class RdbDaoTest {
 		assertEquals(1, count);
 		completeSql = logRegistry.getLast().getCompleteSql();
 		assertMatches(
-				"INSERT INTO EMP \\( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP \\) VALUES \\( .* , 'ename' , NULL , NULL , NULL , NULL , 2 , 10 , NULL \\)",
+				"INSERT INTO .* \\( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP \\) VALUES \\( .* , 'ename' , NULL , NULL , NULL , NULL , 2 , 10 , NULL \\)",
 				completeSql);
 	}
 

@@ -311,6 +311,10 @@ public class CompressTest {
 		if (dialect instanceof SQLite) {
 			return;
 		}
+		String binaryColumnName = "BINARY"; // TODO change to BIN
+		if (dialect instanceof MySQL) {
+			 binaryColumnName = "BIN";
+		}
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
@@ -318,8 +322,8 @@ public class CompressTest {
 		dao.insert(bean);
 		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_NO_COMPRESSION.class).get();
 		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
-		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream("BINARY")), String.class));
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
+		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream(binaryColumnName)), String.class));
 	}
 
 	@Table("BINARY_TABLE")
