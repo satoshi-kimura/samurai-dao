@@ -49,7 +49,7 @@ public class CompressTest {
 	@Test
 	public void testNoCompress() throws SQLException {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -84,7 +84,7 @@ public class CompressTest {
 	@Test
 	public void testGZIPCompressAutoUncompress() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -112,7 +112,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_BEST_COMPRESSION() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -140,7 +140,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_BEST_SPEED() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -168,7 +168,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_DEFAULT_COMPRESSION() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -196,7 +196,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_DEFAULT_STRATEGY() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -224,7 +224,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_DEFLATED() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -252,7 +252,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_FILTERED() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -280,7 +280,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_HUFFMAN_ONLY() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -308,7 +308,7 @@ public class CompressTest {
 	@Test
 	public void testZLIB_NO_COMPRESSION() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 		String binaryColumnName = "BINARY"; // TODO change to BIN
@@ -321,8 +321,8 @@ public class CompressTest {
 		ZLIB_NO_COMPRESSION bean = new ZLIB_NO_COMPRESSION();
 		dao.insert(bean);
 		bean = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), ZLIB_NO_COMPRESSION.class).get();
-		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(bean.binary, String.class));
+		Row record = dao.selectOne("select * from BINARY_TABLE where id = /*id*/0", args("id", bean.id), Row.class).get();
 		assertEquals("abcdefg", TypeConverter.convert(new InflaterInputStream(record.getInputStream(binaryColumnName)), String.class));
 	}
 
@@ -339,7 +339,7 @@ public class CompressTest {
 	@Test
 	public void testGZIPCompressNoAutoUncompress() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
@@ -367,7 +367,7 @@ public class CompressTest {
 	@Test
 	public void testConstructorArgHasCompress() throws Exception {
 		Dialect dialect = DialectManager.getDialect(getConnection());
-		if (dialect instanceof SQLite) {
+		if (dialect instanceof SQLite || dialect instanceof MySQL) {
 			return;
 		}
 
