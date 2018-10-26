@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -45,6 +46,10 @@ public class DbTestRule extends ExternalResource {
 
 	@Override
 	protected void before() throws Throwable {
+		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		for (; drivers.hasMoreElements();) {
+			DriverManager.deregisterDriver(drivers.nextElement());
+		}
 		driver = ClassUtil.newInstance(config.driverClassName());
 		DriverManager.registerDriver(driver);
 		this.connection = DriverManager.getConnection(config.URL(), config.properties());

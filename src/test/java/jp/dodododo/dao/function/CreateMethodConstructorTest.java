@@ -49,11 +49,11 @@ public class CreateMethodConstructorTest {
 		emp.TSTAMP = null;
 		emp.TSTAMP = new Date();
 		emp.NAME = "ename";
-		dao.insert("emp", emp);
+		dao.insert("EMP", emp);
 		// dao.insert(emp.dept);
 		String empNo = emp.EMPNO;
 
-		List<Emp> select = dao.select("select dept.deptno as DEPTNO from emp, dept where emp.deptno = dept.deptno and empno = " + empNo, Emp.class);
+		List<Emp> select = dao.select("select DEPT.deptno as DEPTNO from EMP, DEPT where EMP.deptno = DEPT.deptno and empno = " + empNo, Emp.class);
 
 		assertTrue(select.get(0).dept instanceof Dept2);
 		assertEquals("10", select.get(0).dept.getDEPTNO());

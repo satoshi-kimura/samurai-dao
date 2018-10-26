@@ -51,7 +51,7 @@ public class Issue12Test {
 	}
 
 	private void test(Connection connection, Emp emp) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM emp WHERE empno = " + emp.getEMPNO());
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM EMP WHERE empno = " + emp.getEMPNO());
 		ResultSet rs = ps.executeQuery();
 		rs.next();
 		EnumType<Emp> enumType = new EnumType<Emp>(Emp.class);

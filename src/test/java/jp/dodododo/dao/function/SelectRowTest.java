@@ -43,19 +43,19 @@ public class SelectRowTest {
 		emp.TSTAMP = null;
 		emp.TSTAMP = new Date();
 		emp.NAME = "ename";
-		int count = dao.insert("emp", emp);
+		int count = dao.insert("EMP", emp);
 		assertEquals(1, count);
 		Integer empNo = Integer.parseInt(emp.EMPNO);
 
-		List<Row> select = dao.select("SELECT * FROM emp WHERE empno = " + empNo, Row.class);
-		assertEquals("SELECT * FROM emp WHERE empno = "+ empNo, logRegistry.getLast().getCompleteSql());
+		List<Row> select = dao.select("SELECT * FROM EMP WHERE empno = " + empNo, Row.class);
+		assertEqualsIgnoreCase("SELECT * FROM emp WHERE empno = "+ empNo, logRegistry.getLast().getCompleteSql());
 		assertEquals(empNo, select.get(0).getInteger("EMPNO"));
 		assertEquals("" + empNo, select.get(0).getString("EMPNO"));
 		assertEquals(new Integer(2), select.get(0).getInteger("COMM"));
 		assertEquals("ename", select.get(0).getString("ENAME"));
 		assertNotNull(select.get(0).getString("TSTAMP"));
 
-		select = dao.select(SIMPLE_WHERE, args(TABLE_NAME, "emp", "EMPNO", empNo), Row.class);
+		select = dao.select(SIMPLE_WHERE, args(TABLE_NAME, "EMP", "EMPNO", empNo), Row.class);
 		assertEqualsIgnoreCase("SELECT * FROM EMP WHERE EMPNO = "+ empNo, logRegistry.getLast().getCompleteSql());
 		assertEquals(empNo, select.get(0).getInteger("EMPNO"));
 		assertEquals("" + empNo, select.get(0).getString("EMPNO"));
@@ -66,7 +66,7 @@ public class SelectRowTest {
 
 	public static class Emp {
 		@Id(value = { @IdDefSet(type = Sequence.class, name = "sequence"), @IdDefSet(type = Identity.class, db = SQLite.class),
-				@IdDefSet(type = Identity.class, db = MySQL.class) }, targetTables = { "emp" })
+				@IdDefSet(type = Identity.class, db = MySQL.class) }, targetTables = { "EMP" })
 		public String EMPNO;
 
 		@Column("ename")

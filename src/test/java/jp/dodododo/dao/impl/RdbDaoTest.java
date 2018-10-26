@@ -447,7 +447,7 @@ public class RdbDaoTest {
 		String sql = "UPDATE EMP SET ENAME = /*name*/'SMITH' WHERE EMPNO = /*no*/1";
 
 		dao.executeUpdate(sql, args("name", "foo", "no", 7369));
-		Emp emp = dao.selectOne("select * from emp where EMPNO = 7369", Emp.class).get();
+		Emp emp = dao.selectOne("select * from EMP where EMPNO = 7369", Emp.class).get();
 		assertEquals("foo", emp.getENAME());
 	}
 
@@ -459,7 +459,7 @@ public class RdbDaoTest {
 		List<Object> list = list(args("name", "foo", "no", 7369), args("name", "bar", "no", 7499), args("name", "baz", "no", -1));
 		int[] counts = dao.executeBatch(sql, list);
 
-		Emp emp = dao.selectOne("select * from emp where EMPNO = 7369", Emp.class).get();
+		Emp emp = dao.selectOne("select * from EMP where EMPNO = 7369", Emp.class).get();
 		assertEquals(1, counts[0]);
 		assertEquals("foo", emp.getENAME());
 		emp = dao.selectOne("select * from emp where EMPNO = 7499", Emp.class).get();
@@ -864,7 +864,7 @@ public class RdbDaoTest {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
-		String sql = "select * from emp order by empno";
+		String sql = "select * from EMP order by empno";
 		List<Emp> allList = dao.select(sql, Emp.class);
 		List<Emp> list0 = dao.select(sql, args(new Paging(2, 0)), Emp.class);
 		List<Emp> list1 = dao.select(sql, args(new Paging(2, 1)), Emp.class);

@@ -43,11 +43,11 @@ public class SomeObjectTest {
 		emp.TSTAMP = null;
 		emp.person.TSTAMP = new Date();
 		emp.person.NAME = "ename";
-		int count = dao.insert("emp", emp);
+		int count = dao.insert("EMP", emp);
 		assertEquals(1, count);
 		String empNo = emp.no.EMPNO;
 
-		List<Emp> select = dao.select("select * from emp where EMPNO =" + empNo, Emp.class);
+		List<Emp> select = dao.select("select * from EMP where EMPNO =" + empNo, Emp.class);
 		assertEquals(empNo, select.get(0).no.EMPNO);
 		assertEquals(new Integer(2), TypeConverter.convert(select.get(0).COMM, Integer.class));
 		assertEquals("10", select.get(0).dept.DEPTNO);
