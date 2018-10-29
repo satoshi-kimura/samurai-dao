@@ -54,7 +54,7 @@ public class CreateMethodPropertyTest {
 		String empNo = emp.EMPNO;
 
 		List<Emp> select = dao.select(
-				"select emp.deptno as deptno from emp, dept where emp.deptno = dept.deptno and empno = "
+				"select EMP.deptno as deptno from EMP, DEPT where EMP.deptno = DEPT.deptno and empno = "
 						+ empNo, Emp.class);
 
 		assertTrue(select.get(0).dept instanceof Dept2);

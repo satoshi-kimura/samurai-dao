@@ -47,10 +47,10 @@ public class ExecuteXxxTest {
 		dao.execute(UPDATE, args(TABLE_NAME, "emp", //
 				"EMPNO", 100, //
 				"ENAME", "name2"));
-		actual = dao.selectOneMap("select * from emp where empno=100").get();
+		actual = dao.selectOneMap("select * from EMP where empno=100").get();
 		assertEquals("name2", actual.get("ename"));
 
-		dao.execute(DELETE, args(TABLE_NAME, "emp", //
+		dao.execute(DELETE, args(TABLE_NAME, "EMP", //
 				"EMPNO", 100));
 		Optional<Map<String, Object>> actual2 = dao.selectOneMap("select * from EMP where empno=100");
 		assertFalse(actual2.isPresent());

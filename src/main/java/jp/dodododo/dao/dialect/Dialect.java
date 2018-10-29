@@ -53,4 +53,9 @@ public interface Dialect {
 	String getSchema(Connection connection);
 
 	String getSchema(TableMetaData metaData);
+
+	default TableNameResolver getTableNameResolver() {
+		return new TableNameResolver() {
+		};
+	}
 }

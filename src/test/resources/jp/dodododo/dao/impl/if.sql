@@ -1,7 +1,7 @@
 select
 	*
 from
-	emp
+	EMP
 /*BEGIN*/
 where
 	/*IF no != null*/ EMPNO = /*no*/0 /*END*/

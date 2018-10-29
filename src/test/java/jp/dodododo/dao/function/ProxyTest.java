@@ -1,6 +1,7 @@
 package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.commons.Bool.*;
+import static jp.dodododo.dao.unit.Assert.*;
 import static jp.dodododo.dao.unit.UnitTestUtil.*;
 import static org.junit.Assert.*;
 
@@ -54,7 +55,7 @@ public class ProxyTest {
 		// dao.insert(emp.dept);
 		String empNo = emp.EMPNO;
 
-		String sql = "select dept.deptno as DEPTNO, ename, comm, tstamp, EMPNO from emp, dept where emp.deptno = dept.deptno and empno = " + empNo;
+		String sql = "select DEPT.deptno as DEPTNO, ename, comm, tstamp, EMPNO from EMP, DEPT where EMP.deptno = DEPT.deptno and empno = " + empNo;
 		List<Emp> select = dao.select(sql, Emp.class);
 		assertEquals(empNo, select.get(0).EMPNO);
 		assertEquals(new Integer(2), TypeConverter.convert(select.get(0).COMM, Integer.class));
@@ -64,7 +65,7 @@ public class ProxyTest {
 		assertEquals(sql, logRegistry.getLast()
 				.getCompleteSql());
 		assertEquals("10", select.get(0).dept.getDEPTNO());
-		assertEquals("select * from dept where deptno =10", logRegistry.getLast().getCompleteSql());
+		assertEqualsIgnoreCase("select * from dept where deptno =10", logRegistry.getLast().getCompleteSql());
 	}
 
 	public static class Emp {
@@ -115,7 +116,7 @@ public class ProxyTest {
 
 	    @Override
 		public Dept lazyLoad() {
-			return DeptProxy.dao.selectOne("select * from dept where deptno =" + DEPTNO, Dept.class).get();
+			return DeptProxy.dao.selectOne("select * from DEPT where deptno =" + DEPTNO, Dept.class).get();
 		}
 
 	    @Override

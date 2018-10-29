@@ -50,7 +50,7 @@ public class ArgAnnotationTest {
 		// dao.insert(emp.dept);
 		String empNo = emp.EMPNO;
 
-		List<Emp> select = dao.select("select dept.deptno as DEPTNO from emp, dept where emp.deptno = dept.deptno and empno = " + empNo,
+		List<Emp> select = dao.select("select DEPT.deptno as DEPTNO from EMP, DEPT where EMP.deptno = DEPT.deptno and empno = " + empNo,
 				args("dept", new Dept2("123"), "job", "argJob", "MGR", new StringBuilder("argMGR"), "null", null, "dept4", ""), Emp.class);
 
 		emp = select.get(0);

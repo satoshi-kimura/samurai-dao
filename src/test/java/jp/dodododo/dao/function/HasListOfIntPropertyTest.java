@@ -28,7 +28,7 @@ public class HasListOfIntPropertyTest {
 		dao = newTestDao(getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
-		List<Dept> deptList = dao.select("SELECT dept.DEPTNO as DEPTNO, DNAME, EMPNO FROM dept, emp where dept.DEPTNO = emp.DEPTNO AND dept.DEPTNO = 10", Dept.class);
+		List<Dept> deptList = dao.select("SELECT DEPT.DEPTNO as DEPTNO, DNAME, EMPNO FROM DEPT, EMP where DEPT.DEPTNO = EMP.DEPTNO AND DEPT.DEPTNO = 10", Dept.class);
 
 		assertEquals(1, deptList.size());
 		assertEquals(3, deptList.get(0).empNo.size());

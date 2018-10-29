@@ -30,7 +30,7 @@ public class Issue46Test {
 		dao = newTestDao(getDataSource());
 
 		final AtomicBoolean invoked = new AtomicBoolean(false);
-		dao.selectMap("select * from emp", by("empno", 1), new Each() {
+		dao.selectMap("select * from EMP", by("empno", 1), new Each() {
 			@SuppressWarnings("unused")
 			public void each(Map<String, Object> row) {
 				invoked.getAndSet(true);
@@ -58,7 +58,7 @@ public class Issue46Test {
 		dao = newTestDao(getDataSource());
 
 		final AtomicBoolean invoked = new AtomicBoolean(false);
-		dao.selectMap("select * from emp", new Each() {
+		dao.selectMap("select * from EMP", new Each() {
 			@SuppressWarnings("unused")
 			public void each(Map<String, Object> row) {
 				invoked.getAndSet(true);

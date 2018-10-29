@@ -914,12 +914,12 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		try {
 			PropertyDesc.cacheModeOn();
 			connection = getConnection();
-			prepareInsert(tableName, entity, locking, connection);
+			prepareInsert(tableMetaData.getTableName(), entity, locking, connection);
 			Map<String, ParameterValue> values = getUpdateParameterValues(entities, updateColumnNames, tableMetaData);
 
-			String sql = createInsertSql(tableName, updateColumnNames, values);
+			String sql = createInsertSql(tableMetaData.getTableName(), updateColumnNames, values);
 			int ret = executeUpdate(values, sql);
-			setIds(tableName, entity, connection, !PREPARE);
+			setIds(tableMetaData.getTableName(), entity, connection, !PREPARE);
 			return ret;
 		} finally {
 			PropertyDesc.cacheModeOff();
@@ -1357,9 +1357,9 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			if (isAllNull(values)) {
 				throw new DaoRuntimeException("00044");
 			}
-			prepareUpdate(tableName, entity, locking);
+			prepareUpdate(tableMetaData.getTableName(), entity, locking);
 			values.putAll(getUpdateParameterValues(entities, updateColumnNames, tableMetaData));
-			String sql = createUpdateSql(tableName, updateColumnNames, values, whereColumnNames);
+			String sql = createUpdateSql(tableMetaData.getTableName(), updateColumnNames, values, whereColumnNames);
 			return executeUpdate(values, sql);
 		} finally {
 			PropertyDesc.cacheModeOff();
@@ -1481,7 +1481,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			if (isAllNull(values)) {
 				throw new DaoRuntimeException("00044");
 			}
-			String sql = createDeleteSql(tableName, whereColumnNames, values);
+			String sql = createDeleteSql(tableMetaData.getTableName(), whereColumnNames, values);
 			return executeUpdate(values, sql);
 		} finally {
 			PropertyDesc.cacheModeOff();

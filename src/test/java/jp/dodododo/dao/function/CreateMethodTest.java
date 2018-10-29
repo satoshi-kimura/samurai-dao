@@ -38,7 +38,7 @@ public class CreateMethodTest {
 
 		dao.setSqlLogRegistry(logRegistry);
 
-		List<Emp> select = dao.select("select EMPNO, dept.DEPTNO as DEPTNO from emp, dept where emp.deptno = dept.deptno ",
+		List<Emp> select = dao.select("select EMPNO, DEPT.DEPTNO as DEPTNO from EMP, DEPT where EMP.deptno = DEPT.deptno ",
 				Emp.class);
 
 		for (Emp selectedEmp : select) {
@@ -62,7 +62,7 @@ public class CreateMethodTest {
 
 		dao.setSqlLogRegistry(logRegistry);
 
-		List<Emp2> select = dao.select("select EMPNO, dept.deptno as deptno from emp, dept where emp.deptno = dept.deptno ",
+		List<Emp2> select = dao.select("select EMPNO, DEPT.deptno as deptno from EMP, DEPT where EMP.deptno = DEPT.deptno ",
 				Emp2.class);
 
 		for (Emp selectedEmp : select) {
@@ -86,7 +86,7 @@ public class CreateMethodTest {
 
 		dao.setSqlLogRegistry(logRegistry);
 
-		List<Emp3> select = dao.select("select EMPNO, dept.deptno as deptno from emp, dept where emp.deptno = dept.deptno ",
+		List<Emp3> select = dao.select("select EMPNO, DEPT.deptno as deptno from EMP, DEPT where EMP.deptno = DEPT.deptno ",
 				Emp3.class);
 
 		for (Emp selectedEmp : select) {

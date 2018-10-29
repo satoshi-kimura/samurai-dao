@@ -30,7 +30,7 @@ public class HasListOfEnumPropertyTest {
 		dao.setSqlLogRegistry(logRegistry);
 
 		List<Dept> deptList = dao
-				.select("SELECT dept.DEPTNO as DEPTNO, EMPNO FROM dept, emp where dept.DEPTNO = emp.DEPTNO AND dept.DEPTNO = 10",
+				.select("SELECT DEPT.DEPTNO as DEPTNO, EMPNO FROM DEPT, EMP where DEPT.DEPTNO = EMP.DEPTNO AND DEPT.DEPTNO = 10",
 						Dept.class);
 
 		assertEquals(1, deptList.size());

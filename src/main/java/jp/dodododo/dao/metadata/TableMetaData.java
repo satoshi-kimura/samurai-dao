@@ -57,9 +57,9 @@ public class TableMetaData {
 
 	private void init(Connection connection, String tableName) {
 		try {
-			this.tableName = tableName;
-			DatabaseMetaData metaData = connection.getMetaData();
 			Dialect dialect = DialectManager.getDialect(connection);
+			this.tableName = dialect.getTableNameResolver().resolve(connection, tableName);
+			DatabaseMetaData metaData = connection.getMetaData();
 
 			setUpColumnMetaData(connection, metaData, this.tableName, dialect);
 			setUpPks(metaData, this.tableName);

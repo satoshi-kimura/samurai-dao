@@ -41,7 +41,7 @@ public class EnumInsertTest {
 		} catch (SQLRuntimeException success) {
 		}
 
-		List<Emp> result = dao.select("SELECT empno FROM emp where empno=1", Emp.class);
+		List<Emp> result = dao.select("SELECT empno FROM EMP where empno=1", Emp.class);
 		assertEquals(result.get(0).getClass(), Emp.class);
 		assertEquals(result.get(0).getId(), Emp.EMP.getId());
 	}

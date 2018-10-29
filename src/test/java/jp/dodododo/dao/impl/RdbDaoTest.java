@@ -180,14 +180,14 @@ public class RdbDaoTest {
 	@Test
 	public void testSelectIn() {
 		dao = newTestDao(getDataSource());
-		List<Emp> list = dao.select("SELECT * FROM emp WHERE empno IN /*IN empNoList*/(1, 2)/*END*/ order by empno",
+		List<Emp> list = dao.select("SELECT * FROM EMP WHERE empno IN /*IN empNoList*/(1, 2)/*END*/ order by empno",
 				args("empNoList", list(7369, 7499)), Emp.class);
 
 		assertEquals(2, list.size());
 		assertEquals("7369", list.get(0).getEMPNO());
 		assertEquals("7499", list.get(1).getEMPNO());
 
-		list = dao.select("SELECT * FROM emp WHERE empno NOT IN /*IN empNoList*/(1, 2)/*END*/ order by empno", args("empNoList", list(7369, 7499)),
+		list = dao.select("SELECT * FROM EMP WHERE empno NOT IN /*IN empNoList*/(1, 2)/*END*/ order by empno", args("empNoList", list(7369, 7499)),
 				Emp.class);
 
 		assertEquals(12, list.size());
@@ -220,7 +220,7 @@ public class RdbDaoTest {
 		int count = dao.insert(binaryTable);
 		assertEquals(1, count);
 
-		binaryTable = dao.selectOne("select * from Binary_Table where id=/*id*/0", args("id", binaryTable.getId()), BinaryTable.class).get();
+		binaryTable = dao.selectOne("select * from BINARY_TABLE where id=/*id*/0", args("id", binaryTable.getId()), BinaryTable.class).get();
 		String expected = ReaderUtil.readText(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(
 				"jp/dodododo/dao/dialect.properties"), "UTF-8"));
 		assertEquals(expected, ReaderUtil.readText(new InputStreamReader(binaryTable.getBinary(), "UTF-8")));
@@ -462,7 +462,7 @@ public class RdbDaoTest {
 		Emp emp = dao.selectOne("select * from EMP where EMPNO = 7369", Emp.class).get();
 		assertEquals(1, counts[0]);
 		assertEquals("foo", emp.getENAME());
-		emp = dao.selectOne("select * from emp where EMPNO = 7499", Emp.class).get();
+		emp = dao.selectOne("select * from EMP where EMPNO = 7499", Emp.class).get();
 		assertEquals(1, counts[1]);
 		assertEquals("bar", emp.getENAME());
 		assertEquals(0, counts[2]);
@@ -560,7 +560,7 @@ public class RdbDaoTest {
 	private void assertSql(String exp, String act) {
 		// assertEquals(exp.replaceAll("\r", "\n").replaceAll("\n\n", "\n"),
 		// act);
-		assertEquals(exp.replaceAll("\r", "\n").replaceAll("\n\n", "\n").trim(), act.replaceAll("\r", "\n").replaceAll("\n\n", "\n").trim());
+		assertEqualsIgnoreCase(exp.replaceAll("\r", "\n").replaceAll("\n\n", "\n").trim(), act.replaceAll("\r", "\n").replaceAll("\n\n", "\n").trim());
 	}
 
 	private String getText(String fileName) {
@@ -887,7 +887,7 @@ public class RdbDaoTest {
 		dao = newTestDao(getDataSource());
 
 		final AtomicInteger count = new AtomicInteger(0);
-		String sql = "select * from emp order by empno";
+		String sql = "select * from EMP order by empno";
 		assertEquals(0, count.intValue());
 
 		dao.select(sql, Emp.class, new Each<Emp>() {
@@ -906,7 +906,7 @@ public class RdbDaoTest {
 		dao = newTestDao(getDataSource());
 
 		final AtomicInteger count = new AtomicInteger(0);
-		String sql = "select * from emp order by empno";
+		String sql = "select * from EMP order by empno";
 		assertEquals(0, count.intValue());
 
 		dao.select(sql, Emp.class, new jp.dodododo.dao.script.Each() {
@@ -1256,7 +1256,7 @@ public class RdbDaoTest {
 		list.add(bean);
 		try {
 			dao.insert("emp", bean);
-			assertEquals(
+			assertEqualsIgnoreCase(
 					"INSERT INTO emp ( EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, TSTAMP ) VALUES ( 1 , 'ename2' , NULL , NULL , NULL , NULL , NULL , NULL , NULL )",
 					logRegistry.getLast().getCompleteSql());
 		} catch (Exception ignore) {
@@ -1280,7 +1280,7 @@ public class RdbDaoTest {
 		ColumnMetaData columnMetaData = new TableMetaData(getDataSource().getConnection(), "emp").getColumnMetaData("empno");
 		String empnoColumnName = columnMetaData.getColumnName();
 		dao.update("emp", bean);
-		assertEquals(
+		assertEqualsIgnoreCase(
 				"UPDATE emp SET EMPNO = 1 , ENAME = 'ename2' , JOB = NULL , MGR = NULL , HIREDATE = NULL , SAL = NULL , COMM = NULL , DEPTNO = NULL , TSTAMP = NULL WHERE "
 						+ empnoColumnName + " = 1",
 				logRegistry.getLast().getCompleteSql());
@@ -1298,7 +1298,7 @@ public class RdbDaoTest {
 		assertEquals(0, messages.size());
 
 		dao.delete("emp", bean);
-		assertEquals("DELETE FROM emp WHERE EMPNO = 1", logRegistry.getLast().getCompleteSql());
+		assertEqualsIgnoreCase("DELETE FROM emp WHERE EMPNO = 1", logRegistry.getLast().getCompleteSql());
 		assertEquals(5, messages.size());
 		MemoryAppender.clear(GatherTestBean.class);
 		assertEquals(0, messages.size());
@@ -1315,12 +1315,12 @@ public class RdbDaoTest {
 		dao = newTestDao(getConnection());
 		dao.setSqlLogRegistry(logRegistry);
 
-		Long sum1 = dao.selectOne("select sum(sal) from emp", Long.class).get();
+		Long sum1 = dao.selectOne("select sum(sal) from EMP", Long.class).get();
 		AtomicLong sum2 = new AtomicLong(0);
 		AtomicLong sum3 = new AtomicLong(0);
-		dao.select("select *   from emp", Row.class, System.out::println);
-		dao.select("select *   from emp", Row.class, row -> { sum2.addAndGet(row.getLong("sal")); });
-		dao.select("select sal from emp", Long.class, sal -> { sum3.addAndGet(sal); });
+		dao.select("select *   from EMP", Row.class, System.out::println);
+		dao.select("select *   from EMP", Row.class, row -> { sum2.addAndGet(row.getLong("sal")); });
+		dao.select("select sal from EMP", Long.class, sal -> { sum3.addAndGet(sal); });
 		assertEquals(sum1.longValue(), sum2.longValue());
 		assertEquals(sum1.longValue(), sum3.longValue());
 	}

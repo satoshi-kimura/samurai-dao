@@ -43,11 +43,11 @@ public class HasAliasTest {
 		emp.no = "10";
 		emp.TSTAMP = null;
 		emp.TSTAMP = new Date();
-		int count = dao.insert("emp", emp);
+		int count = dao.insert("EMP", emp);
 		assertEquals(1, count);
 		String empNo = emp.EMPNO;
 
-		List<Emp> select = dao.select("select * from emp where EMPNO =" + empNo, Emp.class);
+		List<Emp> select = dao.select("select * from EMP where EMPNO =" + empNo, Emp.class);
 		assertEquals(empNo, select.get(0).EMPNO);
 		assertEquals("foo", select.get(0).NAME);
 		assertEquals("10", select.get(0).no);

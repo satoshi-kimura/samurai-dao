@@ -38,7 +38,7 @@ public class InsertObjectAndMap {
 		assertTrue(dao.exists(new Emp(1)));
 		assertTrue(dao.exists(new Emp(2)));
 
-		TypeConverter result = new TypeConverter(dao.selectOneMap("select * from emp where empno = 1"));
+		TypeConverter result = new TypeConverter(dao.selectOneMap("select * from EMP where empno = 1"));
 		assertEquals(1, result.getInteger("empno").intValue());
 		assertEquals("nnn", result.getString("ename"));
 		assertEquals("jjj", result.getString("job"));

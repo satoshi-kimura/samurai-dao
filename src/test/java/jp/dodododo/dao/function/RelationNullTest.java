@@ -38,7 +38,7 @@ public class RelationNullTest {
 		Emp emp = new Emp(new Dept(null));
 		dao.insert(emp);
 
-		emp = dao.selectOne("select * from emp where empno = /*empno*/0", args("empno", emp.EMPNO), Emp.class).get();
+		emp = dao.selectOne("select * from EMP where empno = /*empno*/0", args("empno", emp.EMPNO), Emp.class).get();
 		assertNull(emp.getDept());
 	}
 

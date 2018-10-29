@@ -33,17 +33,17 @@ public class OneColumnResultSetHandlerTest {
 		dao = newTestDao(dbTestRule.getDataSource());
 		dao.setSqlLogRegistry(logRegistry);
 
-		List<String> resultStringList = dao.select("SELECT ename FROM emp ORDER BY empno", String.class);
+		List<String> resultStringList = dao.select("SELECT ename FROM EMP ORDER BY empno", String.class);
 		assertEquals("SMITH", resultStringList.get(0));
 
-		List<Integer> resultIntegerList = dao.select("SELECT sal FROM emp ORDER BY empno", Integer.class);
+		List<Integer> resultIntegerList = dao.select("SELECT sal FROM EMP ORDER BY empno", Integer.class);
 		assertEquals(800, (int) resultIntegerList.get(0));
 
-		List<Integer> resultBigDecimalList = dao.select("SELECT sal FROM emp ORDER BY empno", Integer.class);
+		List<Integer> resultBigDecimalList = dao.select("SELECT sal FROM EMP ORDER BY empno", Integer.class);
 		assertEquals(new Integer("800"), resultBigDecimalList.get(0));
 
 		@SuppressWarnings("rawtypes")
-		List<Map> resultMapList = dao.select("SELECT * FROM emp ORDER BY empno", Map.class);
+		List<Map> resultMapList = dao.select("SELECT * FROM EMP ORDER BY empno", Map.class);
 		assertEquals(7369, ((Number) resultMapList.get(0).get("empno")).intValue());
 		assertEquals("SMITH", resultMapList.get(0).get("ename"));
 		assertEquals(800, ((Number) resultMapList.get(0).get("sal")).intValue());

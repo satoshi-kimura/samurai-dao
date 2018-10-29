@@ -33,7 +33,7 @@ public class Issue38Test {
 		dao = newTestDao(dbTestRule.getDataSource());
 
 		List<Dept> deptList = dao.select(
-				"select dept.deptno, dept.dname, emp.empno, emp.ename from dept , emp where emp.deptno = dept.deptno order by dept.deptno", Dept.class);
+				"select DEPT.deptno, DEPT.dname, EMP.empno, EMP.ename from DEPT , EMP where EMP.deptno = DEPT.deptno order by DEPT.deptno", Dept.class);
 
 		assertEquals(3, deptList.size());
 		assertEquals(3, deptList.get(0).empList.size());

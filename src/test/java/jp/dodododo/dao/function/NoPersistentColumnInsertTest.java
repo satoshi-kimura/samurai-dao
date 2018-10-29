@@ -1,6 +1,7 @@
 package jp.dodododo.dao.function;
 
 import static jp.dodododo.dao.columns.ColumnsUtil.*;
+import static jp.dodododo.dao.unit.Assert.*;
 import static org.junit.Assert.*;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ public class NoPersistentColumnInsertTest {
 
 		int count = dao.insert("emp", Emp.EMP, npc("ename", "COMM", "deptNo", "HIREDATE", "MGR", "SAL", "TSTAMP", "JOB"));
 		assertEquals(1, count);
-		assertEquals("INSERT INTO emp ( EMPNO ) VALUES ( 1 )", logRegistry.getLast().getCompleteSql());
+		assertEqualsIgnoreCase("INSERT INTO emp ( EMPNO ) VALUES ( 1 )", logRegistry.getLast().getCompleteSql());
 
 		try {
 			count = dao.insert("emp", Emp.EMP);
