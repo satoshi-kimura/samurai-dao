@@ -48,6 +48,7 @@ public interface Dialect {
 	boolean isSupportMultiRowInsert();
 
 	String getReplaceCommand();
+
 	String getReplaceOption();
 
 	String getSchema(Connection connection);
@@ -55,7 +56,6 @@ public interface Dialect {
 	String getSchema(TableMetaData metaData);
 
 	default TableNameResolver getTableNameResolver() {
-		return new TableNameResolver() {
-		};
+		return TableNameResolver.NULL_RESOLVER;
 	}
 }
