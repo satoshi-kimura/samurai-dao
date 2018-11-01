@@ -22,7 +22,6 @@ public class Issue15Test {
 	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
 	@Before
 	public void setUp() throws Exception {
@@ -32,7 +31,6 @@ public class Issue15Test {
 	@Test
 	public void test() throws ParseException {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		try {
 			dao.update("EMP", map("ename", "mike"));

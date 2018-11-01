@@ -19,13 +19,9 @@ public class ArgNotFoundTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
-
 	@Test
 	public void testSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		try {
 			dao.selectMap("select * from emp where id = /*arg1*/0", args("arg0", "1", "arg2", "1"));

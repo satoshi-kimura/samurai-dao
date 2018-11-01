@@ -22,12 +22,9 @@ public class HasListOfEnumPropertyTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		List<Dept> deptList = dao
 				.select("SELECT DEPT.DEPTNO as DEPTNO, EMPNO FROM DEPT, EMP where DEPT.DEPTNO = EMP.DEPTNO AND DEPT.DEPTNO = 10",

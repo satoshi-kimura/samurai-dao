@@ -38,21 +38,21 @@ public class ObjectDesc<OBJ> {
 	protected ClassDesc<OBJ> classDesc;
 
 	protected Map<String, PropertyDesc> propertyDescCache;
-	protected Map<String, FieldDesc> fieldDescCache = new HashMap<String, FieldDesc>();
+	protected Map<String, FieldDesc> fieldDescCache = new HashMap<>();
 
-	protected List<PropertyDesc> propertyDescList = new ArrayList<PropertyDesc>();
-	protected List<PropertyDesc> writablePropertyDescList = new ArrayList<PropertyDesc>();
-	protected List<PropertyDesc> readablePropertyDescList = new ArrayList<PropertyDesc>();
+	protected List<PropertyDesc> propertyDescList = new ArrayList<>();
+	protected List<PropertyDesc> writablePropertyDescList = new ArrayList<>();
+	protected List<PropertyDesc> readablePropertyDescList = new ArrayList<>();
 	protected List<FieldDesc> fieldDescList = new ArrayList<FieldDesc>();
 
-	protected Map<Class<? extends Annotation>, List<PropertyDesc>> annotationCache = new HashMap<Class<? extends Annotation>, List<PropertyDesc>>();
+	protected Map<Class<? extends Annotation>, List<PropertyDesc>> annotationCache = new HashMap<>();
 	protected Map<JavaType<?>, List<PropertyDesc>> javaTypeCache = new HashMap<JavaType<?>, List<PropertyDesc>>();
 
 	protected ObjectDesc(boolean isIgnoreCase) {
 		if (isIgnoreCase == true) {
-			propertyDescCache = new CaseInsensitiveMap<PropertyDesc>();
+			propertyDescCache = new CaseInsensitiveMap<>();
 		} else {
-			propertyDescCache = new HashMap<String, PropertyDesc>();
+			propertyDescCache = new HashMap<>();
 		}
 	}
 
@@ -62,7 +62,7 @@ public class ObjectDesc<OBJ> {
 			throw new NullPointerException("targetClass");
 		}
 		this.targetClass = targetClass;
-		this.classDesc = new ClassDesc<OBJ>(targetClass);
+		this.classDesc = new ClassDesc<>(targetClass);
 		setupPropertyDescs();
 		setupAnnotationCache();
 		setupJavaTypeCache();
@@ -173,7 +173,7 @@ public class ObjectDesc<OBJ> {
 				Class<? extends Annotation> annotationClass = annotation.annotationType();
 				List<PropertyDesc> list = annotationCache.get(annotationClass);
 				if (list == null) {
-					list = new ArrayList<PropertyDesc>();
+					list = new ArrayList<>();
 					annotationCache.put(annotationClass, list);
 				}
 				list.add(propertyDesc);
@@ -185,7 +185,7 @@ public class ObjectDesc<OBJ> {
 	}
 
 	private Field[] getAllDeclaredFields() {
-		return getAllDeclaredFields(targetClass, new HashMap<String, Field>());
+		return getAllDeclaredFields(targetClass, new HashMap<>());
 	}
 
 	private Field[] getAllDeclaredFields(Class<?> clazz, Map<String, Field> fields) {
@@ -367,7 +367,7 @@ public class ObjectDesc<OBJ> {
 	}
 
 	public Map<String, Object> toMapWithFields(OBJ obj) {
-		Map<String, Object> ret = new HashMap<String, Object>();
+		Map<String, Object> ret = new HashMap<>();
 		List<FieldDesc> fieldDescs = getFieldDescs();
 		for (FieldDesc fd : fieldDescs) {
 			String fieldName = fd.getFieldName();
@@ -387,7 +387,7 @@ public class ObjectDesc<OBJ> {
 	}
 
 	public Map<String, Object> toMap(Object obj) {
-		Map<String, Object> ret = new HashMap<String, Object>();
+		Map<String, Object> ret = new HashMap<>();
 
 		List<PropertyDesc> propertyDescs = getPropertyDescs();
 		propertyDescs.stream().filter(pd -> pd.isReadable()).forEach(pd -> ret.put(pd.getPropertyName(), pd.getValue(obj)));

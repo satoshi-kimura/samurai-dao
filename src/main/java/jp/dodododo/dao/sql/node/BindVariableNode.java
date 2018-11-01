@@ -39,7 +39,7 @@ public class BindVariableNode extends AbstractNode {
 		}
 
 		if (value != null && 1 < names.length) {
-			Map<String, Object> root = new HashMap<String, Object>();
+			Map<String, Object> root = new HashMap<>();
 			root.put(name, value);
 			Dialect dialect = ctx.getDialect();
 			value = getValue(expression, names, root, dialect);

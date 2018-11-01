@@ -98,7 +98,7 @@ public class HasInitialValueHashMap<K, V> extends HashMap<K, V> {
 	public static class HashMapFactory<K, V> implements Factory<Map<K, V>> {
 		@Override
 		public Map<K, V> create() {
-			return new HashMap<K, V>();
+			return new HashMap<>();
 		}
 	}
 
@@ -113,7 +113,7 @@ public class HasInitialValueHashMap<K, V> extends HashMap<K, V> {
 	public static class TreeMapFactory<K, V> implements Factory<Map<K, V>> {
 		@Override
 		public Map<K, V> create() {
-			return new TreeMap<K, V>();
+			return new TreeMap<>();
 		}
 	}
 

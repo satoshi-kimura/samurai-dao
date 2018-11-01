@@ -30,12 +30,10 @@ public class ExecuteXxxTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertUpdateAndDelete() {
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
+		SqlLogRegistry logRegistry = dao.getSqlLogRegistry();
 
 		dao.execute(INSERT, args(TABLE_NAME, "emp", //
 				"EMPNO", 100, //

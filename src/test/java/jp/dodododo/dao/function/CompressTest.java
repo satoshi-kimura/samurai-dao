@@ -44,8 +44,6 @@ public class CompressTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testNoCompress() throws SQLException {
 		Dialect dialect = DialectManager.getDialect(getConnection());
@@ -54,7 +52,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		NoCompress bean = new NoCompress();
 		dao.insert(bean);
@@ -89,7 +86,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		GZIPCompress bean = new GZIPCompress();
 		dao.insert(bean);
@@ -117,7 +113,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_BEST_COMPRESSION bean = new ZLIB_BEST_COMPRESSION();
 		dao.insert(bean);
@@ -145,7 +140,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_BEST_SPEED bean = new ZLIB_BEST_SPEED();
 		dao.insert(bean);
@@ -173,7 +167,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_DEFAULT_COMPRESSION bean = new ZLIB_DEFAULT_COMPRESSION();
 		dao.insert(bean);
@@ -201,7 +194,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_DEFAULT_STRATEGY bean = new ZLIB_DEFAULT_STRATEGY();
 		dao.insert(bean);
@@ -229,7 +221,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_DEFLATED bean = new ZLIB_DEFLATED();
 		dao.insert(bean);
@@ -257,7 +248,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_FILTERED bean = new ZLIB_FILTERED();
 		dao.insert(bean);
@@ -285,7 +275,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_HUFFMAN_ONLY bean = new ZLIB_HUFFMAN_ONLY();
 		dao.insert(bean);
@@ -316,7 +305,6 @@ public class CompressTest {
 			 binaryColumnName = "BIN";
 		}
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ZLIB_NO_COMPRESSION bean = new ZLIB_NO_COMPRESSION();
 		dao.insert(bean);
@@ -344,7 +332,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		GZIPCompressNoAutoUncompress bean = new GZIPCompressNoAutoUncompress();
 		dao.insert(bean);
@@ -372,7 +359,6 @@ public class CompressTest {
 		}
 
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		ConstructorArgHasCompress bean = new ConstructorArgHasCompress(new ByteArrayInputStream("abcdefg".getBytes()));
 		dao.insert(bean);

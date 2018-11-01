@@ -24,13 +24,9 @@ public class EnumInsertTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		int count = dao.insert("emp", Emp.EMP);
 		assertEquals(1, count);

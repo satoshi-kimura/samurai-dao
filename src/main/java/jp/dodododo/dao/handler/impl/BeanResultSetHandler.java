@@ -297,7 +297,7 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 		if (rowCaches.containsKey(clazz) == true) {
 			return rowCaches.get(clazz);
 		} else {
-			Map<StringBuilderWrapper, Object> ret = new HashMap<StringBuilderWrapper, Object>();
+			Map<StringBuilderWrapper, Object> ret = new HashMap<>();
 			rowCaches.put(clazz, ret);
 			return ret;
 		}
@@ -456,8 +456,8 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 		return null;
 	}
 
-	private Map<Class<?>, Map<StringBuilderWrapper, Object>> rowCaches = new HashMap<Class<?>, Map<StringBuilderWrapper, Object>>();
-	private Map<Integer, StringBuilder> rowDataCaches = new HashMap<Integer, StringBuilder>();
+	private Map<Class<?>, Map<StringBuilderWrapper, Object>> rowCaches = new HashMap<>();
+	private Map<Integer, StringBuilder> rowDataCaches = new HashMap<>();
 
 	protected T newInstance(ResultSet rs, List<ResultSetColumn> resultSetColumnList) throws SQLException {
 
@@ -465,7 +465,7 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 			createMethod = getCreateMethod(beanClass);
 		}
 		if (isNotEmpty(createMethod)) {
-			Map<String, Object> root = new HashMap<String, Object>();
+			Map<String, Object> root = new HashMap<>();
 			Map<String, Object> resultSetMap = new MapResultSetHandler(null).createRow(rs, resultSetColumnList);
 			Row row = new  Row(resultSetMap);
 			root.put("resultSetMap", resultSetMap);
@@ -519,7 +519,7 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 		List<Column> columnAnnotations = AnnotationUtil.getParameterAnnotations(constructor, Column.class);
 		List<Compress> compressAnnotations = AnnotationUtil.getParameterAnnotations(constructor, Compress.class);
 		List<Arg> argAnnotations = AnnotationUtil.getParameterAnnotations(constructor, Arg.class);
-		Map<Integer, String> paramNames = new HashMap<Integer, String>();
+		Map<Integer, String> paramNames = new HashMap<>();
 		Class<?>[] parameterTypes = constructor.getParameterTypes();
 		Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
 		Object[] initArgs = new Object[parameterTypes.length];

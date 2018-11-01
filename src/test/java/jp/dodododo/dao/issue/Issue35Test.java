@@ -23,7 +23,6 @@ public class Issue35Test {
 	public DbTestRule dbTestRule = new DbTestRule();
 
 	private Dao dao;
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
 	@Before
 	public void setUp() throws Exception {
@@ -33,7 +32,6 @@ public class Issue35Test {
 	@Test
 	public void test() throws ParseException {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		Emp emp = dao.selectOne("select * from EMP where empno = 7369", Emp.class).get();
 		assertNotNull(emp.dept);

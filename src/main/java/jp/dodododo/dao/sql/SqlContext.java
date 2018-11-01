@@ -23,7 +23,7 @@ public class SqlContext implements Serializable {
 	private List<Object> values;
 	private Class<?> queryClass;
 	private Dialect dialect;
-	private Map<String, Object> parameters = new HashMap<String, Object>();
+	private Map<String, Object> parameters = new HashMap<>();
 
 	public SqlContext(String tableName, List<ParameterValue> columns, Class<?> queryClass, Dialect dialect) {
 		this(tableName, null, columns, queryClass, dialect);
@@ -32,8 +32,8 @@ public class SqlContext implements Serializable {
 	public SqlContext(String tableName, List<ParameterValue> pks, List<ParameterValue> columns, Class<?> queryClass,
 			Dialect dialect) {
 		this.tableName = tableName;
-		this.pks = pks == null ? new ArrayList<ParameterValue>() : pks;
-		this.columns = columns == null ? new ArrayList<ParameterValue>() : columns;
+		this.pks = pks == null ? new ArrayList<>() : pks;
+		this.columns = columns == null ? new ArrayList<>() : columns;
 		this.queryClass = queryClass;
 		this.dialect = dialect;
 		init();

@@ -165,7 +165,7 @@ public class MapPropertyDesc extends PropertyDesc {
 	public <K, V> V putValue(Object target, K key, V value) {
 		Object element = getValue(target);
 		if (element == null) {
-			Map<K, V> tmp = new HashMap<K, V>();
+			Map<K, V> tmp = new HashMap<>();
 			tmp.put(key, value);
 			setValue(target, tmp);
 			return null;

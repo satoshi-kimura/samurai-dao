@@ -26,12 +26,9 @@ public class OneColumnResultSetHandlerTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		List<String> resultStringList = dao.select("SELECT ename FROM EMP ORDER BY empno", String.class);
 		assertEquals("SMITH", resultStringList.get(0));

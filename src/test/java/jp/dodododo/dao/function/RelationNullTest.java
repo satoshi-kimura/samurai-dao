@@ -28,12 +28,9 @@ public class RelationNullTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		Emp emp = new Emp(new Dept(null));
 		dao.insert(emp);

@@ -10,6 +10,7 @@ import jp.dodododo.dao.log.SqlLogRegistry;
 public interface Dao extends SelectDao, ExecuteUpdateDao {
 	SqlLogRegistry getSqlLogRegistry();
 
+	@Deprecated
 	void setSqlLogRegistry(SqlLogRegistry sqlLogRegistry);
 
 	void setQueryTimeout(int seconds);

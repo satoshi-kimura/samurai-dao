@@ -33,13 +33,10 @@ public class CreateMethodPropertyTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
 
-		dao.setSqlLogRegistry(logRegistry);
 		Emp emp = new Emp();
 		emp.dept = new Dept();
 		emp.dept.setDEPTNO("10");

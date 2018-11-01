@@ -138,7 +138,8 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	protected int queryTimeout;
 
 	{
-		sqlLogRegistry = new SqlLogRegistry(config);
+		sqlLogRegistry = SqlLogRegistry.getInstance();
+		sqlLogRegistry.setConfig(config);
 		whereColumnPrefix = DEFAULT_WHERE_COLUMN_PREFIX;
 		queryTimeout = config.getQueryTimeout();
 	}
@@ -344,7 +345,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			handler.handle(rs);
 			return callback.getResult();
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(this.sqlLogRegistry.getLast().getCompleteSql(), e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
 		} finally {
 			try {
 				ResultSetUtil.close(rs);
@@ -694,7 +695,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 				continue;
 			}
 			String expression = timestamp.value();
-			Object value = OgnlUtil.getValue(expression, new HashMap<String, Object>());
+			Object value = OgnlUtil.getValue(expression, new HashMap<>());
 			propertyDesc.setValue(entity, value);
 		}
 	}
@@ -723,7 +724,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		if (entity == null) {
 			return false;
 		}
-		Map<Integer, Object> processedObjects = new HashMap<Integer, Object>();
+		Map<Integer, Object> processedObjects = new HashMap<>();
 		return setIds(tableName, entity, connection, isPrepare, processedObjects);
 	}
 
@@ -868,7 +869,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		if (ret != null) {
 			return ret;
 		}
-		ret = new HashMap<Class<? extends Dialect>, IdDefSet>();
+		ret = new HashMap<>();
 		Id idAnnotation = propertyDesc.getAnnotation(Id.class);
 		if (idAnnotation == null) {
 			ID_DEFS_CACHE.put(propertyDesc, ret);
@@ -991,7 +992,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 					ps.setObject(i + 1, TypesUtil.getSQLType(bindVariableType).convert(value, getFormats()), bindVariableType);
 				}
 			} catch (SQLException e) {
-				throw new SQLRuntimeException("value=" + value, e);
+				throw new SQLRuntimeException("value=" + value, sqlLogRegistry, e);
 			}
 		}
 	}
@@ -1023,7 +1024,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	protected Map<String, ParameterValue> getUpdateParameterValues(Object[] entities, List<String> updateColumnNames, TableMetaData tableMetaData) {
-		Map<String, ParameterValue> parameterValues = new HashMap<String, ParameterValue>(updateColumnNames.size());
+		Map<String, ParameterValue> parameterValues = new HashMap<>(updateColumnNames.size());
 		String tableName = tableMetaData.getTableName();
 		updateColumnNames.forEach(columnName -> {
 			List<CandidateValue> values = new ArrayList<CandidateValue>();
@@ -1037,7 +1038,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	protected void gatherValue(Object[] entities, String tableName, String columnName, List<CandidateValue> values) {
-		Map<Integer, Object> processedObjects = new HashMap<Integer, Object>();
+		Map<Integer, Object> processedObjects = new HashMap<>();
 		for (Object entity : entities) {
 			StringBuilder path = new StringBuilder();
 			gatherValue(entity, tableName, columnName, values, path, processedObjects);
@@ -1231,7 +1232,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			connection = getConnection();
 			Object object = iterator.next();
 
-			Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+			Map<String, ParameterValue> values = new HashMap<>();
 			addValues(values, object);
 			sql = getSql(sql, dialect);
 			ps = createPreparedStatement(connection, sql, values, ExecuteType.UPDATE, dialect, null);
@@ -1241,7 +1242,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 				object = iterator.next();
 
 				Node node = parse(sql);
-				values = new HashMap<String, ParameterValue>();
+				values = new HashMap<>();
 				addValues(values, object);
 				CommandContext ctx = new CommandContext(dialect);
 				ctx.addArgs(values);
@@ -1301,7 +1302,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			TableMetaData tableMetaData = getTableMetaData(tableName);
 			List<String> updateColumnNames = getUpdateColumnNames(tableMetaData, pc, npc);
 
-			Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+			Map<String, ParameterValue> values = new HashMap<>();
 			List<String> whereColumnNames = getWhereColumnNames(tableMetaData, entity, locking, CRUD.UPDATE);
 			addWhereValues(entity, whereColumnNames, tableMetaData, values);
 			prepareUpdate(tableName, entity, locking);
@@ -1314,7 +1315,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 				ENTITY e = iterator.next();
 
 				Node node = parse(sql);
-				values = new HashMap<String, ParameterValue>();
+				values = new HashMap<>();
 				addWhereValues(e, whereColumnNames, tableMetaData, values);
 				prepareUpdate(tableName, e, locking);
 				values.putAll(getUpdateParameterValues(new Object[] { e }, updateColumnNames, tableMetaData));
@@ -1348,7 +1349,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			PropertyDesc.cacheModeOn();
 			TableMetaData tableMetaData = getTableMetaData(tableName);
 			List<String> updateColumnNames = getUpdateColumnNames(tableMetaData, pc, npc);
-			Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+			Map<String, ParameterValue> values = new HashMap<>();
 			List<String> whereColumnNames = getWhereColumnNames(tableMetaData, entity, locking, CRUD.UPDATE);
 			addWhereValues(entity, whereColumnNames, tableMetaData, values);
 			for (Object e : entities) {
@@ -1474,7 +1475,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		try {
 			PropertyDesc.cacheModeOn();
 			TableMetaData tableMetaData = getTableMetaData(tableName);
-			Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+			Map<String, ParameterValue> values = new HashMap<>();
 			List<String> whereColumnNames = getWhereColumnNames(tableMetaData, entity, locking, CRUD.DELETE);
 
 			addWhereValues(entity, whereColumnNames, tableMetaData, values);
@@ -1534,7 +1535,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			String tableName = getTableName(entity, getConnection());
 			TableMetaData tableMetaData = getTableMetaData(tableName);
 
-			Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+			Map<String, ParameterValue> values = new HashMap<>();
 			List<String> whereColumnNames = getWhereColumnNames(tableMetaData, entity, locking, CRUD.DELETE);
 			addWhereValues(entity, whereColumnNames, tableMetaData, values);
 			String sql = createDeleteSql(tableName, whereColumnNames, values);
@@ -1546,7 +1547,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 				prepareDelete(e, locking);
 
 				Node node = parse(sql);
-				values = new HashMap<String, ParameterValue>();
+				values = new HashMap<>();
 				addWhereValues(e, whereColumnNames, tableMetaData, values);
 				CommandContext ctx = new CommandContext(dialect);
 				ctx.addArgs(values);
@@ -1573,7 +1574,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public int executeInsert(String sql) {
-		return executeInsert(sql, new HashMap<String, Object>());
+		return executeInsert(sql, new HashMap<>());
 	}
 
     @Override
@@ -1583,7 +1584,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public int executeUpdate(String sql) {
-		return executeUpdate(sql, new HashMap<String, Object>());
+		return executeUpdate(sql, new HashMap<>());
 	}
 
     @Override
@@ -1593,7 +1594,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public int executeDelete(String sql) {
-		return executeDelete(sql, new HashMap<String, Object>());
+		return executeDelete(sql, new HashMap<>());
 	}
 
     @Override
@@ -1640,7 +1641,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
 	protected Map<String, ParameterValue> toValues(Object[] entity, Map<String, Object> parameters) {
 		Set<Entry<String, Object>> entrySet = parameters.entrySet();
-		Map<String, ParameterValue> ret = new CaseInsensitiveMap<ParameterValue>();
+		Map<String, ParameterValue> ret = new CaseInsensitiveMap<>();
 		String tableName = getTableName(entity[0], getConnection());
 		TableMetaData tableMetaData = getTableMetaData(tableName);
 		for (Entry<String, Object> entry : entrySet) {
@@ -1682,7 +1683,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	protected Map<String, ParameterValue> createParameterValues(Map<String, Object> arg) {
-		Map<String, ParameterValue> parameterValues = new HashMap<String, ParameterValue>();
+		Map<String, ParameterValue> parameterValues = new HashMap<>();
 		if (arg == null) {
 			return parameterValues;
 		}
@@ -1768,6 +1769,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return config.getFormats();
 	}
 
+	@Deprecated
     @Override
 	public void setSqlLogRegistry(SqlLogRegistry sqlLogRegistry) {
 		this.sqlLogRegistry = sqlLogRegistry;
@@ -2194,7 +2196,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		try {
 			PropertyDesc.cacheModeOn();
 			connection = getConnection();
-			Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+			Map<String, ParameterValue> values = new HashMap<>();
 			List<String> whereColumnNames = getWhereColumnNames(tableMetaData, null, null, CRUD.UPDATE);
 			for (Object entity : entities) {
 				addWhereValues(entity, whereColumnNames, tableMetaData, values);
@@ -2214,7 +2216,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	protected Map<String, Object> toPkValues(Map<String, ParameterValue> values) {
-		Map<String, Object> ret = new CaseInsensitiveMap<Object>();
+		Map<String, Object> ret = new CaseInsensitiveMap<>();
 		values.keySet().forEach(key -> ret.put(key.replaceFirst(whereColumnPrefix, ""), values.get(key).getValue()));
 		return ret;
 	}

@@ -32,8 +32,6 @@ public class GenericSqlTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testGetSql_ALL() {
 		String tableName = "emp";
@@ -151,7 +149,6 @@ public class GenericSqlTest {
 			return;
 		}
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		int beforeCount = dao.select(SIMPLE_COUNT_WHERE, args(TABLE_NAME, "emp"), Integer.class).get(0);
 
@@ -176,7 +173,6 @@ public class GenericSqlTest {
 			return;
 		}
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		int beforeCount = dao.select(SIMPLE_COUNT_WHERE, args(TABLE_NAME, "emp"), Integer.class).get(0);
 

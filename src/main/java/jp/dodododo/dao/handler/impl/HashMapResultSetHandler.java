@@ -20,7 +20,7 @@ public class HashMapResultSetHandler extends jp.dodododo.dao.handler.impl.MapRes
 
 	@Override
 	protected Map<String, Object> newInstance() {
-		Map<String, Object> ret = new HashMap<String, Object>();
+		Map<String, Object> ret = new HashMap<>();
 		ret.putAll(arg);
 		return ret;
 	}

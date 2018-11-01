@@ -20,7 +20,7 @@ public class OGNLValueProxy extends ValueProxy {
 		if (this.value != Objects.UNDEFINE) {
 			return this.value;
 		}
-		Map<String, Object> root = new HashMap<String, Object>();
+		Map<String, Object> root = new HashMap<>();
 		root.put("data", this.target);
 		this.value = OgnlUtil.getValue(expression, root);
 		return this.value;

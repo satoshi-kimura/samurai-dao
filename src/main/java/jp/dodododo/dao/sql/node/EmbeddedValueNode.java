@@ -31,7 +31,7 @@ public class EmbeddedValueNode extends AbstractNode {
 			return;
 		}
 		if (1 < names.length) {
-			Map<String, Object> root = new HashMap<String, Object>();
+			Map<String, Object> root = new HashMap<>();
 			root.put(name, value);
 			Dialect dialect = ctx.getDialect();
 			value = getValue(expression, names, root, dialect);

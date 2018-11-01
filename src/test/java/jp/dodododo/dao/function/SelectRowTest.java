@@ -31,12 +31,11 @@ public class SelectRowTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
+		SqlLogRegistry logRegistry = dao.getSqlLogRegistry();
 		Emp emp = new Emp();
 		emp.COMM = "2";
 		// emp.EMPNO = "1";

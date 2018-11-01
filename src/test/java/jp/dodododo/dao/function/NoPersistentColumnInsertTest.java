@@ -21,16 +21,13 @@ public class NoPersistentColumnInsertTest {
 
 	private RdbDao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = new RdbDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		int count = dao.insert("emp", Emp.EMP, npc("ename", "COMM", "deptNo", "HIREDATE", "MGR", "SAL", "TSTAMP", "JOB"));
 		assertEquals(1, count);
-		assertEqualsIgnoreCase("INSERT INTO emp ( EMPNO ) VALUES ( 1 )", logRegistry.getLast().getCompleteSql());
+		assertEqualsIgnoreCase("INSERT INTO emp ( EMPNO ) VALUES ( 1 )", dao.getSqlLogRegistry().getLast().getCompleteSql());
 
 		try {
 			count = dao.insert("emp", Emp.EMP);

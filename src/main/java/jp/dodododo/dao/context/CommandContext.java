@@ -23,15 +23,15 @@ import ognl.OgnlRuntime;
  */
 @Internal
 public class CommandContext {
-	private CaseInsensitiveMap<Object> args = new CaseInsensitiveMap<Object>();
+	private CaseInsensitiveMap<Object> args = new CaseInsensitiveMap<>();
 
-	private CaseInsensitiveMap<Integer> argTypes = new CaseInsensitiveMap<Integer>();
+	private CaseInsensitiveMap<Integer> argTypes = new CaseInsensitiveMap<>();
 
 	private StringBuilder sqlBuf = new StringBuilder(100);
 
-	private List<Object> bindVariables = new ArrayList<Object>();
+	private List<Object> bindVariables = new ArrayList<>();
 
-	private List<Integer> bindVariableTypes = new ArrayList<Integer>();
+	private List<Integer> bindVariableTypes = new ArrayList<>();
 
 	private boolean enabled = true;
 
@@ -136,7 +136,7 @@ public class CommandContext {
 	}
 
 	public void addValues(List<?> values) {
-		Map<String, ParameterValue> arg = new HashMap<String, ParameterValue>();
+		Map<String, ParameterValue> arg = new HashMap<>();
 		arg.put(DaoUtil.VALUES, new ParameterValue(DaoUtil.VALUES, SQLTypes.OBJECT.getType(), values, false));
 		addArgs(arg);
 	}

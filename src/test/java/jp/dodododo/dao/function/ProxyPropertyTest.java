@@ -32,14 +32,12 @@ public class ProxyPropertyTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
 		DeptProxy.dao = dao;
+		SqlLogRegistry logRegistry = dao.getSqlLogRegistry();
 
-		dao.setSqlLogRegistry(logRegistry);
 		Emp emp = new Emp();
 		emp.dept = new Dept();
 		emp.dept.setDEPTNO("10");

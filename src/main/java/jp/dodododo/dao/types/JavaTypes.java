@@ -267,7 +267,7 @@ public class JavaTypes<T> implements JavaType<T> {
 		}
 	};
 
-	private static Map<String, Boolean> STRING_BOOLEAN_TABLE = new HashMap<String, Boolean>();
+	private static Map<String, Boolean> STRING_BOOLEAN_TABLE = new HashMap<>();
 	static {
 		STRING_BOOLEAN_TABLE.put("yes", true);
 		STRING_BOOLEAN_TABLE.put("no", false);

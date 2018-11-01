@@ -49,9 +49,9 @@ import jp.dodododo.dao.types.SQLTypes;
  */
 public abstract class TypesUtil {
 
-	private static final Map<Class<?>, SQLType> SQL_TYPES = new HashMap<Class<?>, SQLType>();
+	private static final Map<Class<?>, SQLType> SQL_TYPES = new HashMap<>();
 
-	private static final Map<Class<?>, JavaType<?>> JAVA_TYPES = new HashMap<Class<?>, JavaType<?>>();
+	private static final Map<Class<?>, JavaType<?>> JAVA_TYPES = new HashMap<>();
 
 	static {
 		addType(Object.class, SQLTypes.OBJECT, JavaTypes.OBJECT);
@@ -349,7 +349,7 @@ public abstract class TypesUtil {
 	}
 
 
-	private static final Map<Class<?>, Class<?>> wrapperTypes = new HashMap<Class<?>, Class<?>>();
+	private static final Map<Class<?>, Class<?>> wrapperTypes = new HashMap<>();
 
 	static {
 		wrapperTypes.put(boolean.class, Boolean.class);

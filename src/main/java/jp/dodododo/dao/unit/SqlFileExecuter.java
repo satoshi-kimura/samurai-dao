@@ -30,7 +30,7 @@ public class SqlFileExecuter {
 
 	public void executeUpdate(String sqlFilePath) {
 		RdbDao daoImpl = new RdbDao(connection);
-		Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
+		Map<String, ParameterValue> values = new HashMap<>();
 		daoImpl.executeUpdate(values, sqlFilePath, null, false);
 	}
 

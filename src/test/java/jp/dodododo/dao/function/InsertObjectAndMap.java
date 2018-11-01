@@ -18,12 +18,9 @@ public class InsertObjectAndMap {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		assertFalse(dao.exists(new Emp(1)));
 		assertFalse(dao.exists(new Emp(2)));

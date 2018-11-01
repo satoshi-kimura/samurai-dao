@@ -13,7 +13,7 @@ public class Each implements IterationCallback<Object> {
 
 	public static final String METHOD_NAME = "each";
 
-	private Map<Class<?>, Method> methodMap = new HashMap<Class<?>, Method>();
+	private Map<Class<?>, Method> methodMap = new HashMap<>();
 
 	public Each() {
 		Arrays.asList(getClass().getMethods()).stream(). //

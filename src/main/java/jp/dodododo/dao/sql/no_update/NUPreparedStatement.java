@@ -263,6 +263,7 @@ public class NUPreparedStatement extends PreparedStatementWrapper {
 	public void setTimestamp(int arg0, Timestamp arg1, Calendar arg2) throws SQLException {
 	}
 
+	@Deprecated
 	@Override
 	public void setUnicodeStream(int arg0, InputStream arg1, int arg2) throws SQLException {
 	}

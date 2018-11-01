@@ -17,7 +17,7 @@ public class ClassDesc<T> {
 	private Class<T> targetClass;
 
 	private Map<Integer, List<Constructor<T>>> constructors = Collections
-			.synchronizedMap(new HashMap<Integer, List<Constructor<T>>>());
+			.synchronizedMap(new HashMap<>());
 
 	private List<Method> methods = new ArrayList<Method>();
 

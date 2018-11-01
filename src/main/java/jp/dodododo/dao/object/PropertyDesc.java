@@ -387,7 +387,7 @@ public class PropertyDesc implements AnnotatedElement {
 		}
 		Collection<V> collection = getValue(target);
 		if (collection == null) {
-			collection = new ArrayList<V>();
+			collection = new ArrayList<>();
 			setValue(target, collection);
 		}
 		return collection.add(value);
@@ -399,7 +399,7 @@ public class PropertyDesc implements AnnotatedElement {
 		}
 		Map<K, V> map = getValue(target);
 		if (map == null) {
-			map = new HashMap<K, V>();
+			map = new HashMap<>();
 			setValue(target, map);
 		}
 		return map.put(key, value);

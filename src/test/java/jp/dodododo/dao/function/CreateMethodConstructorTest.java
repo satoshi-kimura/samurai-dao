@@ -30,16 +30,12 @@ public class CreateMethodConstructorTest {
 	@Rule
 	public DbTestRule dbTestRule = new DbTestRule();
 
-
 	private Dao dao;
-
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
 
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(dbTestRule.getDataSource());
 
-		dao.setSqlLogRegistry(logRegistry);
 		Emp emp = new Emp();
 		emp.dept = new Dept();
 		emp.dept.setDEPTNO("10");

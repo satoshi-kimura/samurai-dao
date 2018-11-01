@@ -32,13 +32,10 @@ public class SelectAllTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testSelectAll() {
 		dao = newTestDao(dbTestRule.getDataSource());
 
-		dao.setSqlLogRegistry(logRegistry);
 		List<Emp> allEmp = dao.select(ALL, Emp.class);
 		assertEquals(14, allEmp.size());
 		Emp emp = allEmp.get(0);

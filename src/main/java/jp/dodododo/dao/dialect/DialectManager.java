@@ -23,7 +23,7 @@ public abstract class DialectManager {
 
 	private static Properties dialectClassNames;
 
-	private static Map<String, Dialect> dialectInstances = Collections.synchronizedMap(new HashMap<String, Dialect>());
+	private static Map<String, Dialect> dialectInstances = Collections.synchronizedMap(new HashMap<>());
 
 	static {
 		initDefaultDialectClassNames();

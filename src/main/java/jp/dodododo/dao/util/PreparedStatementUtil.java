@@ -21,9 +21,10 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 
 	public static int executeUpdate(PreparedStatement ps, SqlLogRegistry sqlLogRegistry) {
 		try {
-			return ps.executeUpdate();
+			int ret = ps.executeUpdate();
+			return ret;
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
 		}
 	}
 
@@ -35,7 +36,7 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 		try {
 			ps.addBatch();
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
 		}
 	}
 
@@ -45,9 +46,10 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 
 	public static int[] executeBatch(PreparedStatement ps, SqlLogRegistry sqlLogRegistry) {
 		try {
-			return ps.executeBatch();
+			int[] ret = ps.executeBatch();
+			return ret;
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
 		}
 	}
 
@@ -66,7 +68,7 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 			}
 			return resultSet;
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
 		}
 	}
 

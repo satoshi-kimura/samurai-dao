@@ -20,12 +20,9 @@ public class SomeEntitiesTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsert() {
 		dao = newTestDao(dbTestRule.getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 
 		Emp e = new Emp();
 		e.EMPNO = "100";

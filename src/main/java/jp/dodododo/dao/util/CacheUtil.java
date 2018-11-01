@@ -18,7 +18,7 @@ public abstract class CacheUtil {
 	}
 
 	public static <K, V> Map<K, V> cacheMap(int initialCapacity) {
-		return cacheMap(new HashMap<K, V>(initialCapacity));
+		return cacheMap(new HashMap<>(initialCapacity));
 	}
 
 	public static <V> Map<String, V> cacheCaseInsensitiveMap() {

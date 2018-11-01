@@ -30,12 +30,9 @@ public class HasAliasTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testInsertAndSelect() {
 		dao = newTestDao(getDataSource());
-		dao.setSqlLogRegistry(logRegistry);
 		Emp emp = new Emp("", "");
 		emp.no = "10";
 		emp.c = "foo";

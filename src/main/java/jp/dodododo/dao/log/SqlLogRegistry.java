@@ -1,9 +1,11 @@
 package jp.dodododo.dao.log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.Map;
 import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.util.EmptyUtil;
 import jp.dodododo.dao.util.ThreadLocalUtil;
@@ -17,9 +19,11 @@ public class SqlLogRegistry {
 	private ThreadLocal<LinkedList<SqlLog>> threadList = new ThreadLocal<LinkedList<SqlLog>>() {
 		@Override
 		protected LinkedList<SqlLog> initialValue() {
-			return new LinkedList<SqlLog>();
+			return new LinkedList<>();
 		}
 	};
+
+	private Map<Thread, SqlLog> lastLogs = new HashMap<>();
 
 	public static SqlLogRegistry getInstance() {
 		return INSTANCE;
@@ -40,7 +44,15 @@ public class SqlLogRegistry {
 	 *            config
 	 */
 	public SqlLogRegistry(DaoConfig config) {
+		setConfig(config);
+	}
+
+	public void setConfig(DaoConfig config) {
 		this.config = config;
+	}
+
+	public DaoConfig getConfig() {
+		return config;
 	}
 
 	public int getLimitSize() {
@@ -66,6 +78,7 @@ public class SqlLogRegistry {
 	public void add(SqlLog sqlLog) {
 		LinkedList<SqlLog> list = getSqlLogList();
 		list.add(sqlLog);
+		lastLogs.put(sqlLog.getExecuteThread(), sqlLog);
 		if (getLimitSize() < list.size()) {
 			list.removeFirst();
 		}
@@ -79,7 +92,7 @@ public class SqlLogRegistry {
 	private LinkedList<SqlLog> getSqlLogList() {
 		LinkedList<SqlLog> ret = threadList.get();
 		if (ret == null) {
-			ret = new LinkedList<SqlLog>();
+			ret = new LinkedList<>();
 			threadList.set(ret);
 		}
 		return ret;
@@ -87,7 +100,7 @@ public class SqlLogRegistry {
 
 	public List<String> getSqls(ExecuteType executeType) {
 		LinkedList<SqlLog> sqlLogList = getSqlLogList();
-		List<String> ret = new ArrayList<String>(sqlLogList.size());
+		List<String> ret = new ArrayList<>(sqlLogList.size());
 		for (SqlLog sqlLog : sqlLogList) {
 			if (ExecuteType.ALL.equals(executeType) || executeType.equals(sqlLog.getSqlType())) {
 				ret.add(sqlLog.getCompleteSql());
@@ -98,9 +111,21 @@ public class SqlLogRegistry {
 
 	public List<String> getAllSql() {
 		LinkedList<SqlLog> sqlLogList = getSqlLogList();
-		List<String> ret = new ArrayList<String>(sqlLogList.size());
+		List<String> ret = new ArrayList<>(sqlLogList.size());
 		for (SqlLog sqlLog : sqlLogList) {
 			ret.add(sqlLog.getCompleteSql());
+		}
+		return ret;
+	}
+
+	public List<SqlLog> getRunningSqlLogs(Thread excludeThread) {
+		Map<Thread, SqlLog> logMap = new HashMap<>(lastLogs);
+		List<SqlLog> ret = new ArrayList<>(logMap.size());
+		for (Map.Entry<Thread, SqlLog> entry : logMap.entrySet()) {
+			SqlLog log = entry.getValue();
+			if (log.getExecuteThread() != excludeThread) {
+				ret.add(log);
+			}
 		}
 		return ret;
 	}

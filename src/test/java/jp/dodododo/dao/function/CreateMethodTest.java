@@ -30,13 +30,9 @@ public class CreateMethodTest {
 
 	private Dao dao;
 
-	private SqlLogRegistry logRegistry = new SqlLogRegistry();
-
 	@Test
 	public void testMethodCreateBean() {
 		dao = newTestDao(getDataSource());
-
-		dao.setSqlLogRegistry(logRegistry);
 
 		List<Emp> select = dao.select("select EMPNO, DEPT.DEPTNO as DEPTNO from EMP, DEPT where EMP.deptno = DEPT.deptno ",
 				Emp.class);
@@ -60,8 +56,6 @@ public class CreateMethodTest {
 	public void testMethodCreateConstructor() {
 		dao = newTestDao(getDataSource());
 
-		dao.setSqlLogRegistry(logRegistry);
-
 		List<Emp2> select = dao.select("select EMPNO, DEPT.deptno as deptno from EMP, DEPT where EMP.deptno = DEPT.deptno ",
 				Emp2.class);
 
@@ -83,8 +77,6 @@ public class CreateMethodTest {
 	@Test
 	public void testMethodCreateClass() {
 		dao = newTestDao(getDataSource());
-
-		dao.setSqlLogRegistry(logRegistry);
 
 		List<Emp3> select = dao.select("select EMPNO, DEPT.deptno as deptno from EMP, DEPT where EMP.deptno = DEPT.deptno ",
 				Emp3.class);

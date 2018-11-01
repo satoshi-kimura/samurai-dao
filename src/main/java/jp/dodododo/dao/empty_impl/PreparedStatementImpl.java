@@ -581,6 +581,7 @@ public class PreparedStatementImpl implements PreparedStatement {
 
 	}
 
+	@Deprecated
     @Override
 	public void setUnicodeStream(int arg0, InputStream arg1, int arg2) throws SQLException {
 		throw new UnsupportedOperationException();

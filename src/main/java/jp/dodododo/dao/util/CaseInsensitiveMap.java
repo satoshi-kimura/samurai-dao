@@ -30,35 +30,35 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 
 	public CaseInsensitiveMap() {
 		super();
-		cache = new HashMap<String, V>();
-		original = new HashMap<String, V>();
-		camelize = new CaseInsensitiveMap0<V>();
-		decamelize = new CaseInsensitiveMap0<V>();
+		cache = new HashMap<>();
+		original = new HashMap<>();
+		camelize = new CaseInsensitiveMap0<>();
+		decamelize = new CaseInsensitiveMap0<>();
 	}
 
 	public CaseInsensitiveMap(int i, float f) {
 		super(i, f);
-		cache = new HashMap<String, V>(i, f);
-		original = new HashMap<String, V>(i, f);
-		camelize = new CaseInsensitiveMap0<V>(i, f);
-		decamelize = new CaseInsensitiveMap0<V>(i, f);
+		cache = new HashMap<>(i, f);
+		original = new HashMap<>(i, f);
+		camelize = new CaseInsensitiveMap0<>(i, f);
+		decamelize = new CaseInsensitiveMap0<>(i, f);
 	}
 
 	public CaseInsensitiveMap(int i) {
 		super(i);
-		cache = new HashMap<String, V>(i);
-		original = new HashMap<String, V>(i);
-		camelize = new CaseInsensitiveMap0<V>(i);
-		decamelize = new CaseInsensitiveMap0<V>(i);
+		cache = new HashMap<>(i);
+		original = new HashMap<>(i);
+		camelize = new CaseInsensitiveMap0<>(i);
+		decamelize = new CaseInsensitiveMap0<>(i);
 	}
 
 	public CaseInsensitiveMap(Map<String, V> map) {
 		super(map);
 		int size = map.size();
-		cache = new HashMap<String, V>(size);
-		original = new HashMap<String, V>(size);
-		camelize = new CaseInsensitiveMap0<V>(size);
-		decamelize = new CaseInsensitiveMap0<V>(size);
+		cache = new HashMap<>(size);
+		original = new HashMap<>(size);
+		camelize = new CaseInsensitiveMap0<>(size);
+		decamelize = new CaseInsensitiveMap0<>(size);
 		putAll(map);
 	}
 
@@ -100,7 +100,7 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 
 	@Override
 	public Set<Entry<String, V>> entrySet() {
-		Map<String, V> tmp = new HashMap<String, V>();
+		Map<String, V> tmp = new HashMap<>();
 		tmp.putAll(decamelize);
 		tmp.putAll(camelize);
 		tmp.putAll(original);

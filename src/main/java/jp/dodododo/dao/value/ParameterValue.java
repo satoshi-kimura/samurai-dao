@@ -74,7 +74,7 @@ public class ParameterValue {
 	}
 
 	public String getOperator() {
-		Map<String, Object> context = new HashMap<String, Object>();
+		Map<String, Object> context = new HashMap<>();
 		context.put("name", name);
 		return FreeMarkerUtil.process(operator, context).trim();
 	}

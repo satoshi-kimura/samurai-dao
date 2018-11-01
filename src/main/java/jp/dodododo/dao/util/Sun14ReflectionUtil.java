@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class Sun14ReflectionUtil { // because this class use sun.reflect packages.
 
-	private static Map<Class<?>, Constructor<?>> constructorCache = new HashMap<Class<?>, Constructor<?>>();
+	private static Map<Class<?>, Constructor<?>> constructorCache = new HashMap<>();
 
 	public static <T> T newInstance(Class<T> type) {
 		try {
@@ -140,7 +140,7 @@ public class Sun14ReflectionUtil { // because this class use sun.reflect package
 		return false;
 	}
 
-	private static Map<String, Class<?>> loaderCache = new HashMap<String, Class<?>>();
+	private static Map<String, Class<?>> loaderCache = new HashMap<>();
 
 	private static Class<?> loadClass(String name) {
 		Class<?> cached = loaderCache.get(name);

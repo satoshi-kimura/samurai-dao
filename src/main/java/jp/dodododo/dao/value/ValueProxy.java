@@ -50,7 +50,7 @@ public class ValueProxy {
 		}
 		Bean bean = pd.getAnnotation(Bean.class);
 		if (bean != null && bean.property().isEmpty() == false) {
-			Map<String, Object> root = new HashMap<String, Object>();
+			Map<String, Object> root = new HashMap<>();
 			root.put("data", value);
 			this.value = OgnlUtil.getValue("data." + bean.property(), root);
 			return this.value;

@@ -14,6 +14,8 @@ public class SqlLog {
 
 	private ExecuteType executeType;
 
+	private Thread executeThread;
+
 	/**
 	 * インスタンスを構築します。
 	 *
@@ -34,6 +36,7 @@ public class SqlLog {
 		this.bindArgs = bindArgs;
 		this.bindArgTypes = bindArgTypes;
 		this.executeType = executeType;
+		this.executeThread = Thread.currentThread();
 	}
 
 	public List<Object> getBindArgs() {
@@ -54,6 +57,14 @@ public class SqlLog {
 
 	public ExecuteType getSqlType() {
 		return executeType;
+	}
+
+	public Thread getExecuteThread() {
+		return executeThread;
+	}
+
+	public String getThreadName() {
+		return executeThread.getName();
 	}
 
 	@Override
