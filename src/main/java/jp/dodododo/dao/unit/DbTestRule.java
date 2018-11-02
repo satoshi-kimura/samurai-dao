@@ -3,7 +3,6 @@ package jp.dodododo.dao.unit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -15,7 +14,6 @@ import javax.sql.DataSource;
 
 import jp.dodododo.dao.empty_impl.DataSourceImpl;
 import jp.dodododo.dao.error.SQLError;
-import jp.dodododo.dao.log.SqlLogRegistry;
 import jp.dodododo.dao.util.ClassUtil;
 import jp.dodododo.dao.wrapper.ConnectionWrapper;
 

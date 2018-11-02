@@ -1,5 +1,6 @@
 package jp.dodododo.dao.log;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class SqlLog {
@@ -15,6 +16,8 @@ public class SqlLog {
 	private ExecuteType executeType;
 
 	private Thread executeThread;
+
+	private LocalDateTime time;
 
 	/**
 	 * インスタンスを構築します。
@@ -37,6 +40,7 @@ public class SqlLog {
 		this.bindArgTypes = bindArgTypes;
 		this.executeType = executeType;
 		this.executeThread = Thread.currentThread();
+		this.time = LocalDateTime.now();
 	}
 
 	public List<Object> getBindArgs() {
@@ -65,6 +69,10 @@ public class SqlLog {
 
 	public String getThreadName() {
 		return executeThread.getName();
+	}
+
+	public LocalDateTime getTime() {
+		return time;
 	}
 
 	@Override

@@ -1,6 +1,10 @@
 package jp.dodododo.dao.exception;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import jp.dodododo.dao.log.SqlLog;
 import jp.dodododo.dao.log.SqlLogRegistry;
@@ -50,6 +54,7 @@ public class SQLRuntimeException extends RuntimeException {
 		List<SqlLog> logs = sqlLogRegistry.getRunningSqlLogs(Thread.currentThread());
 		logs.forEach(log -> {
 			ret.append("  ");
+			ret.append("[").append(log.getTime()).append("]");
 			ret.append("[").append(log.getThreadName()).append("]");
 			ret.append("[").append(log.getCompleteSql()).append("]");
 			ret.append(System.lineSeparator());
@@ -59,5 +64,4 @@ public class SQLRuntimeException extends RuntimeException {
 
 		return ret.toString();
 	}
-
 }
