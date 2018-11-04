@@ -1089,7 +1089,6 @@ public class RdbDaoTest {
 
 	public void _testPerformance() throws Exception {
 		dao = newTestDao(getDataSource());
-		SqlLogRegistry logRegistry = dao.getSqlLogRegistry();
 
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < 1000; i++) {
