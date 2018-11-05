@@ -71,7 +71,7 @@ public class HasInitialValueHashMap<K, V> extends HashMap<K, V> {
 	public static class ArrayListFactory<E> implements Factory<List<E>> {
 		@Override
 		public List<E> create() {
-			return new ArrayList<E>();
+			return new ArrayList<>();
 		}
 	}
 
@@ -85,7 +85,7 @@ public class HasInitialValueHashMap<K, V> extends HashMap<K, V> {
 	public static class LinkedListFactory<E> implements Factory<List<E>> {
 		@Override
 		public List<E> create() {
-			return new LinkedList<E>();
+			return new LinkedList<>();
 		}
 	}
 	/**

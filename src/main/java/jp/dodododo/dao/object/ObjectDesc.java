@@ -43,10 +43,10 @@ public class ObjectDesc<OBJ> {
 	protected List<PropertyDesc> propertyDescList = new ArrayList<>();
 	protected List<PropertyDesc> writablePropertyDescList = new ArrayList<>();
 	protected List<PropertyDesc> readablePropertyDescList = new ArrayList<>();
-	protected List<FieldDesc> fieldDescList = new ArrayList<FieldDesc>();
+	protected List<FieldDesc> fieldDescList = new ArrayList<>();
 
 	protected Map<Class<? extends Annotation>, List<PropertyDesc>> annotationCache = new HashMap<>();
-	protected Map<JavaType<?>, List<PropertyDesc>> javaTypeCache = new HashMap<JavaType<?>, List<PropertyDesc>>();
+	protected Map<JavaType<?>, List<PropertyDesc>> javaTypeCache = new HashMap<>();
 
 	protected ObjectDesc(boolean isIgnoreCase) {
 		if (isIgnoreCase == true) {
@@ -87,7 +87,7 @@ public class ObjectDesc<OBJ> {
 			JavaType<?> javaType = TypesUtil.getJavaType(propertyDesc.getPropertyType());
 			List<PropertyDesc> list = javaTypeCache.get(javaType);
 			if (list == null) {
-				list = new ArrayList<PropertyDesc>(size);
+				list = new ArrayList<>(size);
 				javaTypeCache.put(javaType, list);
 			}
 			list.add(propertyDesc);
@@ -102,7 +102,7 @@ public class ObjectDesc<OBJ> {
 			for (Annotation annotation : annotations) {
 				List<PropertyDesc> list = annotationCache.get(annotation.getClass());
 				if (list == null) {
-					list = new ArrayList<PropertyDesc>(size);
+					list = new ArrayList<>(size);
 					annotationCache.put(annotation.getClass(), list);
 				}
 				list.add(propertyDesc);
@@ -148,10 +148,10 @@ public class ObjectDesc<OBJ> {
 	}
 
 	protected void setupPropertyDescs() {
-		Map<String, PropertyDesc> propertyDescTmpCache = new CaseInsensitiveMap<PropertyDesc>();
-		Map<String, FieldDesc> fieldDescTmpCache = new CaseInsensitiveMap<FieldDesc>();
-		List<PropertyDesc> propertyDescTmpList = new ArrayList<PropertyDesc>();
-		List<FieldDesc> fieldDescTmpList = new ArrayList<FieldDesc>();
+		Map<String, PropertyDesc> propertyDescTmpCache = new CaseInsensitiveMap<>();
+		Map<String, FieldDesc> fieldDescTmpCache = new CaseInsensitiveMap<>();
+		List<PropertyDesc> propertyDescTmpList = new ArrayList<>();
+		List<FieldDesc> fieldDescTmpList = new ArrayList<>();
 
 		for (Field f : getAllDeclaredFields()) {
 			setupPropertyDescs(f, propertyDescTmpCache, propertyDescTmpList, fieldDescTmpCache, fieldDescTmpList);

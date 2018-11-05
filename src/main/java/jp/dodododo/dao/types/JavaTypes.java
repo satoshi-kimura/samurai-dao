@@ -2088,7 +2088,7 @@ public class JavaTypes<T> implements JavaType<T> {
 
 	public static JavaType<?>[] values() {
 		Field[] fields = JavaTypes.class.getFields();
-		List<JavaType<?>> values = new ArrayList<JavaType<?>>(fields.length);
+		List<JavaType<?>> values = new ArrayList<>(fields.length);
 		for (Field field : fields) {
 			if (Modifier.isStatic(field.getModifiers()) == false) {
 				continue;

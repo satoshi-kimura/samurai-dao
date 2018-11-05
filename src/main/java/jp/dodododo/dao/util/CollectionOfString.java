@@ -11,7 +11,7 @@ import java.util.Map;
 public abstract class CollectionOfString {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Map<String, Object> map(Object... map) {
-		Map<String, Object> ret = new CaseInsensitiveMap<Object>();
+		Map<String, Object> ret = new CaseInsensitiveMap<>();
 		for (int i = 0; i < map.length; i++) {
 			Object o1 = map[i];
 			Object o2 = null;
@@ -42,7 +42,7 @@ public abstract class CollectionOfString {
 	}
 
 	public static List<String> list(String... list) {
-		List<String> ret = new ArrayList<String>(list.length);
+		List<String> ret = new ArrayList<>(list.length);
 		for (int i = 0; i < list.length; i++) {
 			String value = list[i];
 			ret.add(value);

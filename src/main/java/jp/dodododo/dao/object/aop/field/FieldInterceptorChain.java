@@ -8,7 +8,7 @@ import jp.dodododo.dao.annotation.Internal;
 @Internal
 public class FieldInterceptorChain extends FieldInterceptor {
 
-	private List<FieldInterceptor> interceptors = new ArrayList<FieldInterceptor>();
+	private List<FieldInterceptor> interceptors = new ArrayList<>();
 
 	public void add(FieldInterceptor interceptor) {
 		interceptors.add(interceptor);

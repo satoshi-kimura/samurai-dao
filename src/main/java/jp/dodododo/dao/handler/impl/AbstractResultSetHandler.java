@@ -24,7 +24,7 @@ import jp.dodododo.dao.wrapper.ResultSetWrapper;
 public abstract class AbstractResultSetHandler<T> implements ResultSetHandler<T> {
 	private IterationCallback<T> callback;
 	private static final Map<String, List<ResultSetColumn>> RESULT_SET_COLUMN_CACHE = CacheUtil
-			.cacheMap(new WeakHashMap<String, List<ResultSetColumn>>());
+			.cacheMap(new WeakHashMap<>());
 
 	protected AbstractResultSetHandler() {
 	}
@@ -57,7 +57,7 @@ public abstract class AbstractResultSetHandler<T> implements ResultSetHandler<T>
 	}
 
 	private List<Object> getRowData(ResultSet rs, List<ResultSetColumn> resultSetColumnList) throws SQLException {
-		List<Object> ret = new ArrayList<Object>(resultSetColumnList.size());
+		List<Object> ret = new ArrayList<>(resultSetColumnList.size());
 		for (ResultSetColumn resultSetColumn : resultSetColumnList) {
 			SQLType sqlType = TypesUtil.getSQLType(resultSetColumn.getDataType());
 			Object value = sqlType.toJavaType().getValue(rs, resultSetColumn.getName());
@@ -85,7 +85,7 @@ public abstract class AbstractResultSetHandler<T> implements ResultSetHandler<T>
 
 	protected List<ResultSetColumn> getResultSetColumnList(ResultSetMetaData rsmd) throws SQLException {
 		int count = rsmd.getColumnCount();
-		List<ResultSetColumn> ret = new ArrayList<ResultSetColumn>(count);
+		List<ResultSetColumn> ret = new ArrayList<>(count);
 
 		for (int i = 0; i < count; ++i) {
 			String columnName = rsmd.getColumnLabel(i + 1);

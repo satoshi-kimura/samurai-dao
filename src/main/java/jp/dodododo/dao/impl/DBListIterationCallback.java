@@ -6,7 +6,7 @@ import jp.dodododo.dao.IterationCallback;
 import jp.dodododo.dao.util.DbArrayList;
 
 public class DBListIterationCallback<ROW> implements IterationCallback<ROW> {
-	protected List<ROW> list = new DbArrayList<ROW>();
+	protected List<ROW> list = new DbArrayList<>();
 
     @Override
 	public void iterate(ROW object) {

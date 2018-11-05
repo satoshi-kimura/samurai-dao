@@ -27,7 +27,7 @@ public class FlyweightFactory {
 		FlyweightFactory.factory = factory;
 	}
 
-	private static Map<Class<?>, Map<Object, Object>> cacheMap = new ThreadLocalCacheMap<Class<?>, Map<Object, Object>>();
+	private static Map<Class<?>, Map<Object, Object>> cacheMap = new ThreadLocalCacheMap<>();
 
 	@SuppressWarnings("unchecked")
 	public <T> T getFlyweight(T value) {
@@ -41,7 +41,7 @@ public class FlyweightFactory {
 		}
 		Map<Object, Object> objects = cacheMap.get(clazz);
 		if (objects == null) {
-			objects = new HashMap<Object, Object>();
+			objects = new HashMap<>();
 			cacheMap.put(clazz, objects);
 		}
 		Object key = value;

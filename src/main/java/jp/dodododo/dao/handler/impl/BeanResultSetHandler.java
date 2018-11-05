@@ -130,7 +130,7 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 		boolean useCache = true;
 		if (propertyDescs == null) {
 			useCache = false;
-			propertyDescs = new ArrayList<PropertyDesc>(objectDesc.getReadablePropertyDescs());
+			propertyDescs = new ArrayList<>(objectDesc.getReadablePropertyDescs());
 		}
 		for (int i = 0; i < propertyDescs.size(); i++) {
 			PropertyDesc propertyDesc = propertyDescs.get(i);
@@ -273,7 +273,7 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 
 	private Object newEmptyValue(PropertyDesc propertyDesc) {
 		if (propertyDesc.isCollectionType() == true) {
-			return new ArrayList<Object>();
+			return new ArrayList<>();
 		}
 		Class<?> propertyType = propertyDesc.getPropertyType();
 		if (propertyDesc.isOneDimensionalArrayType() == true) {
@@ -772,7 +772,7 @@ public class BeanResultSetHandler<T> extends AbstractResultSetHandler<T> {
 	private static List<String> getColumnNames(Column column) {
 
 		String[] alias = column.alias();
-		List<String> ret = new ArrayList<String>(alias.length);
+		List<String> ret = new ArrayList<>(alias.length);
 		for (String s : alias) {
 			ret.add(s);
 		}

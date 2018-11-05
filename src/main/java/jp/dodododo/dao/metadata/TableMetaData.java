@@ -35,11 +35,11 @@ public class TableMetaData {
 
 	private String catalog;
 
-	private CaseInsensitiveMap<ColumnMetaData> columnMetaData = new CaseInsensitiveMap<ColumnMetaData>();
-	private List<String> columnNames = new ArrayList<String>();
+	private CaseInsensitiveMap<ColumnMetaData> columnMetaData = new CaseInsensitiveMap<>();
+	private List<String> columnNames = new ArrayList<>();
 
-	private CaseInsensitiveMap<ColumnMetaData> pkColumnMetaData = new CaseInsensitiveMap<ColumnMetaData>();
-	private List<String> pkColumnNames = new ArrayList<String>();
+	private CaseInsensitiveMap<ColumnMetaData> pkColumnMetaData = new CaseInsensitiveMap<>();
+	private List<String> pkColumnNames = new ArrayList<>();
 
 	public TableMetaData(Connection connection, String tableName) {
 		init(connection, tableName);
@@ -147,7 +147,7 @@ public class TableMetaData {
 		}
 	}
 
-	protected List<ForeignKey> importedKeys = new ArrayList<ForeignKey>();
+	protected List<ForeignKey> importedKeys = new ArrayList<>();
 
 	public List<ForeignKey> getImportedKeys() {
 		return importedKeys;
@@ -212,7 +212,7 @@ public class TableMetaData {
 	public static TableMetaData getTableMetaData(Connection connection, String schema, String tableName) {
 		Map<String, TableMetaData> metadatas = TABLE_META_DATA_CACHE.get(schema);
 		if (metadatas == null) {
-			metadatas = new CaseInsensitiveMap<TableMetaData>();
+			metadatas = new CaseInsensitiveMap<>();
 			TABLE_META_DATA_CACHE.put(schema, metadatas);
 		}
 		TableMetaData metaData = metadatas.get(tableName);

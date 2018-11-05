@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import java.util.Map;
+import java.util.Set;
 import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.util.EmptyUtil;
 import jp.dodododo.dao.util.ThreadLocalUtil;
@@ -16,14 +17,9 @@ public class SqlLogRegistry {
 
 	private static final SqlLogRegistry INSTANCE = new SqlLogRegistry();
 
-	private ThreadLocal<LinkedList<SqlLog>> threadList = new ThreadLocal<LinkedList<SqlLog>>() {
-		@Override
-		protected LinkedList<SqlLog> initialValue() {
-			return new LinkedList<>();
-		}
-	};
+	private ThreadLocal<LinkedList<SqlLog>> threadList = ThreadLocal.withInitial(() -> new LinkedList<>());
 
-	private Map<Thread, SqlLog> lastLogs = new HashMap<>();
+	private Map<Thread, LinkedList<SqlLog>> allLogs = new HashMap<>();
 
 	public static SqlLogRegistry getInstance() {
 		return INSTANCE;
@@ -78,7 +74,7 @@ public class SqlLogRegistry {
 	public void add(SqlLog sqlLog) {
 		LinkedList<SqlLog> list = getSqlLogList();
 		list.add(sqlLog);
-		lastLogs.put(sqlLog.getExecuteThread(), sqlLog);
+		allLogs.put(sqlLog.getExecuteThread(), list);
 		if (getLimitSize() < list.size()) {
 			list.removeFirst();
 		}
@@ -118,14 +114,10 @@ public class SqlLogRegistry {
 		return ret;
 	}
 
-	public List<SqlLog> getRunningSqlLogs(Thread excludeThread) {
-		Map<Thread, SqlLog> logMap = new HashMap<>(lastLogs);
-		List<SqlLog> ret = new ArrayList<>(logMap.size());
-		for (Map.Entry<Thread, SqlLog> entry : logMap.entrySet()) {
-			SqlLog log = entry.getValue();
-			if (log.getExecuteThread() != excludeThread) {
-				ret.add(log);
-			}
+	public List<SqlLog> getAllThreadSqls() {
+		List<SqlLog> ret = new ArrayList<>(512);
+		for (Map.Entry<Thread, LinkedList<SqlLog>> entry : allLogs.entrySet()) {
+			ret.addAll(entry.getValue());
 		}
 		return ret;
 	}

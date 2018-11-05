@@ -114,7 +114,7 @@ public abstract class DaoUtil {
 	public static Set<String> getTableNames(PropertyDesc pd, String columnName) {
 		Map<String, Set<String>> subCache = TABLE_NAMES_CACHE.get(pd);
 		if(subCache == null) {
-			subCache = new CaseInsensitiveMap<Set<String>>();
+			subCache = new CaseInsensitiveMap<>();
 			TABLE_NAMES_CACHE.put(pd, subCache);
 		}
 		Set<String> ret = subCache.get(columnName);
@@ -199,7 +199,7 @@ public abstract class DaoUtil {
 
 	private static String getTableName(Map<String, Object> map) {
 		if (map instanceof CaseInsensitiveMap == false) {
-			map = new CaseInsensitiveMap<Object>(map);
+			map = new CaseInsensitiveMap<>(map);
 		}
 		Object val = map.get(TABLE_NAME);
 		if (val != null) {
@@ -237,7 +237,7 @@ public abstract class DaoUtil {
 	}
 
 	public static List<Object> list(Object... args) {
-		List<Object> ret = new ArrayList<Object>(args.length);
+		List<Object> ret = new ArrayList<>(args.length);
 		for (Object o : args) {
 			ret.add(o);
 		}
@@ -249,7 +249,7 @@ public abstract class DaoUtil {
 	}
 
 	public static List<OrderByArg> orderByList(Object... args) {
-		List<OrderByArg> orderByList = new ArrayList<OrderByArg>(args.length);
+		List<OrderByArg> orderByList = new ArrayList<>(args.length);
 		for (int i = 0; i < args.length; i++) {
 			Object arg1 = args[i];
 			Object arg2 = null;

@@ -6,7 +6,7 @@ import java.util.List;
 import jp.dodododo.dao.IterationCallback;
 
 public class ListIterationCallback<ROW> implements IterationCallback<ROW> {
-	protected List<ROW> list = new ArrayList<ROW>(1024);
+	protected List<ROW> list = new ArrayList<>(1024);
 
     @Override
 	public void iterate(ROW object) {

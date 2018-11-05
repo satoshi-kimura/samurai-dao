@@ -345,7 +345,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			handler.handle(rs);
 			return callback.getResult();
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
 		} finally {
 			try {
 				ResultSetUtil.close(rs);
@@ -546,7 +546,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		}
 
 		List<String> allColumnNames = tableMetaData.getColumnNames();
-		columnNames = new ArrayList<String>(allColumnNames.size());
+		columnNames = new ArrayList<>(allColumnNames.size());
 		Set<String> npc = toCaseInsensitiveSet(noPersistentColumns);
 		for (String columnName : allColumnNames) {
 			if (npc.contains(columnName) == false) {
@@ -992,7 +992,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 					ps.setObject(i + 1, TypesUtil.getSQLType(bindVariableType).convert(value, getFormats()), bindVariableType);
 				}
 			} catch (SQLException e) {
-				throw new SQLRuntimeException("value=" + value, sqlLogRegistry, e);
+				throw new SQLRuntimeException("value=" + value, e);
 			}
 		}
 	}
@@ -1027,7 +1027,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		Map<String, ParameterValue> parameterValues = new HashMap<>(updateColumnNames.size());
 		String tableName = tableMetaData.getTableName();
 		updateColumnNames.forEach(columnName -> {
-			List<CandidateValue> values = new ArrayList<CandidateValue>();
+			List<CandidateValue> values = new ArrayList<>();
 			gatherValue(entities, tableName, columnName, values);
 			CandidateValue value = CandidateValue.getValue(values, tableName, columnName);
 			int dataType = tableMetaData.getColumnMetaData(columnName).getDataType();
@@ -1375,7 +1375,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			if (values.containsKey(name) == true && values.get(name).getValue() != null) {
 				continue;
 			}
-			List<CandidateValue> vals = new ArrayList<CandidateValue>();
+			List<CandidateValue> vals = new ArrayList<>();
 			gatherValue(new Object[]{entity}, tableName, columnName, vals);
 			CandidateValue value = CandidateValue.getValue(vals, tableName, columnName);
 			int dataType = tableMetaData.getColumnMetaData(columnName).getDataType();
@@ -1398,7 +1398,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 				columnNames = tableMetaData.getColumnNames();
 			}
 		}
-		List<String> whereColumnNames = new ArrayList<String>(columnNames);
+		List<String> whereColumnNames = new ArrayList<>(columnNames);
 
 		if (locking == OPTIMISTIC_LOCKING) {
 			addVersionNoColumnNames(entity, tableMetaData, whereColumnNames);
@@ -1769,12 +1769,6 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return config.getFormats();
 	}
 
-	@Deprecated
-    @Override
-	public void setSqlLogRegistry(SqlLogRegistry sqlLogRegistry) {
-		this.sqlLogRegistry = sqlLogRegistry;
-	}
-
     @Override
 	public Optional<Map<String, Object>> selectOneMap(String sql, Map<String, Object> arg) {
 		List<Map<String, Object>> rows = selectMap(sql, arg);
@@ -1788,7 +1782,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public Optional<BigDecimal> selectOneNumber(String sql, Map<String, Object> arg) {
-		IterationCallback<BigDecimal> callback = new DBListIterationCallback<BigDecimal>();
+		IterationCallback<BigDecimal> callback = new DBListIterationCallback<>();
 		ResultSetHandler<?> handler = createResultSetHandler(BigDecimal.class, callback, this.dialect, arg);
 
 		List<BigDecimal> rows = select(sql, arg, callback, handler);
@@ -1853,7 +1847,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg) {
-		return selectMap(sql, arg, new DBListIterationCallback<Map<String, Object>>());
+		return selectMap(sql, arg, new DBListIterationCallback<>());
 	}
 
     @Override
@@ -1874,7 +1868,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public List<Map<String, Object>> selectMap(String sql) {
-		return selectMap(sql, new DBListIterationCallback<Map<String, Object>>());
+		return selectMap(sql, new DBListIterationCallback<>());
 	}
 
     @Override
@@ -1918,7 +1912,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			if (obj instanceof CaseInsensitiveMap) {
 				queryOrEntity[i] = obj;
 			} else if (obj instanceof Map) {
-				CaseInsensitiveMap<Object> map = new CaseInsensitiveMap<Object>();
+				CaseInsensitiveMap<Object> map = new CaseInsensitiveMap<>();
 				map.putAll((Map<String, Object>) obj);
 				queryOrEntity[i] = map;
 			} else {
@@ -1926,7 +1920,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 			}
 		}
 		List<ParameterValue> pks = null;
-		List<ParameterValue> columns = getColumns(tableName, tableMetaData, queryOrEntity);
+		List<ParameterValue> columns = getColumns(tableMetaData, queryOrEntity);
 		if (isSelect == false) {
 			pks = getPks(tableName, columns);
 		}
@@ -1939,11 +1933,11 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	}
 
 	protected Map<String, Object> toMap(Object obj, String tableName, TableMetaData tableMetaData) {
-		Map<String, Object> ret = new CaseInsensitiveMap<Object>();
+		Map<String, Object> ret = new CaseInsensitiveMap<>();
 
 		List<String> columnNames = tableMetaData.getColumnNames();
 		columnNames.forEach(columnName -> {
-			List<CandidateValue> values = new ArrayList<CandidateValue>();
+			List<CandidateValue> values = new ArrayList<>();
 			gatherValue(new Object[]{obj}, tableName, columnName, values);
 			CandidateValue value = CandidateValue.getValue(values, tableName, columnName);
 			ret.put(columnName, value.value.getValue());
@@ -1956,7 +1950,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 	protected List<ParameterValue> getPks(String tableName, List<ParameterValue> columns) {
 		TableMetaData tableMetaData = getTableMetaData(tableName);
 		List<String> pkColumnNames = tableMetaData.getPkColumnNames();
-		List<ParameterValue> pks = new ArrayList<ParameterValue>(pkColumnNames.size());
+		List<ParameterValue> pks = new ArrayList<>(pkColumnNames.size());
 		for (String pkColumnName : pkColumnNames) {
 			for (ParameterValue column : columns) {
 				if (StringUtil.equalsIgnoreCase(pkColumnName, column.getName())) {
@@ -1967,8 +1961,8 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 		return pks;
 	}
 
-	protected List<ParameterValue> getColumns(String tableName, TableMetaData tableMetaData, Object[] objects) {
-		List<ParameterValue> ret = new ArrayList<ParameterValue>();
+	protected List<ParameterValue> getColumns(TableMetaData tableMetaData, Object[] objects) {
+		List<ParameterValue> ret = new ArrayList<>();
 
 		for (Object obj : objects) {
 			getColumns(tableMetaData, obj, ret);
@@ -2075,7 +2069,7 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
     @Override
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> selectMap(Object... query) {
-		IterationCallback<Map<String, Object>> callback = new DBListIterationCallback<Map<String, Object>>();
+		IterationCallback<Map<String, Object>> callback = new DBListIterationCallback<>();
 		for (Object o : query) {
 			if (o instanceof IterationCallback) {
 				callback = (IterationCallback<Map<String, Object>>) o;
@@ -2234,32 +2228,32 @@ public class RdbDao implements Dao, ExtendedExecuteUpdateDao {
 
     @Override
 	public <ROW> List<ROW> select(String sql, Class<ROW> as, Consumer<ROW> callback) {
-		return select(sql, as, new ConsumerWrapper<ROW>(callback));
+		return select(sql, as, new ConsumerWrapper<>(callback));
 	}
 
     @Override
 	public <ROW> List<ROW> select(String sql, Map<String, Object> arg, Class<ROW> as, Consumer<ROW> callback) {
-		return select(sql, arg, as, new ConsumerWrapper<ROW>(callback));
+		return select(sql, arg, as, new ConsumerWrapper<>(callback));
 	}
 
     @Override
 	public List<Map<String, Object>> selectMap(String sql, Map<String, Object> arg, Consumer<Map<String, Object>> callback) {
-		return selectMap(sql, arg, new ConsumerWrapper<Map<String, Object>>(callback));
+		return selectMap(sql, arg, new ConsumerWrapper<>(callback));
 	}
 
     @Override
 	public List<Map<String, Object>> selectMap(String sql, Consumer<Map<String, Object>> callback) {
-		return selectMap(sql, new ConsumerWrapper<Map<String, Object>>(callback));
+		return selectMap(sql, new ConsumerWrapper<>(callback));
 	}
 
     @Override
 	public <ROW> List<ROW> select(Sql sql, ROW query, Consumer<ROW> callback) {
-		return select(sql, query, new ConsumerWrapper<ROW>(callback));
+		return select(sql, query, new ConsumerWrapper<>(callback));
 	}
 
     @Override
 	public List<Map<String, Object>> selectMap(Sql sql, Map<String, Object> query, Consumer<Map<String, Object>> callback) {
-		return selectMap(sql, query, new ConsumerWrapper<Map<String, Object>>(callback));
+		return selectMap(sql, query, new ConsumerWrapper<>(callback));
 	}
 
 

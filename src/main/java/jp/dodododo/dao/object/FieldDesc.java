@@ -24,10 +24,6 @@ public class FieldDesc {
 
 	private boolean writable = false;
 
-	// private boolean isOneDimensionalArray;
-
-	// private Collection<Class<? extends Throwable>> ignoreExceptions = new ArrayList<Class<? extends Throwable>>();
-
 	protected FieldDesc() {
 	}
 

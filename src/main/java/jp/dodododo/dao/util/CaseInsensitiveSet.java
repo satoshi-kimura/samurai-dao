@@ -33,7 +33,7 @@ public class CaseInsensitiveSet extends HashSet<String> {
 	private final CaseInsensitiveMap<Object> map;
 
 	public CaseInsensitiveSet() {
-		map = new CaseInsensitiveMap<Object>();
+		map = new CaseInsensitiveMap<>();
 	}
 
 	public CaseInsensitiveSet(String... addValues) {
@@ -45,16 +45,16 @@ public class CaseInsensitiveSet extends HashSet<String> {
 
 	public CaseInsensitiveSet(Collection<? extends String> collection) {
 		int size = collection.size();
-		map = new CaseInsensitiveMap<Object>(size);
+		map = new CaseInsensitiveMap<>(size);
 		addAll(collection);
 	}
 
 	public CaseInsensitiveSet(int initialCapacity, float loadFactor) {
-		map = new CaseInsensitiveMap<Object>(initialCapacity, loadFactor);
+		map = new CaseInsensitiveMap<>(initialCapacity, loadFactor);
 	}
 
 	public CaseInsensitiveSet(int initialCapacity) {
-		map = new CaseInsensitiveMap<Object>(initialCapacity);
+		map = new CaseInsensitiveMap<>(initialCapacity);
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class CaseInsensitiveSet extends HashSet<String> {
 	}
 
 	public String getFirstElement() {
-		List<String> tmp = new ArrayList<String>(map.size());
+		List<String> tmp = new ArrayList<>(map.size());
 		tmp.addAll(map.keySet());
 		return tmp.get(0);
 	}

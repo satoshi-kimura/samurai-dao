@@ -30,7 +30,7 @@ public class ObjectDescFactory {
 		@SuppressWarnings("unchecked")
 		ObjectDesc<T> objectDesc = (ObjectDesc<T>) OBJECT_DESC_CACHE.get(clazz);
 		if (objectDesc == null) {
-			objectDesc = new ObjectDesc<T>(clazz, isIgnoreCase);
+			objectDesc = new ObjectDesc<>(clazz, isIgnoreCase);
 			OBJECT_DESC_CACHE.put(clazz, objectDesc);
 		}
 		return objectDesc;

@@ -21,6 +21,6 @@ public class EmptyIterationCallback<ROW> implements IterationCallback<ROW> {
 
     @Override
 	public List<ROW> getResult() {
-		return new ArrayList<ROW>();
+		return new ArrayList<>();
 	}
 }

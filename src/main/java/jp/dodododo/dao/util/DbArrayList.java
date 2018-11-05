@@ -16,10 +16,10 @@ import jp.dodododo.dao.types.TypeConverter;
 public class DbArrayList<T> extends ArrayList<T> {
 	private static final long serialVersionUID = -1400549097017247568L;
 
-	protected List<ResultSetColumn> resultSetColumnList = new ArrayList<ResultSetColumn>();
+	protected List<ResultSetColumn> resultSetColumnList = new ArrayList<>();
 
-	protected List<ColMetadata> cols = new ArrayList<ColMetadata>();
-	protected List<Row> rows = new ArrayList<Row>();
+	protected List<ColMetadata> cols = new ArrayList<>();
+	protected List<Row> rows = new ArrayList<>();
 
 	public DbArrayList() {
 		super();
@@ -62,7 +62,7 @@ public class DbArrayList<T> extends ArrayList<T> {
 	}
 
 	public List<String> getColumnNames() {
-		List<String> ret = new ArrayList<String>(resultSetColumnList.size());
+		List<String> ret = new ArrayList<>(resultSetColumnList.size());
 		resultSetColumnList.forEach(column -> ret.add(column.getName()));
 		return ret;
 	}
@@ -106,9 +106,7 @@ public class DbArrayList<T> extends ArrayList<T> {
 
 	@Override
 	public Object clone() {
-		@SuppressWarnings("unchecked")
-		List<T> clone = (List<T>) super.clone();
-		return new DbArrayList<T>(clone);
+		return new DbArrayList<>(this);
 	}
 
 	protected boolean isBinary(int dataType) {
@@ -141,7 +139,7 @@ public class DbArrayList<T> extends ArrayList<T> {
 	public class Row implements Serializable{
 		private static final long serialVersionUID = -8684091440216292108L;
 
-		protected List<String> datas = new ArrayList<String>();
+		protected List<String> datas = new ArrayList<>();
 
 		public Row() {
 		}

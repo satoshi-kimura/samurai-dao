@@ -19,7 +19,7 @@ public class ClassDesc<T> {
 	private Map<Integer, List<Constructor<T>>> constructors = Collections
 			.synchronizedMap(new HashMap<>());
 
-	private List<Method> methods = new ArrayList<Method>();
+	private List<Method> methods = new ArrayList<>();
 
 	public ClassDesc(Class<T> target) {
 		this.targetClass = target;
@@ -39,7 +39,7 @@ public class ClassDesc<T> {
 	public <A extends Annotation> List<Constructor<T>> getAnnotatedConstructors(Class<A> annotationClass, int modifier) {
 
 		List<Constructor<T>> constructors = getConstructors(modifier);
-		List<Constructor<T>> ret = new ArrayList<Constructor<T>>(constructors.size());
+		List<Constructor<T>> ret = new ArrayList<>(constructors.size());
 		for (Constructor<T> constructor : constructors) {
 			if (constructor.getAnnotation(annotationClass) != null) {
 				ret.add(constructor);
@@ -57,7 +57,7 @@ public class ClassDesc<T> {
 		}
 
 		List<Method> methods = getMethods();
-		List<Method> ret = new ArrayList<Method>(methods.size());
+		List<Method> ret = new ArrayList<>(methods.size());
 		methods.stream().filter(method -> method.getAnnotation(annotationClass) != null).forEach(method -> ret.add(method));
 		annotatedMethods.put(annotationClass, ret);
 		return ret;
@@ -71,7 +71,7 @@ public class ClassDesc<T> {
 		Method[] methods = targetClass.getMethods();
 		Method[] declaredMethods = targetClass.getDeclaredMethods();
 
-		this.methods = new ArrayList<Method>(methods.length + declaredMethods.length);
+		this.methods = new ArrayList<>(methods.length + declaredMethods.length);
 
 		for (Method method : methods) {
 			this.methods.add(method);

@@ -24,7 +24,7 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 			int ret = ps.executeUpdate();
 			return ret;
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
 		}
 	}
 
@@ -36,7 +36,7 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 		try {
 			ps.addBatch();
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
 		}
 	}
 
@@ -49,7 +49,7 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 			int[] ret = ps.executeBatch();
 			return ret;
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
 		}
 	}
 
@@ -68,7 +68,7 @@ public abstract class PreparedStatementUtil extends StatementUtil {
 			}
 			return resultSet;
 		} catch (SQLException e) {
-			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), sqlLogRegistry, e);
+			throw new SQLRuntimeException(sqlLogRegistry.getLast().getCompleteSql(), e);
 		}
 	}
 

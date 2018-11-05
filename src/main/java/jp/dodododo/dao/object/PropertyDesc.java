@@ -60,7 +60,7 @@ public class PropertyDesc implements AnnotatedElement {
 
 	private boolean isOneDimensionalArray;
 
-	private Collection<Class<? extends Throwable>> ignoreExceptions = new ArrayList<Class<? extends Throwable>>();
+	private Collection<Class<? extends Throwable>> ignoreExceptions = new ArrayList<>();
 
 	protected String toString;
 
@@ -222,12 +222,7 @@ public class PropertyDesc implements AnnotatedElement {
 		}
 	};
 
-	protected static ThreadLocal<Map<PropertyDesc, Map<Object, Object>>> getValueCache = new ThreadLocal<Map<PropertyDesc, Map<Object, Object>>>() {
-		@Override
-		protected Map<PropertyDesc, Map<Object, Object>> initialValue() {
-			return new HashMap<PropertyDesc, Map<Object, Object>>();
-		}
-	};
+	protected static ThreadLocal<Map<PropertyDesc, Map<Object, Object>>> getValueCache = ThreadLocal.withInitial(() -> new HashMap());
 
 	public static void cacheModeOn() {
 		cacheMode.set(true);
@@ -244,18 +239,18 @@ public class PropertyDesc implements AnnotatedElement {
 	public <VALUE> VALUE getValue(Object target, boolean force) {
 		VALUE ret;
 		if (cacheMode.get() == false) {
-			ret = (VALUE) getValue(target, force, true);
+			ret = getValue(target, force, true);
 		} else {
 		Map<Object, Object> map = getValueCache.get().get(this);
 		Object key = target;
 		if (map == null) {
-			map = new HashMap<Object, Object>();
+			map = new HashMap<>();
 			getValueCache.get().put(this, map);
 		}
 		if (map.containsKey(key)) {
 				ret = (VALUE) map.get(key);
 			} else {
-				ret = (VALUE) getValue(target, force, true);
+				ret = getValue(target, force, true);
 				map.put(key, ret);
 			}
 		}
@@ -534,7 +529,7 @@ public class PropertyDesc implements AnnotatedElement {
 
 	    @Override
 		public Annotation[] getAnnotations() {
-			List<Annotation> ret = new ArrayList<Annotation>();
+			List<Annotation> ret = new ArrayList<>();
 			if (writeMethod != null) {
 				ret.addAll(Arrays.asList(writeMethod.getAnnotations()));
 			}
@@ -549,7 +544,7 @@ public class PropertyDesc implements AnnotatedElement {
 
 	    @Override
 		public Annotation[] getDeclaredAnnotations() {
-			List<Annotation> ret = new ArrayList<Annotation>();
+			List<Annotation> ret = new ArrayList<>();
 			if (writeMethod != null) {
 				ret.addAll(Arrays.asList(writeMethod.getDeclaredAnnotations()));
 			}

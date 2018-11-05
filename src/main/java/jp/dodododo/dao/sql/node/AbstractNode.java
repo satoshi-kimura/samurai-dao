@@ -22,7 +22,7 @@ import jp.dodododo.dao.util.TypesUtil;
  */
 public abstract class AbstractNode implements Node {
 
-	private List<Node> children = new ArrayList<Node>();
+	private List<Node> children = new ArrayList<>();
 
 	protected Node parent;
 

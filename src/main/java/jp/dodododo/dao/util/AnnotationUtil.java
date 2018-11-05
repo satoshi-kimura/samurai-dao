@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class AnnotationUtil {
 	public static <A extends Annotation> List<A> getParameterAnnotations(Constructor<?> constructor, Class<A> annotation) {
 
-		List<A> ret = new ArrayList<A>();
+		List<A> ret = new ArrayList<>();
 		Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
 
 		for (Annotation[] annotations : parameterAnnotations) {

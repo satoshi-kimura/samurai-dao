@@ -86,7 +86,7 @@ public class SqlContext implements Serializable {
 	}
 
 	public void setValues(List<?> values) {
-		this.values = new ArrayList<Object>();
+		this.values = new ArrayList<>();
 		if (values == null || values.isEmpty()) {
 			return;
 		}

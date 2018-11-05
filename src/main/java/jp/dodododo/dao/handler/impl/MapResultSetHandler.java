@@ -39,7 +39,7 @@ public class MapResultSetHandler extends AbstractResultSetHandler<Map<String, Ob
 	}
 
 	protected Map<String, Object> newInstance() {
-		CaseInsensitiveMap<Object> ret = new CaseInsensitiveMap<Object>();
+		CaseInsensitiveMap<Object> ret = new CaseInsensitiveMap<>();
 		ret.putAll(arg);
 		return ret;
 	}

@@ -26,7 +26,7 @@ public abstract class CacheUtil {
 	}
 
 	public static <V> Map<String, V> cacheCaseInsensitiveMap(int initialCapacity) {
-		return cacheMap(new CaseInsensitiveMap<V>(initialCapacity));
+		return cacheMap(new CaseInsensitiveMap<>(initialCapacity));
 	}
 
 	public static <K, V> Map<K, V> cacheMap(Map<K, V> cacheMap) {
@@ -34,11 +34,11 @@ public abstract class CacheUtil {
 		return cacheMap;
 	}
 
-	private static List<Map<?, ?>> cacheMapList = Collections.synchronizedList(new LinkedList<Map<?, ?>>());
+	private static List<Map<?, ?>> cacheMapList = Collections.synchronizedList(new LinkedList<>());
 
-	private static List<List<?>> cacheListList = Collections.synchronizedList(new LinkedList<List<?>>());
+	private static List<List<?>> cacheListList = Collections.synchronizedList(new LinkedList<>());
 
-	private static List<CacheObject<?>> cacheObjectList = Collections.synchronizedList(new LinkedList<CacheObject<?>>());
+	private static List<CacheObject<?>> cacheObjectList = Collections.synchronizedList(new LinkedList<>());
 
 	public static void clearAllCache() {
 		cacheMapList.stream().parallel().forEach(cacheMap -> cacheMap.clear());
@@ -51,7 +51,7 @@ public abstract class CacheUtil {
 	}
 
 	public static <T> List<T> cacheList() {
-		return cacheList(new ArrayList<T>(1024));
+		return cacheList(new ArrayList<>(1024));
 	}
 
 	public static <T> List<T> cacheList(List<T> list) {
@@ -61,7 +61,7 @@ public abstract class CacheUtil {
 	}
 
 	public static <T> CacheObject<T> cacheObject() {
-		CacheObject<T> ret = new CacheObject<T>();
+		CacheObject<T> ret = new CacheObject<>();
 		cacheObjectList.add(ret);
 		return ret;
 	}

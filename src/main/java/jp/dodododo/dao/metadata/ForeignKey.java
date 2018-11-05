@@ -9,7 +9,7 @@ import jp.dodododo.dao.annotation.Internal;
 @Internal
 public class ForeignKey implements Iterable<ForeignKeyColumn> {
 
-	protected List<ForeignKeyColumn> columns = new ArrayList<ForeignKeyColumn>();
+	protected List<ForeignKeyColumn> columns = new ArrayList<>();
 
 	public void add(String table, String column, String referenceTable, String referenceColumn) {
 		columns.add(new ForeignKeyColumn(table, column, referenceTable, referenceColumn));

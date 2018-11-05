@@ -7,12 +7,7 @@ import java.util.Set;
 
 public class ThreadLocalCacheMap<K, V> implements Map<K, V> {
 
-	private ThreadLocal<Map<Object, Object>> threadLocalCaches = new ThreadLocal<Map<Object, Object>>() {
-		@Override
-		protected Map<Object, Object> initialValue() {
-			return new HashMap<Object, Object>();
-		}
-	};
+	private ThreadLocal<Map<Object, Object>> threadLocalCaches = ThreadLocal.withInitial(() -> new HashMap<>());
 
     @Override
 	public void clear() {
