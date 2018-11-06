@@ -1,17 +1,25 @@
 package jp.dodododo.dao.log;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import java.util.Map;
-import java.util.Set;
 import jp.dodododo.dao.config.DaoConfig;
 import jp.dodododo.dao.util.EmptyUtil;
 import jp.dodododo.dao.util.ThreadLocalUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class SqlLogRegistry {
+
+	private static final Log logger = LogFactory.getLog(SlowQuery.class);
 
 	protected DaoConfig config;
 
@@ -27,7 +35,6 @@ public class SqlLogRegistry {
 
 	/**
 	 * デフォルトの上限サイズを使用してインスタンスを構築します。
-	 *
 	 */
 	public SqlLogRegistry() {
 		this(DaoConfig.getDefaultConfig());
@@ -36,8 +43,7 @@ public class SqlLogRegistry {
 	/**
 	 * DaoConfigを指定してインスタンスを構築します。
 	 *
-	 * @param config
-	 *            config
+	 * @param config config
 	 */
 	public SqlLogRegistry(DaoConfig config) {
 		setConfig(config);
@@ -120,5 +126,46 @@ public class SqlLogRegistry {
 			ret.addAll(entry.getValue());
 		}
 		return ret;
+	}
+
+	public File dump() {
+		File dumpFile;
+		try {
+			dumpFile = File.createTempFile("samurai-dao-sql-", ".dump", null);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
+		try (OutputStreamWriter writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(dumpFile), 16384), "UTF8")) {
+			List<SqlLog> allSqlList = getAllThreadSqls();
+			allSqlList.stream().sorted((log1, log2) -> {
+				int threadName = log1.getThreadName().compareTo(log2.getThreadName());
+				if (threadName != 0) {
+					return threadName;
+				}
+				int time = log1.getTime().compareTo(log2.getTime());
+				return time;
+			}).forEach(log -> {
+				try {
+					writer.write("[");
+					writer.write(log.getThreadName());
+					writer.write("]");
+					writer.write("[");
+					writer.write(log.getTime().toString());
+					writer.write("]");
+					writer.write("[");
+					writer.write(log.getCompleteSql());
+					writer.write("]");
+					writer.write(System.lineSeparator());
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			});
+			writer.flush();
+			logger.info("Dump all SQL.[" + dumpFile.getAbsolutePath() + "]");
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return dumpFile;
 	}
 }
