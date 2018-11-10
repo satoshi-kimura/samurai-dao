@@ -8,7 +8,7 @@
   <artifactId>samurai-dao</artifactId>
   <packaging>jar</packaging>
   <name>dao</name>
-  <version>1.2.0-RC5</version>
+  <version>1.2.0-RC6</version>
 <!--
   <version>1.2.0-RC5</version>
   <version>1.2.0</version>
@@ -302,7 +302,7 @@
     </dependency>
     <dependency>
       <groupId>jp.dodododo</groupId>
-      <artifactId>samurai-dao-dialect-mysql-8</artifactId>
+      <artifactId>samurai-dao-dialect-mysql-5</artifactId>
       <version>1.2.0-RC1</version>
       <type>jar</type>
       <scope>test</scope>
