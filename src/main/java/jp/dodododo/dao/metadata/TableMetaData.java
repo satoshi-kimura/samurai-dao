@@ -69,7 +69,7 @@ public class TableMetaData {
 		}
 	}
 
-	private void setUpPks(DatabaseMetaData metaData, String tableName) throws SQLException {
+	private void setUpPks(DatabaseMetaData metaData, String tableName) {
 		String catalog = null;
 		String schemaPattern = null;
 		try (ResultSet primaryKeys = metaData.getPrimaryKeys(catalog, schemaPattern, tableName)) {
@@ -83,6 +83,7 @@ public class TableMetaData {
 			logger.info("[primary key] setup is success . tableName[" + tableName + "]");
 		} catch (SQLException ignore) {
 			logger.error("[primary key] setup is fail . tableName[" + tableName + "]");
+			logger.trace(ignore.getMessage(), ignore);
 		}
 		if (pkColumnMetaData.isEmpty() == true && tableName.equals(tableName.toUpperCase()) == false) {
 			setUpPks(metaData, tableName.toUpperCase());
