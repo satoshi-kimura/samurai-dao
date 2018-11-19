@@ -7,6 +7,7 @@ import java.util.List;
 
 import jp.dodododo.dao.annotation.Column;
 import jp.dodododo.dao.annotation.Columns;
+import jp.dodododo.dao.annotation.Internal;
 import jp.dodododo.dao.annotation.Relations;
 import jp.dodododo.dao.message.Message;
 import jp.dodododo.dao.util.EmptyUtil;
@@ -14,6 +15,7 @@ import jp.dodododo.dao.util.EmptyUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+@Internal
 public class CandidateValue implements Serializable {
 	private static final long serialVersionUID = -2173377825923811975L;
 
@@ -135,7 +137,19 @@ public class CandidateValue implements Serializable {
 			} else {
 				reason = Message.getMessage("00055");
 			}
-			logger.trace(Message.getMessage("00054", tableName, columnName, value.value.pd.toString(), value.matchTableName, reason));
+			logger.trace(Message.getMessage("00054", tableName, columnName, toPdString(value), value.matchTableName, reason));
+		}
+	}
+
+	private static String toPdString(CandidateValue value) {
+		if (value == null) {
+			return null;
+		} else if (value.value == null) {
+			return null;
+		} else if (value.value.pd == null) {
+			return null;
+		} else {
+			return value.value.pd.toString();
 		}
 	}
 

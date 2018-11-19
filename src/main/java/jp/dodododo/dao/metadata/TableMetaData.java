@@ -80,13 +80,14 @@ public class TableMetaData {
 				pkColumnMetaData.put(columnMetaData.getColumnName(), columnMetaData);
 				pkColumnNames.add(columnMetaData.getColumnName());
 			}
-			logger.info("[primary key] setup is success . tableName[" + tableName + "]");
+			logger.info("[primary key] setup is success. tableName[" + tableName + "]");
 		} catch (SQLException ignore) {
-			logger.error("[primary key] setup is fail . tableName[" + tableName + "]");
-			logger.trace(ignore.getMessage(), ignore);
-		}
-		if (pkColumnMetaData.isEmpty() == true && tableName.equals(tableName.toUpperCase()) == false) {
-			setUpPks(metaData, tableName.toUpperCase());
+			logger.error("[primary key] setup is fail. tableName[" + tableName + "]");
+			logger.debug(ignore.getMessage(), ignore);
+            if (tableName.equals(tableName.toUpperCase()) == false) {
+                logger.info("[primary key] retry setup. But you should make TableNameResolver.");
+                setUpPks(metaData, tableName.toUpperCase());
+            }
 		}
 	}
 

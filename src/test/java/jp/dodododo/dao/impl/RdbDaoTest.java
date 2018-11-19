@@ -1144,7 +1144,7 @@ public class RdbDaoTest {
 
 		String tableName = "test_table";
 		String columnName = "test_column";
-		List<CandidateValue> values = new ArrayList<CandidateValue>();
+		List<CandidateValue> values = new ArrayList<>();
 		new RdbDao().gatherValue(new Object[] { bean }, tableName, columnName, values);
 		assertEquals(0, values.size());
 	}

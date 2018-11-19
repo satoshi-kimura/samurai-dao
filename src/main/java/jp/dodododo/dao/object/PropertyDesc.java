@@ -286,7 +286,7 @@ public class PropertyDesc implements AnnotatedElement {
 			}
 			try {
 				@SuppressWarnings("unchecked")
-				VALUE ret = (VALUE) MethodUtil.invoke(readMethod, target, (Object[]) null);
+				VALUE ret = MethodUtil.invoke(readMethod, target, (Object[]) null);
 				return ret;
 			} catch (Throwable t) {
 				if (isIgnoreException(t) == true) {
