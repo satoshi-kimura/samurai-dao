@@ -143,11 +143,11 @@ public class CandidateValue implements Serializable {
 
 	private static String toPdString(CandidateValue value) {
 		if (value == null) {
-			return null;
+			return "root value is null.";
 		} else if (value.value == null) {
-			return null;
+			return "value.value is null.";
 		} else if (value.value.pd == null) {
-			return null;
+			return "value.value.pd is null.";
 		} else {
 			return value.value.pd.toString();
 		}

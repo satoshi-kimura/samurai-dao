@@ -70,6 +70,11 @@ public class TableMetaData {
 	}
 
 	private void setUpPks(DatabaseMetaData metaData, String tableName) {
+		setUpPks(metaData, tableName, new ArrayList<>());
+	}
+
+	private void setUpPks(DatabaseMetaData metaData, String tableName, List<String> triedTableName) {
+		triedTableName.add(tableName);
 		String catalog = null;
 		String schemaPattern = null;
 		try (ResultSet primaryKeys = metaData.getPrimaryKeys(catalog, schemaPattern, tableName)) {
@@ -84,10 +89,13 @@ public class TableMetaData {
 		} catch (SQLException ignore) {
 			logger.error("[primary key] setup is fail. tableName[" + tableName + "]");
 			logger.debug(ignore.getMessage(), ignore);
-            if (tableName.equals(tableName.toUpperCase()) == false) {
-                logger.info("[primary key] retry setup. But you should make TableNameResolver.");
-                setUpPks(metaData, tableName.toUpperCase());
-            }
+			if (triedTableName.contains(tableName.toUpperCase()) == false) {
+				logger.info("[primary key] retry setup.");
+				setUpPks(metaData, tableName.toUpperCase(), triedTableName);
+			} else if (triedTableName.contains(tableName.toLowerCase()) == false) {
+				logger.info("[primary key] retry setup.");
+				setUpPks(metaData, tableName.toLowerCase(), triedTableName);
+			}
 		}
 	}
 

@@ -31,7 +31,7 @@ public abstract class DatabaseMetaDataUtil {
 	}
 
 	private static Set<String> getTables(DatabaseMetaData dmd, String... types) throws SQLError {
-		Set<String> tableNames = new HashSet<String>();
+		Set<String> tableNames = new HashSet<>();
 		ResultSet rs = null;
 		try {
 			rs = dmd.getTables(null, null, "%", types);

@@ -58,4 +58,6 @@ public interface Dialect {
 	default TableNameResolver getTableNameResolver() {
 		return TableNameResolver.NULL_RESOLVER;
 	}
+
+	void setTableNameResolver(TableNameResolver tableNameResolver);
 }

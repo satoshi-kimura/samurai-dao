@@ -123,4 +123,18 @@ public class Standard implements Dialect {
 	public String getSchema(TableMetaData metaData) {
 		return metaData.getSchema();
 	}
+
+	protected TableNameResolver tableNameResolver;
+
+	@Override
+	public TableNameResolver getTableNameResolver() {
+		if(tableNameResolver == null) {
+			return TableNameResolver.NULL_RESOLVER;
+		}
+		return tableNameResolver;
+	}
+
+	public void setTableNameResolver(TableNameResolver tableNameResolver) {
+		this.tableNameResolver = tableNameResolver;
+	}
 }
