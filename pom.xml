@@ -76,7 +76,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -98,7 +98,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -153,22 +153,8 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <outputDirectory>${basedir}/lib</outputDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>source-jar</id>
@@ -181,6 +167,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
         <configuration>
           <use>false</use>
           <quiet>true</quiet>
