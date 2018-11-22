@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo "git tag $1"
-echo "git push origin $1"
+set -eu
+: $1
 
-
+git tag $1
+git push origin $1
