@@ -22,7 +22,7 @@ import jp.dodododo.dao.id.Identity;
 import jp.dodododo.dao.id.Sequence;
 import jp.dodododo.dao.unit.DbTestRule;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 
